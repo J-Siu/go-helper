@@ -2,6 +2,17 @@
 
 Simple helper functions for GO program.
 
+### Usage
+
+```go
+import	"github.com/J-Siu/go-helper"
+
+func main() {
+	helper.Debug = true
+	helper.DebugLog("debug msg")
+}
+```
+
 ### Repository
 
 - [go-helper](https://github.com/J-Siu/go-helper)

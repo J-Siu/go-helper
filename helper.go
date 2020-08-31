@@ -20,19 +20,19 @@ import (
 // Debug bool to control log
 var Debug bool = false
 
-// DebugLog - msg
-func DebugLog(msg ...interface{}) {
-	if Debug {
-		fmt.Println("log:", msg)
-	}
-}
-
 // DebugEnv - set debug flag from env
 func DebugEnv() bool {
 	if os.Getenv("_DEBUG") == "true" {
 		Debug = true
 	}
 	return Debug
+}
+
+// DebugLog - msg
+func DebugLog(msg ...interface{}) {
+	if Debug {
+		fmt.Println("log:", msg)
+	}
 }
 
 // ErrCheck - check error
