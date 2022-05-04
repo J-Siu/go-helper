@@ -17,9 +17,6 @@ import (
 	"os"
 )
 
-// Debug bool to control log
-var Debug bool = false
-
 // DebugEnv - set debug flag from env
 func DebugEnv() bool {
 	if os.Getenv("_DEBUG") == "true" {
