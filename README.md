@@ -29,6 +29,8 @@ func main() {
   - Function update
 - 0.9.1
   - Fix git command args
+- v0.9.1
+  - Add prefix v for version number
 
 ### License
 
