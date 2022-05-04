@@ -39,7 +39,7 @@ func GitInit() *MyCmd {
 }
 
 func GitPush(optionsP []string) *MyCmd {
-	args := []string{"git", "push"}
+	args := []string{"push"}
 	if optionsP != nil {
 		args = append(args, optionsP...)
 	}
@@ -47,7 +47,7 @@ func GitPush(optionsP []string) *MyCmd {
 }
 
 func GitRemoteAdd(name string, git string) *MyCmd {
-	return MyCmdRun("git", &[]string{"git", "remote", "add", name, git})
+	return MyCmdRun("git", &[]string{"remote", "add", name, git})
 }
 
 // Check if specified remote exist in repository
@@ -58,7 +58,7 @@ func GitRemoteExist(name string) bool {
 
 // Remove specified remotes from repository
 func GitRemoteRemove(name string) *MyCmd {
-	return MyCmdRun("git", &[]string{"git", "remote", "remove", name})
+	return MyCmdRun("git", &[]string{"remote", "remove", name})
 }
 
 // Remove all remotes from repository
@@ -68,5 +68,3 @@ func GitRemoteRemoveAll() {
 		GitRemoteRemove(r)
 	}
 }
-
-// func GitFetch() {}
