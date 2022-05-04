@@ -26,7 +26,9 @@ func main() {
 - 0.0.1
   - Initial Commit
 - 0.9.0
-  - function update
+  - Function update
+- 0.9.1
+  - Fix git command args
 
 ### License
 
