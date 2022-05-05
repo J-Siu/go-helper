@@ -28,9 +28,12 @@ import (
 	"golang.org/x/crypto/nacl/box"
 )
 
-func BoxSealAnonymous(key, msg *string) *string {
-	keyByte := make([]byte, base64.StdEncoding.DecodedLen(len(*key)))
-	base64.StdEncoding.Decode(keyByte, []byte(*key))
+// Encrypt msg with public key using nacl box seal anonymous.
+//
+// Parameter "base64Pubkey" and returning string are base64 encoded.
+func BoxSealAnonymous(base64Pubkey, msg *string) *string {
+	keyByte := make([]byte, base64.StdEncoding.DecodedLen(len(*base64Pubkey)))
+	base64.StdEncoding.Decode(keyByte, []byte(*base64Pubkey))
 	keyByteP := new([32]byte)
 	copy((*keyByteP)[:], keyByte)
 	outByte, _ := box.SealAnonymous(nil, []byte(*msg), keyByteP, nil)
