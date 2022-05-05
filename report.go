@@ -97,8 +97,10 @@ func (self *ReportT) StringP() *string {
 				output = *JsonIndentSp(&byteA, true)
 			}
 		}
+	case []byte:
+		output = *JsonIndentSp(&v, true)
 	case *[]byte:
-		output = *JsonIndentSp(&byteA, true)
+		output = *JsonIndentSp(v, true)
 	case bool:
 		title_newline = ""
 		if self.ModeStatus {
