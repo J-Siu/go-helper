@@ -46,6 +46,9 @@ func MyCmdRun(name string, argsP *[]string) *MyCmd {
 }
 
 func MyCmdRunWg(name string, argsP *[]string, title *string, wgP *sync.WaitGroup, output bool) *MyCmd {
+	if wgP != nil {
+		defer wgP.Done()
+	}
 	var self MyCmd
 	self.ArgsP = argsP
 	self.Name = name
