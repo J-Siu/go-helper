@@ -31,6 +31,8 @@ func main() {
   - Fix git command args
 - v0.9.1
   - Add prefix v for version number
+- v0.9.2
+  - Fix MyCmdRunWg() missing wgP.Done()
 
 ### License
 
