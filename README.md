@@ -33,6 +33,10 @@ func main() {
   - Add prefix v for version number
 - v0.9.2
   - Fix MyCmdRunWg() missing wgP.Done()
+- v0.9.3
+  - ReportTStringP():
+    - fix using wrong var when handling *[]byte
+    - add []byte case
 
 ### License
 
