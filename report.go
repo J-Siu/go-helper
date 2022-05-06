@@ -135,7 +135,7 @@ func (self *ReportT) StringP() *string {
 	if len(title) > 0 {
 		if !self.SkipEmpty && len(output) == 0 || !self.SingleLine {
 			output = title + "\n" + output
-		} else {
+		} else if len(output) > 0 {
 			output = title + output
 		}
 	}
