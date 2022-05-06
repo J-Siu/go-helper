@@ -39,6 +39,8 @@ func main() {
     - add []byte case
 - v0.9.4
   - Report support SingleLine mode
+- v0.9.5
+  - Fix ReportT.SpringP() output
 
 ### License
 
