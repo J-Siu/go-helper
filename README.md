@@ -37,6 +37,8 @@ func main() {
   - ReportTStringP():
     - fix using wrong var when handling *[]byte
     - add []byte case
+- v0.9.4
+  - Report support SingleLine mode
 
 ### License
 
