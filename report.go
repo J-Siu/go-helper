@@ -28,37 +28,39 @@ import (
 )
 
 type ReportT struct {
-	Data       any    `json:"Data"`
-	Title      string `json:"Title"`
-	SkipEmpty  bool   `json:"SkipEmpty"`  // Return empty string if Data is empty
+	Data       any    `json:"Data"`       // Data to be printed
+	Title      string `json:"Title"`      // Title of print out
 	ModeStatus bool   `json:"ModeStatus"` // bool to "OK/Failed"
+	SkipEmpty  bool   `json:"SkipEmpty"`  // Return empty string if Data is empty
+	SingleLine bool   `json:"SingleLine"` // No need line after title
 }
 
-func Report(data any, title string, skipEmpty bool) {
-	r := ReportNew(data, title, skipEmpty)
+func Report(data any, title string, skipEmpty bool, singleLine bool) {
+	r := ReportNew(data, title, skipEmpty, singleLine)
 	fmt.Print(r)
 }
 
-func ReportDebug(data any, title string, skipEmpty bool) {
-	r := ReportNew(data, title, skipEmpty)
+func ReportDebug(data any, title string, skipEmpty bool, singleLine bool) {
+	r := ReportNew(data, title, skipEmpty, singleLine)
 	fmt.Print(r.StringDebug())
 }
 
-func ReportSp(data any, title string, skipEmpty bool) *string {
-	r := ReportNew(data, title, skipEmpty)
+func ReportSp(data any, title string, skipEmpty bool, singleLine bool) *string {
+	r := ReportNew(data, title, skipEmpty, singleLine)
 	return r.StringP()
 }
 
-func ReportStatus(data bool, title string) {
-	r := ReportNew(data, title, false)
+func ReportStatus(data bool, title string, singleLine bool) {
+	r := ReportNew(data, title, false, singleLine)
 	r.ModeStatus = true
 	fmt.Print(r)
 }
 
-func ReportNew(data any, title string, skipEmpty bool) *ReportT {
+func ReportNew(data any, title string, skipEmpty bool, singleLine bool) *ReportT {
 	var r ReportT
 	r.Data = data
 	r.Title = title
+	r.SingleLine = singleLine
 	r.SkipEmpty = skipEmpty
 	return &r
 }
@@ -73,10 +75,7 @@ func (self *ReportT) StringDebug() string {
 
 func (self *ReportT) StringP() *string {
 	var output string
-	var title_newline string
 	var byteA []byte
-
-	title_newline = "\n"
 
 	switch v := self.Data.(type) {
 	case string:
@@ -102,14 +101,12 @@ func (self *ReportT) StringP() *string {
 	case *[]byte:
 		output = *JsonIndentSp(v, true)
 	case bool:
-		title_newline = ""
 		if self.ModeStatus {
 			output = BoolStatus(v) + "\n"
 		} else {
 			output = BoolString(v) + "\n"
 		}
 	case *bool:
-		title_newline = ""
 		if self.ModeStatus {
 			output = BoolStatus(*v) + "\n"
 		} else {
@@ -130,8 +127,12 @@ func (self *ReportT) StringP() *string {
 
 	if !self.SkipEmpty || len(output) > 0 {
 		if len(self.Title) > 0 {
+			var title_newline string
+			if self.SingleLine {
+				title_newline = "\n"
+			}
 			if len(output) == 0 {
-				output = self.Title + ":"
+				output = self.Title + ":" + title_newline
 			} else {
 				output = self.Title + ":" + title_newline + output
 			}

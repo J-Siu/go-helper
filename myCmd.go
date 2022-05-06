@@ -28,6 +28,7 @@ import (
 	"sync"
 )
 
+// go exec.Cmd wrapper
 type MyCmd struct {
 	ArgsP  *[]string    `json:"ArgsP"`  // Command args
 	Name   string       `json:"Name"`   // Command name
@@ -37,6 +38,7 @@ type MyCmd struct {
 	Stderr bytes.Buffer `json:"Stderr"` // Out: Stderr
 }
 
+// MyCmd run func wrapper
 func MyCmdRun(name string, argsP *[]string) *MyCmd {
 	var self MyCmd
 	self.ArgsP = argsP
@@ -45,6 +47,7 @@ func MyCmdRun(name string, argsP *[]string) *MyCmd {
 	return &self
 }
 
+// MyCmd run func wrapper with sync.WaitGroup support
 func MyCmdRunWg(name string, argsP *[]string, title *string, wgP *sync.WaitGroup, output bool) *MyCmd {
 	if wgP != nil {
 		defer wgP.Done()
@@ -54,20 +57,19 @@ func MyCmdRunWg(name string, argsP *[]string, title *string, wgP *sync.WaitGroup
 	self.Name = name
 	self.Run()
 	if output {
-		Report(self.Stdout.String(), *title+":StdOut", true)
-		Report(self.Stderr.String(), *title+":StdErr", true)
+		Report(self.Stdout.String(), *title+":Stdout", true, false)
+		Report(self.Stderr.String(), *title+":Stderr", true, false)
 	}
 	return &self
 }
 
+// exec.Cmd.Run() wrapper
 func (self *MyCmd) Run() error {
 	execCmd := exec.Command(self.Name, *self.ArgsP...)
 	execCmd.Stdout = &self.Stdout
 	execCmd.Stderr = &self.Stderr
 	self.CmdLn = execCmd.String()
 	self.Err = execCmd.Run()
-	ReportDebug(&self, "myCmdP:", false)
-	ReportDebug(self.Stdout.String(), "myCmdP.Stdout", false)
-	ReportDebug(self.Stderr.String(), "myCmdP.Stderr", false)
+	ReportDebug(&self, "myCmdP:", false, false)
 	return self.Err
 }
