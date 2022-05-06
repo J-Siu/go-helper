@@ -125,19 +125,21 @@ func (self *ReportT) StringP() *string {
 		}
 	}
 
-	if !self.SkipEmpty || len(output) > 0 {
-		if len(self.Title) > 0 {
-			var title_newline string
-			if self.SingleLine {
-				title_newline = "\n"
-			}
-			if len(output) == 0 {
-				output = self.Title + ":" + title_newline
-			} else {
-				output = self.Title + ":" + title_newline + output
-			}
+	// Title
+	var title string
+	if len(self.Title) > 0 {
+		title = self.Title + ":"
+	}
+
+	// Output
+	if len(title) > 0 {
+		if !self.SkipEmpty && len(output) == 0 || !self.SingleLine {
+			output = title + "\n" + output
+		} else {
+			output = title + output
 		}
 	}
+
 	return &output
 }
 
