@@ -22,6 +22,7 @@ THE SOFTWARE.
 
 package helper
 
+// execute "git remote" using MyCmd
 func GitRemote(v bool) *[]string {
 	var args []string
 	if v {
@@ -33,11 +34,12 @@ func GitRemote(v bool) *[]string {
 	return StrPToArrayP(&output)
 }
 
-// Git init
+// execute "git init" using MyCmd
 func GitInit() *MyCmd {
 	return MyCmdRun("git", &[]string{"init"})
 }
 
+// execute "git push" using MyCmd
 func GitPush(optionsP []string) *MyCmd {
 	args := []string{"push"}
 	if optionsP != nil {
@@ -46,22 +48,23 @@ func GitPush(optionsP []string) *MyCmd {
 	return MyCmdRun("git", &args)
 }
 
+// execute "git remote add" using MyCmd
 func GitRemoteAdd(name string, git string) *MyCmd {
 	return MyCmdRun("git", &[]string{"remote", "add", name, git})
 }
 
-// Check if specified remote exist in repository
+// execute "git remote exit" using MyCmd
 func GitRemoteExist(name string) bool {
 	r := GitRemote(false)
 	return StrArrayPtrContain(r, &name)
 }
 
-// Remove specified remotes from repository
+// execute "git remote remove" using MyCmd
 func GitRemoteRemove(name string) *MyCmd {
 	return MyCmdRun("git", &[]string{"remote", "remove", name})
 }
 
-// Remove all remotes from repository
+// execute "git remote remove" all git remote using MyCmd
 func GitRemoteRemoveAll() {
 	gr := GitRemote(false)
 	for _, r := range *gr {

@@ -44,7 +44,7 @@ func StrArrayPtrContain(aP *[]string, sP *string) bool {
 	return false
 }
 
-// Remove empty lines in a strng array
+// Remove empty lines from *[]string
 func StrArrayPtrRemoveEmpty(saP *[]string) *[]string {
 	// var sa []string
 	for i := len(*saP) - 1; i >= 0; i-- {
@@ -55,6 +55,7 @@ func StrArrayPtrRemoveEmpty(saP *[]string) *[]string {
 	return saP
 }
 
+// *[]string output
 func StrArrayPtrPrintln(saP *[]string) {
 	for _, s := range *saP {
 		println(s)
@@ -77,6 +78,7 @@ func BoolStatus(b bool) string {
 	return "fail"
 }
 
+// bool -> "Yes/No"
 func BoolYesNo(b bool) string {
 	if b {
 		return "yes"
@@ -84,11 +86,13 @@ func BoolYesNo(b bool) string {
 	return "no"
 }
 
+// *string -> *[]string
 func StrPToArrayP(sP *string) *[]string {
 	r := strings.Split(*sP, "\n")
 	return StrArrayPtrRemoveEmpty(&r)
 }
 
+// Json indent *[]byte -> *string
 func JsonIndentSp(baP *[]byte, endl bool) *string {
 	var output string
 	if len(*baP) > 0 {

@@ -22,4 +22,5 @@ THE SOFTWARE.
 
 package helper
 
+// debug flag for helper package
 var Debug bool = false
