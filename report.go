@@ -36,18 +36,19 @@ type ReportT struct {
 }
 
 func Report(data any, title string, skipEmpty bool, singleLine bool) {
-	r := ReportNew(data, title, skipEmpty, singleLine)
-	fmt.Print(r)
+	fmt.Print(*ReportSp(data, title, skipEmpty, singleLine))
 }
 
 func ReportDebug(data any, title string, skipEmpty bool, singleLine bool) {
-	r := ReportNew(data, title, skipEmpty, singleLine)
-	fmt.Print(r.StringDebug())
+	fmt.Print(*ReportSpDebug(data, title, skipEmpty, singleLine))
 }
 
 func ReportSp(data any, title string, skipEmpty bool, singleLine bool) *string {
-	r := ReportNew(data, title, skipEmpty, singleLine)
-	return r.StringP()
+	return ReportNew(data, title, skipEmpty, singleLine).StringP()
+}
+
+func ReportSpDebug(data any, title string, skipEmpty bool, singleLine bool) *string {
+	return ReportNew(data, title, skipEmpty, singleLine).StringPDebug()
 }
 
 func ReportStatus(data bool, title string, singleLine bool) {
@@ -133,7 +134,8 @@ func (self *ReportT) StringP() *string {
 
 	// Output
 	if len(title) > 0 {
-		if !self.SkipEmpty && (len(output) == 0 || !self.SingleLine) {
+		if !self.SkipEmpty && (len(output) == 0 || !self.SingleLine) ||
+			!self.SingleLine && len(output) != 0 {
 			output = title + "\n" + output
 		} else if len(output) > 0 {
 			output = title + output
