@@ -41,6 +41,8 @@ func main() {
   - Report support SingleLine mode
 - v0.9.5
   - Fix ReportT.SpringP() output
+- v0.9.6
+  - Fix ReportT.SpringP() skip empty output
 
 ### License
 
