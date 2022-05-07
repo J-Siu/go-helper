@@ -43,8 +43,9 @@ func main() {
   - Fix ReportT.SpringP() output
 - v0.9.6
   - Fix ReportT.SpringP() skip empty output
-- v0.9.7
+- v0.9.8
   - Fix ReportT.SpringP() logical bug
+  - Add report_test.go
 
 ### License
 
