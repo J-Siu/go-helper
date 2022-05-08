@@ -25,16 +25,52 @@ package helper
 import (
 	"bytes"
 	"encoding/json"
-	"os"
-	"path"
 	"strings"
 )
 
-func CurrentDirBase() string {
-	d, _ := os.Getwd()
-	return path.Base(d)
+// bool to "true"/"false"
+func BoolString(b bool) string {
+	if b {
+		return "true"
+	}
+	return "false"
 }
 
+// bool to "OK"/"Fail"
+func BoolStatus(b bool) string {
+	if b {
+		return "ok"
+	}
+	return "fail"
+}
+
+// bool -> "Yes/No"
+func BoolYesNo(b bool) string {
+	if b {
+		return "yes"
+	}
+	return "no"
+}
+
+// Json indent *[]byte -> *string
+func JsonIndentSp(baP *[]byte, endl bool) *string {
+	var output string
+	if len(*baP) > 0 {
+		var dst bytes.Buffer
+		err := json.Indent(&dst, *baP, "", "  ")
+		if err == nil {
+			output = dst.String()
+		} else {
+			output = string(*baP)
+		}
+	}
+	if len(output) > 0 && output[len(output)-1] != '\n' && endl {
+		output += "\n"
+	}
+	return &output
+}
+
+// Check if string array contain a string
 func StrArrayPtrContain(aP *[]string, sP *string) bool {
 	for _, s := range *aP {
 		if s == *sP {
@@ -62,50 +98,8 @@ func StrArrayPtrPrintln(saP *[]string) {
 	}
 }
 
-// bool to "true"/"false"
-func BoolString(b bool) string {
-	if b {
-		return "true"
-	}
-	return "false"
-}
-
-// bool to "OK"/"Fail"
-func BoolStatus(b bool) string {
-	if b {
-		return "ok"
-	}
-	return "fail"
-}
-
-// bool -> "Yes/No"
-func BoolYesNo(b bool) string {
-	if b {
-		return "yes"
-	}
-	return "no"
-}
-
 // *string -> *[]string
 func StrPToArrayP(sP *string) *[]string {
 	r := strings.Split(*sP, "\n")
 	return StrArrayPtrRemoveEmpty(&r)
-}
-
-// Json indent *[]byte -> *string
-func JsonIndentSp(baP *[]byte, endl bool) *string {
-	var output string
-	if len(*baP) > 0 {
-		var dst bytes.Buffer
-		err := json.Indent(&dst, *baP, "", "  ")
-		if err == nil {
-			output = dst.String()
-		} else {
-			output = string(*baP)
-		}
-	}
-	if len(output) > 0 && output[len(output)-1] != '\n' && endl {
-		output += "\n"
-	}
-	return &output
 }
