@@ -82,13 +82,20 @@ func StrArrayPtrContain(aP *[]string, sP *string) bool {
 
 // Remove empty lines from *[]string
 func StrArrayPtrRemoveEmpty(saP *[]string) *[]string {
-	// var sa []string
-	for i := len(*saP) - 1; i >= 0; i-- {
-		if (*saP)[i] == "" {
-			(*saP) = append((*saP)[:i], (*saP)[i+1:]...)
+	// // This is faster but modify original array *saP
+	// for i := len(*saP) - 1; i >= 0; i-- {
+	// 	if (*saP)[i] == "" {
+	// 		(*saP) = append((*saP)[:i], (*saP)[i+1:]...)
+	// 	}
+	// }
+	var sa []string
+	var l int = len(*saP)
+	for i := 0; i < l; i++ {
+		if (*saP)[i] != "" {
+			sa = append(sa, (*saP)[i])
 		}
 	}
-	return saP
+	return &sa
 }
 
 // *[]string output
@@ -101,5 +108,5 @@ func StrArrayPtrPrintln(saP *[]string) {
 // *string -> *[]string
 func StrPToArrayP(sP *string) *[]string {
 	r := strings.Split(*sP, "\n")
-	return StrArrayPtrRemoveEmpty(&r)
+	return &r
 }
