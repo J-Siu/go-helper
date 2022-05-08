@@ -2,6 +2,19 @@
 
 Simple helper functions for GO program.
 
+### Features
+
+File|Description
+---|---
+common.go|Debug flag
+crypto.go|Crypto function
+debug.go|Debug functions
+file.go|File/directory functions
+gitCmd.go|Git functions
+myCmd.go|exec.Command shell wrapper
+report.go|report/log functions auto detect and apply json marshal indent
+string.go|string/array functions
+
 ### Usage
 
 ```go
@@ -11,6 +24,18 @@ func main() {
 	helper.Debug = true
 	helper.DebugLog("debug msg")
 }
+```
+
+### Test
+
+```sh
+go test -v file_test.go file.go
+```
+```sh
+go test -v gitCmd_test.go common.go report.go string.go file.go gitCmd.go myCmd.go
+```
+```sh
+go test -v report_test.go common.go report.go string.go
 ```
 
 ### Repository
@@ -46,6 +71,10 @@ func main() {
 - v0.9.8
   - Fix ReportT.SpringP() logical bug
   - Add report_test.go
+- v0.9.9
+  - Add workpath support for gitCmd and myCmd
+  - Add GitRoot(), GitRootSubmodule(), GitExecExist(), GitExecPath()
+  - Add test
 
 ### License
 
