@@ -32,6 +32,7 @@ import (
 type MyCmd struct {
 	ArgsP  *[]string    `json:"ArgsP"`  // Command args
 	Name   string       `json:"Name"`   // Command name
+	Dir    string       `json:"Dir"`    // Command working dir
 	CmdLn  string       `json:"CmdLn"`  // Out: Command Line
 	Err    error        `json:"Err"`    // Out: run error
 	Stdout bytes.Buffer `json:"Stdout"` // Out: Stdout
@@ -70,6 +71,9 @@ func (self *MyCmd) Run() error {
 	execCmd.Stderr = &self.Stderr
 	self.CmdLn = execCmd.String()
 	self.Err = execCmd.Run()
+	if self.Dir != "" {
+		execCmd.Dir = self.Dir
+	}
 	ReportDebug(&self, "myCmdP:", false, false)
 	return self.Err
 }
