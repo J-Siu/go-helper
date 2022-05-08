@@ -30,36 +30,44 @@ import (
 
 // go exec.Cmd wrapper
 type MyCmd struct {
-	ArgsP  *[]string    `json:"ArgsP"`  // Command args
-	Name   string       `json:"Name"`   // Command name
-	Dir    string       `json:"Dir"`    // Command working dir
-	CmdLn  string       `json:"CmdLn"`  // Out: Command Line
-	Err    error        `json:"Err"`    // Out: run error
-	Stdout bytes.Buffer `json:"Stdout"` // Out: Stdout
-	Stderr bytes.Buffer `json:"Stderr"` // Out: Stderr
+	ArgsP   *[]string    `json:"ArgsP"`  // Command args
+	Name    string       `json:"Name"`   // Command name
+	WorkDir string       `json:"Dir"`    // Command working dir
+	CmdLn   string       `json:"CmdLn"`  // Out: Command Line
+	Err     error        `json:"Err"`    // Out: run error
+	Stdout  bytes.Buffer `json:"Stdout"` // Out: Stdout
+	Stderr  bytes.Buffer `json:"Stderr"` // Out: Stderr
 }
 
-// MyCmd run func wrapper
-func MyCmdRun(name string, argsP *[]string) *MyCmd {
-	var self MyCmd
-	self.ArgsP = argsP
-	self.Name = name
-	self.Run()
-	return &self
+// MyCmd run func wrapper with working directory support.
+// If `workpath` is empty, current directory is used.
+func MyCmdRun(name string, argsP *[]string, workpathP *string) *MyCmd {
+	return MyCmdRunWg(name, argsP, workpathP, nil, nil, false)
 }
 
-// MyCmd run func wrapper with sync.WaitGroup support
-func MyCmdRunWg(name string, argsP *[]string, title *string, wgP *sync.WaitGroup, output bool) *MyCmd {
+// MyCmd run func wrapper with sync.WaitGroup and working directory support
+// If `workpath` is empty, current directory is used.
+func MyCmdRunWg(name string, argsP *[]string, workpathP *string, title *string, wgP *sync.WaitGroup, output bool) *MyCmd {
 	if wgP != nil {
 		defer wgP.Done()
 	}
-	var self MyCmd
-	self.ArgsP = argsP
-	self.Name = name
+	var self MyCmd = *MyCmdInit(name, argsP, workpathP)
 	self.Run()
 	if output {
 		Report(self.Stdout.String(), *title+":Stdout", true, false)
 		Report(self.Stderr.String(), *title+":Stderr", true, false)
+	}
+	return &self
+}
+
+// Setup a MyCmd and return pointer to it
+// If `workpath` is empty, current directory is used.
+func MyCmdInit(name string, argsP *[]string, workpathP *string) *MyCmd {
+	var self MyCmd
+	self.ArgsP = argsP
+	self.Name = name
+	if workpathP != nil {
+		self.WorkDir = *workpathP
 	}
 	return &self
 }
@@ -69,11 +77,9 @@ func (self *MyCmd) Run() error {
 	execCmd := exec.Command(self.Name, *self.ArgsP...)
 	execCmd.Stdout = &self.Stdout
 	execCmd.Stderr = &self.Stderr
+	execCmd.Dir = self.WorkDir
 	self.CmdLn = execCmd.String()
 	self.Err = execCmd.Run()
-	if self.Dir != "" {
-		execCmd.Dir = self.Dir
-	}
-	ReportDebug(&self, "myCmdP:", false, false)
+	ReportDebug(&self, "myCmd:", false, false)
 	return self.Err
 }
