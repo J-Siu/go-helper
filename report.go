@@ -89,12 +89,18 @@ func (self *ReportT) StringP() *string {
 			byteA = []byte(*v)
 			output = *JsonIndentSp(&byteA, true)
 		}
-	case *[]string:
-		saP := StrArrayPtrRemoveEmpty(v)
-		if len(*saP) > 0 {
-			for _, s := range *saP {
+	case []string:
+		if len(v) > 0 {
+			for _, s := range v {
 				byteA = []byte(s)
-				output = *JsonIndentSp(&byteA, true)
+				output += *JsonIndentSp(&byteA, true)
+			}
+		}
+	case *[]string:
+		if len(*v) > 0 {
+			for _, s := range *v {
+				byteA = []byte(s)
+				output += *JsonIndentSp(&byteA, true)
 			}
 		}
 	case []byte:
