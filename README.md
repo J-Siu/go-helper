@@ -75,6 +75,25 @@ go test -v report_test.go common.go report.go string.go
   - Add workpath support for gitCmd and myCmd
   - Add GitRoot(), GitRootSubmodule(), GitExecExist(), GitExecPath()
   - Add test
+- v1.0.0
+  - file.go
+    - Add FullPath()
+    - All func return *string
+  - gitCmd.go
+    - GitPush() correct optionP param type
+  - myCmd.go
+    - MyCmd.Run() improve debug output
+    - MyCmdInit() use fullpath for WorkDir
+  - report.go
+    - ReportT.StringP()
+      - Add *[]string case
+      - case []string, *[]string
+        - fix bug only print last line
+        - no longer remove empty line
+  - string.go
+    - StrArrayPtrRemoveEmpty() return new array
+    - StrPToArrayP no longer remove empty line
+    - func name StrPToArrayP -> StrPtrToArrayPtr
 
 ### License
 
