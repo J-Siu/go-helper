@@ -47,10 +47,10 @@ func GitInit(workpathP *string) *MyCmd {
 }
 
 // execute "git push" using MyCmd
-func GitPush(workpathP *string, optionsP []string) *MyCmd {
+func GitPush(workpathP *string, optionsP *[]string) *MyCmd {
 	args := []string{"push"}
 	if optionsP != nil {
-		args = append(args, optionsP...)
+		args = append(args, *optionsP...)
 	}
 	return MyCmdRun("git", &args, workpathP)
 }
@@ -64,7 +64,7 @@ func GitRemote(workpathP *string, v bool) *[]string {
 		args = []string{"remote"}
 	}
 	output := MyCmdRun("git", &args, workpathP).Stdout.String()
-	return StrPToArrayP(&output)
+	return StrPtrToArrayPtr(&output)
 }
 
 // execute "git remote add" using MyCmd
