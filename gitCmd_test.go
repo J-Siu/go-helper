@@ -2,17 +2,28 @@ package helper
 
 import (
 	"fmt"
+	"path"
 	"testing"
 )
 
 func TestGitRoot_hasSubmodule(t *testing.T) {
-	Debug = true
+	// Debug = true
+
+	// Pull submodules
+	var args []string
+	//   git submodule add https://github.com/J-Siu/submodule_test_1
+	args = []string{"submodule", "add", "https://github.com/J-Siu/submodule_test_1"}
+	MyCmdRun("git", &args, nil)
+	//   git submodule update --recursive --init
+	args = []string{"submodule", "update", "--recursive", "--init"}
+	MyCmdRun("git", &args, nil)
 
 	// testDir should be set to a git submodule directory.
-	var testDir string = "/Users/js/code/go/src/github.com/J-Siu/t2/t3/t4"
-	var msg string = GitRoot(&testDir)
+	var testDir string = "submodule_test_1/submodule_test_2/submodule_test_3/submodule_test_4/submodule_test_5"
+	var wanted string = "go-helper"
+	var msg string = path.Base(GitRoot(&testDir))
 	fmt.Println("Git root of " + testDir + " is `" + msg + "`")
-	if msg == "" {
+	if msg != wanted {
 		t.Fatalf(`GitRoot(rtSp(%s) = ""`, testDir)
 	}
 }
