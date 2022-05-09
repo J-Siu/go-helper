@@ -106,7 +106,7 @@ func StrArrayPtrPrintln(saP *[]string) {
 }
 
 // *string -> *[]string
-func StrPToArrayP(sP *string) *[]string {
-	r := strings.Split(*sP, "\n")
+func StrPtrToArrayPtr(sP *string) *[]string {
+	var r []string = strings.Split(*sP, "\n")
 	return &r
 }
