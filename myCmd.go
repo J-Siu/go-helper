@@ -66,9 +66,7 @@ func MyCmdInit(name string, argsP *[]string, workpathP *string) *MyCmd {
 	var self MyCmd
 	self.ArgsP = argsP
 	self.Name = name
-	if workpathP != nil {
-		self.WorkDir = *workpathP
-	}
+	self.WorkDir = *FullPath(workpathP)
 	return &self
 }
 
@@ -81,5 +79,7 @@ func (self *MyCmd) Run() error {
 	self.CmdLn = execCmd.String()
 	self.Err = execCmd.Run()
 	ReportDebug(&self, "myCmd:", false, false)
+	ReportDebug(self.Stderr.String(), "myCmd:Stderr", false, false)
+	ReportDebug(self.Stdout.String(), "myCmd:Stdout", false, false)
 	return self.Err
 }
