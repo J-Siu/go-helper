@@ -38,6 +38,11 @@ go test -v gitCmd_test.go common.go report.go string.go file.go gitCmd.go myCmd.
 go test -v report_test.go common.go report.go string.go
 ```
 
+### Used By Project
+
+- [go-gitapi](https://github.com/J-Siu/go-gitapi)
+- [go-mygit](https://github.com/J-Siu/go-mygit)
+
 ### Repository
 
 - [go-helper](https://github.com/J-Siu/go-helper)
