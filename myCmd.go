@@ -24,6 +24,7 @@ package helper
 
 import (
 	"bytes"
+	"errors"
 	"os/exec"
 	"sync"
 )
@@ -82,4 +83,14 @@ func (self *MyCmd) Run() error {
 	ReportDebug(self.Stderr.String(), "myCmd:Stderr", false, false)
 	ReportDebug(self.Stdout.String(), "myCmd:Stdout", false, false)
 	return self.Err
+}
+
+// Return exit code
+func (self *MyCmd) ExitCode() int {
+	var exitErr *exec.ExitError
+	if errors.As(self.Err, &exitErr) {
+		return exitErr.ExitCode()
+	}
+	// No error
+	return 0
 }
