@@ -44,7 +44,7 @@ func BoolStatus(b bool) string {
 	return "fail"
 }
 
-// bool -> "Yes/No"
+// bool to "Yes/No"
 func BoolYesNo(b bool) string {
 	if b {
 		return "yes"
@@ -52,8 +52,10 @@ func BoolYesNo(b bool) string {
 	return "no"
 }
 
-// Json indent *[]byte -> *string
-func JsonIndentSp(baP *[]byte, endl bool) *string {
+// Json indent *[]byte to *string.
+// If <endLn> is true, add new line at end of string if not exist.
+// Return string pointer.
+func JsonIndentSp(baP *[]byte, endLn bool) *string {
 	var output string
 	if len(*baP) > 0 {
 		var dst bytes.Buffer
@@ -64,13 +66,13 @@ func JsonIndentSp(baP *[]byte, endl bool) *string {
 			output = string(*baP)
 		}
 	}
-	if len(output) > 0 && output[len(output)-1] != '\n' && endl {
+	if len(output) > 0 && output[len(output)-1] != '\n' && endLn {
 		output += "\n"
 	}
 	return &output
 }
 
-// Check if string array contain a string
+// Check if string array contain a string.
 func StrArrayPtrContain(aP *[]string, sP *string) bool {
 	for _, s := range *aP {
 		if s == *sP {
@@ -80,7 +82,8 @@ func StrArrayPtrContain(aP *[]string, sP *string) bool {
 	return false
 }
 
-// Remove empty lines from *[]string
+// Return a new *[]string with empty lines removed from *[]string.
+// Original []string not modified.
 func StrArrayPtrRemoveEmpty(saP *[]string) *[]string {
 	// // This is faster but modify original array *saP
 	// for i := len(*saP) - 1; i >= 0; i-- {
@@ -105,8 +108,17 @@ func StrArrayPtrPrintln(saP *[]string) {
 	}
 }
 
-// *string -> *[]string
+// *string output
+func StrArrayPtrPrintlnSp(saP *[]string) *string {
+	var output string
+	for _, s := range *saP {
+		output += s + "\n"
+	}
+	return &output
+}
+
+// Split *string to *[]string by new line("\n")
 func StrPtrToArrayPtr(sP *string) *[]string {
-	var r []string = strings.Split(*sP, "\n")
-	return &r
+	var output []string = strings.Split(*sP, "\n")
+	return &output
 }
