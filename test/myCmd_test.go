@@ -3,15 +3,17 @@ package helper
 import (
 	"fmt"
 	"testing"
+
+	"github.com/J-Siu/go-helper"
 )
 
 // Exit code should be 0
 func Test_ExitCode_0(t *testing.T) {
-	Debug = true
+	helper.Debug = true
 	var wanted int = 0
 	var cmd string = "cd"
 	var args []string = []string{"."}
-	var myCmd *MyCmd = MyCmdRun(cmd, &args, nil)
+	var myCmd *helper.MyCmd = helper.MyCmdRun(cmd, &args, nil)
 	var msg int = myCmd.ExitCode()
 	fmt.Printf("myCmd.ExitCode() = %d\n", msg)
 	if msg != wanted {
@@ -21,11 +23,11 @@ func Test_ExitCode_0(t *testing.T) {
 
 // Exit code should be 1
 func Test_ExitCode_1(t *testing.T) {
-	Debug = true
+	helper.Debug = true
 	var wanted int = 1
 	var cmd string = "cd"
 	var args []string = []string{"__This_Path_Does_Not_Exist__"}
-	var myCmd *MyCmd = MyCmdRun(cmd, &args, nil)
+	var myCmd *helper.MyCmd = helper.MyCmdRun(cmd, &args, nil)
 	var msg int = myCmd.ExitCode()
 	fmt.Printf("myCmd.ExitCode() = %d\n", msg)
 	if msg != wanted {
