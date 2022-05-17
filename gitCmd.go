@@ -34,6 +34,17 @@ func Git(workpathP *string, optionsP *[]string) *MyCmd {
 	return MyCmdRun("git", optionsP, workpathP)
 }
 
+// Run "git clone <optionsP>".
+// If <workpathP> is empty/nil, current directory is used.
+// Return a MyCmd pointer for execution information.
+func GitClone(workpathP *string, optionsP *[]string) *MyCmd {
+	args := []string{"clone"}
+	if optionsP != nil {
+		args = append(args, *optionsP...)
+	}
+	return Git(workpathP, &args)
+}
+
 // Check git executable exist.
 func GitExecExist() bool {
 	return GitExecPath() != ""
