@@ -27,6 +27,13 @@ import (
 	"strings"
 )
 
+// Run "git <optionsP>".
+// If <workpathP> is empty/nil, current directory is used.
+// Return a MyCmd pointer for execution information.
+func Git(workpathP *string, optionsP *[]string) *MyCmd {
+	return MyCmdRun("git", optionsP, workpathP)
+}
+
 // Check git executable exist.
 func GitExecExist() bool {
 	return GitExecPath() != ""
@@ -46,10 +53,28 @@ func GitExecPath() string {
 // If <workpathP> is empty/nil, current directory is used.
 // Return a MyCmd pointer for execution information.
 func GitInit(workpathP *string) *MyCmd {
-	return MyCmdRun("git", &[]string{"init"}, workpathP)
+	return Git(workpathP, &[]string{"init"})
 }
 
-// Run "git push".
+// Run "git branch --show-current".
+// If <workpathP> is empty/nil, current directory is used.
+// Return a MyCmd pointer for execution information.
+func GitBranchCurrent(workpathP *string) *MyCmd {
+	return Git(workpathP, &[]string{"branch", "--show-current"})
+}
+
+// Run "git pull <optionsP>".
+// If <workpathP> is empty/nil, current directory is used.
+// Return a MyCmd pointer for execution information.
+func GitPull(workpathP *string, optionsP *[]string) *MyCmd {
+	args := []string{"pull"}
+	if optionsP != nil {
+		args = append(args, *optionsP...)
+	}
+	return Git(workpathP, &args)
+}
+
+// Run "git push <optionsP>".
 // If <workpathP> is empty/nil, current directory is used.
 // Return a MyCmd pointer for execution information.
 func GitPush(workpathP *string, optionsP *[]string) *MyCmd {
@@ -57,7 +82,8 @@ func GitPush(workpathP *string, optionsP *[]string) *MyCmd {
 	if optionsP != nil {
 		args = append(args, *optionsP...)
 	}
-	return MyCmdRun("git", &args, workpathP)
+	return Git(workpathP, &args)
+
 }
 
 // Run "git remote".
@@ -78,7 +104,7 @@ func GitRemote(workpathP *string, v bool) *[]string {
 // If <workpathP> is empty/nil, current directory is used.
 // Return a MyCmd pointer for execution information.
 func GitRemoteAdd(workpathP *string, name string, git string) *MyCmd {
-	return MyCmdRun("git", &[]string{"remote", "add", name, git}, workpathP)
+	return Git(workpathP, &[]string{"remote", "add", name, git})
 }
 
 // Check if a git remote(by name) exist in workpath.
@@ -92,7 +118,7 @@ func GitRemoteExist(workpathP *string, name string) bool {
 // If <workpathP> is empty/nil, current directory is used.
 // Return a MyCmd pointer for execution information.
 func GitRemoteRemove(workpathP *string, name string) *MyCmd {
-	return MyCmdRun("git", &[]string{"remote", "remove", name}, workpathP)
+	return Git(workpathP, &[]string{"remote", "remove", name})
 }
 
 // Run "git remote remove" all git remotes
