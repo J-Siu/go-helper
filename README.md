@@ -25,6 +25,7 @@ Collections of Golang helper functions.
 - [License](#license)
 
 <!-- /TOC -->
+<!--more-->
 ### Features
 
 File|Description
