@@ -39,7 +39,7 @@ type ReportT struct {
 // If <skipEmpty> is true, will not print title if <data> is empty.
 // If <singleLine> is true, <data> will not start on new line.
 func Report(data any, title string, skipEmpty bool, singleLine bool) {
-	fmt.Print(*ReportSp(data, title, skipEmpty, singleLine))
+	fmt.Print(*ReportNew(data, title, skipEmpty, singleLine).StringP())
 }
 
 // Only print if helper.Debug is true.
@@ -47,7 +47,9 @@ func Report(data any, title string, skipEmpty bool, singleLine bool) {
 // If <skipEmpty> is true, will not print title if <data> is empty.
 // If <singleLine> is true, <data> will not start on new line.
 func ReportDebug(data any, title string, skipEmpty bool, singleLine bool) {
-	fmt.Print(*ReportSpDebug(data, title, skipEmpty, singleLine))
+	if Debug {
+		fmt.Print(*ReportNew(data, title, skipEmpty, singleLine).StringP())
+	}
 }
 
 // Print any data(optional) with title(optional) into a string.
@@ -64,7 +66,12 @@ func ReportSp(data any, title string, skipEmpty bool, singleLine bool) *string {
 // If <singleLine> is true, <data> will not start on new line.
 // Return a string pointer.
 func ReportSpDebug(data any, title string, skipEmpty bool, singleLine bool) *string {
-	return ReportNew(data, title, skipEmpty, singleLine).StringPDebug()
+	if Debug {
+		return ReportNew(data, title, skipEmpty, singleLine).StringP()
+	} else {
+		var s string = ""
+		return &s
+	}
 }
 
 // Print bool into true/false, with title(optional).
@@ -201,6 +208,6 @@ func (self *ReportT) StringPDebug() *string {
 	if Debug {
 		return self.StringP()
 	}
-	s := ""
+	var s string = ""
 	return &s
 }
