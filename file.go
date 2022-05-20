@@ -20,20 +20,46 @@ func CurrentDirBase() *string {
 }
 
 // Return full path of path provided.
-// If <workpathP> is empty/nil, use current path.
-// <workpathP> not modified.
+// If <workPathP> is empty/nil, use current path.
+// <workPathP> not modified.
 // Return string pointer.
-func FullPath(workpathP *string) *string {
+func FullPath(workPathP *string) *string {
 	var p string
-	if workpathP == nil || *workpathP == "" {
+	if workPathP == nil || *workPathP == "" {
 		// Empty return current path
 		p = *CurrentPath()
-	} else if (*workpathP)[0] == '/' {
+	} else if (*workPathP)[0] == '/' {
 		// Path start with / already full path, return it
-		p = *workpathP
+		p = *workPathP
 	} else {
 		// Add to current path
-		p = path.Join(*CurrentPath(), *workpathP)
+		p = path.Join(*CurrentPath(), *workPathP)
 	}
 	return &p
+}
+
+func IsRegularFile(workPath string) bool {
+	fileInfo, err := os.Stat(workPath)
+	if err != nil {
+		if Debug {
+			Errs = append(Errs, err)
+		}
+		return false
+	}
+	return fileInfo.Mode().IsRegular()
+}
+
+func IsDir(workPath string) bool {
+	fileInfo, err := os.Stat(workPath)
+	if err != nil {
+		if Debug {
+			Errs = append(Errs, err)
+		}
+		return false
+	}
+	return fileInfo.IsDir()
+}
+
+func SameDir(path1, path2 string) bool {
+	return path.Dir(path1) == path.Dir(path2)
 }
