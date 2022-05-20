@@ -122,3 +122,36 @@ func StrPtrToArrayPtr(sP *string) *[]string {
 	var output []string = strings.Split(*sP, "\n")
 	return &output
 }
+
+// Json indent *string to *string.
+// If <endLn> is true, add new line at end of string if not exist.
+// Return string pointer.
+func StrPtrToJsonIndentSp(strP *string, endLn bool) *string {
+	var byteA = []byte(*strP)
+	return JsonIndentSp(&byteA, endLn)
+}
+
+// Json indent *string to *string.
+// If <endLn> is true, add new line at end of string if not exist.
+// Return string pointer.
+func StrToJsonIndentSp(str string, endLn bool) *string {
+	var byteA = []byte(str)
+	return JsonIndentSp(&byteA, endLn)
+}
+
+// Json indent any to *string.
+// If <endLn> is true, add new line at end of string if not exist.
+// Return string pointer.
+func AnyToJsonIndentSp(data any, endLn bool) *string {
+	var str string
+	j, e := json.MarshalIndent(data, "", "  ")
+	if e != nil {
+		Errs = append(Errs, e)
+	} else if len(j) > 0 {
+		str = string(j)
+		if str[len(str)-1] != '\n' {
+			str += "\n"
+		}
+	}
+	return &str
+}
