@@ -22,5 +22,15 @@ THE SOFTWARE.
 
 package helper
 
-// Debug flag for helper package.
+// Debug flag
+// General debug flag to enable/disable ReportDebug*
 var Debug bool = false
+
+// Enable/Disable debug printout in report.go
+var DebugReport bool = false
+
+// error list
+var Errs ErrsT
+
+// warning list
+var Warns Warnings
