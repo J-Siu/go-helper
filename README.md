@@ -10,11 +10,13 @@ Collections of Golang helper functions.
   - [common.go](#commongo)
   - [crypto.go](#cryptogo)
   - [debug.go](#debuggo)
+  - [err.go](#errgo)
   - [file.go](#filego)
   - [gitCmd.go](#gitcmdgo)
   - [myCmd.go](#mycmdgo)
   - [report.go](#reportgo)
   - [string.go](#stringgo)
+  - [warning.go](#warninggo)
 - [Doc](#doc)
 - [Usage](#usage)
 - [Test](#test)
@@ -33,31 +35,46 @@ File|Description
 common.go|Debug flag
 crypto.go|Crypto function
 debug.go|Debug functions
+err.go|Basic error type
 file.go|File/directory functions
 gitCmd.go|Git functions
 myCmd.go|exec.Command shell wrapper
 report.go|report/log functions auto detect and apply json marshal indent
 string.go|string/array functions
+warning.go|warning type
 
 #### common.go
 - var Debug bool = false
+- var DebugReport bool = false
+- var Errs ErrsT
+- var Warns Warnings
 #### crypto.go
 - func BoxSealAnonymous(base64Pubkey, msg *string) *string
 #### debug.go
 - func DebugEnv() bool
 - func DebugLog(msg ...interface{})
 - func ErrCheck(e error)
+#### err.go
+- type Err string
+- type ErrsT []error
+- func (self Err) Error() string
+- func (self *Err) String() string
+- func (self *Err) StringP() *string
+- func (self *ErrsT) NotEmpty() bool
 #### file.go
 - func CurrentPath() *string
 - func CurrentDirBase() *string
-- func FullPath(workpathP *string) *string
+- func FullPath(workPathP *string) *string
+- func IsRegularFile(workPath string) bool
+- func IsDir(workPath string) bool
+- func SameDir(path1, path2 string) bool
 #### gitCmd.go
 - func Git(workpathP *string, optionsP *[]string) *MyCmd
-- func GitBranchCurrent(workpathP *string) *MyCmd
 - func GitClone(workpathP *string, optionsP *[]string) *MyCmd
 - func GitExecExist() bool
 - func GitExecPath() string
 - func GitInit(workpathP *string) *MyCmd
+- func GitBranchCurrent(workpathP *string) *MyCmd
 - func GitPull(workpathP *string, optionsP *[]string) *MyCmd
 - func GitPush(workpathP *string, optionsP *[]string) *MyCmd
 - func GitRemote(workpathP *string, v bool) *[]string
@@ -97,7 +114,16 @@ string.go|string/array functions
 - func StrArrayPtrPrintln(saP *[]string)
 - func StrArrayPtrPrintlnSp(saP *[]string) *string
 - func StrPtrToArrayPtr(sP *string) *[]string
-
+- func StrPtrToJsonIndentSp(strP *string, endLn bool) *string
+- func StrToJsonIndentSp(str string, endLn bool) *string
+- func AnyToJsonIndentSp(data any, endLn bool) *string
+#### warning.go
+- type Warning string
+- type Warnings []Warning
+- func (self Warning) Error() string
+- func (self *Warning) String() string
+- func (self *Warning) StringP() *string
+- func (self *Warnings) NotEmpty() bool
 ### Doc
 
 - https://pkg.go.dev/github.com/J-Siu/go-helper
@@ -190,7 +216,13 @@ go test report_test.go
   - Improve comment for godoc
 - v1.1.1
   - Add Git(), GitBranchCurrent(), GitClone(), GitPull()
-
+- v1.1.2
+  - Add IsRegularFile(), IsDir(), SameDir()
+  - Add StrPtrToJsonIndentSp(), StrToJsonIndentSp(), AnyToJsonIndentSp()
+  - Add basic error type
+  - Add warning type
+  - If !Debug, short circuit ReportDebug() ReportSpDebug()
+  - Report() support error type
 ### License
 
 The MIT License
