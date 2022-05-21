@@ -3,6 +3,7 @@ package helper
 import (
 	"os"
 	"path"
+	"strings"
 )
 
 // Get full path of current directory.
@@ -38,10 +39,12 @@ func FullPath(workPathP *string) *string {
 	return &p
 }
 
+// Check workPath is regular file
 func IsRegularFile(workPath string) bool {
 	fileInfo, err := os.Stat(workPath)
 	if err != nil {
 		if Debug {
+			ReportDebug(fileInfo, "IsRegularFile:fileInfo", false, false)
 			Errs = append(Errs, err)
 		}
 		return false
@@ -49,6 +52,7 @@ func IsRegularFile(workPath string) bool {
 	return fileInfo.Mode().IsRegular()
 }
 
+// Check workPath is directory
 func IsDir(workPath string) bool {
 	fileInfo, err := os.Stat(workPath)
 	if err != nil {
@@ -60,6 +64,12 @@ func IsDir(workPath string) bool {
 	return fileInfo.IsDir()
 }
 
+// Check two paths have same parent directory
 func SameDir(path1, path2 string) bool {
 	return path.Dir(path1) == path.Dir(path2)
+}
+
+// Check file has supplied extension
+func FileHasExt(name, ext string) bool {
+	return strings.ToLower(path.Ext(name)) == strings.ToLower(ext)
 }
