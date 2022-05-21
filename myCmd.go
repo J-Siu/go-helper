@@ -42,19 +42,19 @@ type MyCmd struct {
 }
 
 // MyCmd run func wrapper.
-// If <workpathP> is empty/nil, current directory is used.
-func MyCmdRun(cmdName string, argsP *[]string, workpathP *string) *MyCmd {
-	return MyCmdRunWg(cmdName, argsP, workpathP, nil, nil, false)
+// If <workPathP> is empty/nil, current directory is used.
+func MyCmdRun(cmdName string, argsP *[]string, workPathP *string) *MyCmd {
+	return MyCmdRunWg(cmdName, argsP, workPathP, nil, nil, false)
 }
 
 // MyCmd run func wrapper with sync.WaitGroup support.
-// If <workpathP> is empty/nil, current directory is used.
+// If <workPathP> is empty/nil, current directory is used.
 // Print if <output> is true
-func MyCmdRunWg(cmdName string, argsP *[]string, workpathP *string, title *string, wgP *sync.WaitGroup, output bool) *MyCmd {
+func MyCmdRunWg(cmdName string, argsP *[]string, workPathP *string, title *string, wgP *sync.WaitGroup, output bool) *MyCmd {
 	if wgP != nil {
 		defer wgP.Done()
 	}
-	var self *MyCmd = MyCmdInit(cmdName, argsP, workpathP)
+	var self *MyCmd = MyCmdInit(cmdName, argsP, workPathP)
 	self.Run()
 	if output {
 		Report(self.Stdout.String(), *title+":Stdout", true, false)
@@ -64,13 +64,19 @@ func MyCmdRunWg(cmdName string, argsP *[]string, workpathP *string, title *strin
 }
 
 // Setup and return MyCmd pointer.
-// If <workpathP> is empty/nil, current directory is used.
-func MyCmdInit(name string, argsP *[]string, workpathP *string) *MyCmd {
+// If <workPathP> is empty/nil, current directory is used.
+func MyCmdInit(name string, argsP *[]string, workPathP *string) *MyCmd {
 	var self MyCmd
+	return self.Init(name, argsP, workPathP)
+}
+
+// Setup and return MyCmd pointer.
+// If <workPathP> is empty/nil, current directory is used.
+func (self *MyCmd) Init(name string, argsP *[]string, workPathP *string) *MyCmd {
 	self.ArgsP = argsP
 	self.CmdName = name
-	self.WorkDir = *FullPath(workpathP)
-	return &self
+	self.WorkDir = *FullPath(workPathP)
+	return self
 }
 
 // A exec.Cmd.Run() wrapper.
