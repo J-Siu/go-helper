@@ -39,6 +39,13 @@ func FullPath(workPathP *string) *string {
 	return &p
 }
 
+// Return full path of path provided.
+// If <workPath> is empty, use current path.
+// Return string pointer.
+func FullPathStr(workPath string) *string {
+	return FullPath(&workPath)
+}
+
 // Check workPath is regular file
 func IsRegularFile(workPath string) bool {
 	fileInfo, err := os.Stat(workPath)
@@ -72,4 +79,43 @@ func SameDir(path1, path2 string) bool {
 // Check file has supplied extension
 func FileHasExt(name, ext string) bool {
 	return strings.ToLower(path.Ext(name)) == strings.ToLower(ext)
+}
+
+// Return filename/path with extension removed
+func FileRemoveExt(filename string) string {
+	return strings.TrimSuffix(filename, path.Ext(filename))
+}
+
+// Search for file in a directory
+//  - filename path info removed automatically, only base is used
+//  - case insensitive search
+//  - return actually filename if found
+//  - return empty if not found or error
+//  - error is added to Errs
+func FileInDir(dir, filename string) string {
+	var fileBase string = strings.ToLower(path.Base(filename))
+	dirEntry, err := os.ReadDir(dir)
+	if err != nil {
+		Errs = append(Errs, err)
+		return ""
+	}
+	for _, f := range dirEntry {
+		if fileBase == strings.ToLower(f.Name()) {
+			// case insensitive matched, return real name
+			return f.Name()
+		}
+	}
+	return ""
+}
+
+// Apply following to filename:
+//	- remove extension
+//	- to lowercase
+//	- remove -,_
+func FileSimplifyName(filename string) string {
+	filename = FileRemoveExt(filename)
+	filename = strings.ToLower(filename)
+	filename = strings.ReplaceAll(filename, "-", "")
+	filename = strings.ReplaceAll(filename, "_", "")
+	return filename
 }
