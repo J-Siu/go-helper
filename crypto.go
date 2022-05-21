@@ -35,12 +35,16 @@ import (
 //  - All errors append to Errs
 func BoxSealAnonymous(base64PublicKey, msg *string) *string {
 	var err error
-	// Decode incoming base64 public key. Decoded key must be 32 bytes.
 	var decodedKeyByte []byte
-	var length int
-	length, err = base64.StdEncoding.Decode(decodedKeyByte, []byte(*base64PublicKey))
-	if err == nil && length != 32 {
+	// Check incoming base64 public key decode length. Must be 32 bytes.
+	var length int = base64.StdEncoding.DecodedLen(len(*base64PublicKey))
+	if length != 32 {
 		err = Err("Decoded key length is " + strconv.Itoa(length) + ". Must be 32.")
+	}
+	// Decode incoming base64 public key
+	if err == nil {
+		decodedKeyByte = make([]byte, 32)
+		_, err = base64.StdEncoding.Decode(decodedKeyByte, []byte(*base64PublicKey))
 	}
 	// Encrypt incoming message with public key
 	var encryptedMsgByte []byte
