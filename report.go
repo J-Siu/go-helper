@@ -26,6 +26,7 @@ import (
 	"fmt"
 )
 
+// ReportT is the base structure for the Report.StringP() function, which support printing a wide range of data types.
 type ReportT struct {
 	Data       any    `json:"Data"`       // Data to be printed
 	Title      string `json:"Title"`      // Title of print out
