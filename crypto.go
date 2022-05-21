@@ -24,19 +24,40 @@ package helper
 
 import (
 	"encoding/base64"
+	"strconv"
 
 	"golang.org/x/crypto/nacl/box"
 )
 
 // Encrypt msg with public key using nacl box seal anonymous.
-//
-// Parameter "base64Pubkey" and returning string are base64 encoded.
-func BoxSealAnonymous(base64Pubkey, msg *string) *string {
-	keyByte := make([]byte, base64.StdEncoding.DecodedLen(len(*base64Pubkey)))
-	base64.StdEncoding.Decode(keyByte, []byte(*base64Pubkey))
-	keyByteP := new([32]byte)
-	copy((*keyByteP)[:], keyByte)
-	outByte, _ := box.SealAnonymous(nil, []byte(*msg), keyByteP, nil)
-	outStr := base64.StdEncoding.EncodeToString(outByte)
-	return &outStr
+//  - Parameter "base64PublicKey" and returning string are base64 encoded.
+//  - Return nil if error
+//  - All errors append to Errs
+func BoxSealAnonymous(base64PublicKey, msg *string) *string {
+	var err error
+	// Decode incoming base64 public key. Decoded key must be 32 bytes.
+	var decodedKeyByte []byte
+	var length int
+	length, err = base64.StdEncoding.Decode(decodedKeyByte, []byte(*base64PublicKey))
+	if err == nil && length != 32 {
+		err = Err("Decoded key length is " + strconv.Itoa(length) + ". Must be 32.")
+	}
+	// Encrypt incoming message with public key
+	var encryptedMsgByte []byte
+	if err == nil {
+		var publicKeyByte [32]byte
+		copy(publicKeyByte[:], decodedKeyByte)
+		encryptedMsgByte, err = box.SealAnonymous(nil, []byte(*msg), &publicKeyByte, nil)
+	}
+	// Encode the encrypted message to base64
+	var base64EncryptedMsg string
+	if err == nil {
+		base64EncryptedMsg = base64.StdEncoding.EncodeToString(encryptedMsgByte)
+	}
+	// Add error to Errs
+	if err != nil {
+		Errs = append(Errs, err)
+	}
+
+	return &base64EncryptedMsg
 }
