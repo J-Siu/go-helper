@@ -130,10 +130,7 @@ func GitRemoteExist(workPathP *string, name string) bool {
 //  - If remote exist Return a MyCmd pointer for execution information.
 //  - If remote does not exit, return nil.(Nothing to remove)
 func GitRemoteRemove(workPathP *string, name string) *MyCmd {
-	if GitRemoteExist(workPathP, name) {
-		return Git(workPathP, &[]string{"remote", "remove", name})
-	}
-	return nil
+	return Git(workPathP, &[]string{"remote", "remove", name})
 }
 
 // Run "git remote remove" all git remotes
