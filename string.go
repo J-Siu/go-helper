@@ -54,8 +54,8 @@ func BoolYesNo(b bool) string {
 }
 
 // Json indent *[]byte to *string.
-// If <endLn> is true, add new line at end of string if not exist.
-// Return string pointer.
+//  - If <endLn> is true, add new line at end of string if not exist.
+//  - Return string pointer.
 func JsonIndentSp(baP *[]byte, endLn bool) *string {
 	var output string
 	if len(*baP) > 0 {
@@ -84,7 +84,7 @@ func StrArrayPtrContain(aP *[]string, sP *string) bool {
 }
 
 // Return a new *[]string with empty lines removed from *[]string.
-// Original []string not modified.
+//  - Original []string not modified.
 func StrArrayPtrRemoveEmpty(saP *[]string) *[]string {
 	// // This is faster but modify original array *saP
 	// for i := len(*saP) - 1; i >= 0; i-- {
@@ -125,24 +125,24 @@ func StrPtrToArrayPtr(sP *string) *[]string {
 }
 
 // Json indent *string to *string.
-// If <endLn> is true, add new line at end of string if not exist.
-// Return string pointer.
+//  - If <endLn> is true, add new line at end of string if not exist.
+//  - Return string pointer.
 func StrPtrToJsonIndentSp(strP *string, endLn bool) *string {
 	var byteA = []byte(*strP)
 	return JsonIndentSp(&byteA, endLn)
 }
 
 // Json indent *string to *string.
-// If <endLn> is true, add new line at end of string if not exist.
-// Return string pointer.
+//  - If <endLn> is true, add new line at end of string if not exist.
+//  - Return string pointer.
 func StrToJsonIndentSp(str string, endLn bool) *string {
 	var byteA = []byte(str)
 	return JsonIndentSp(&byteA, endLn)
 }
 
 // Json indent any to *string.
-// If <endLn> is true, add new line at end of string if not exist.
-// Return string pointer.
+//  - If <endLn> is true, add new line at end of string if not exist.
+//  - Return string pointer.
 func AnyToJsonIndentSp(data any, endLn bool) *string {
 	var str string
 	j, e := json.MarshalIndent(data, "", "  ")

@@ -31,21 +31,21 @@ type ReportT struct {
 	Data       any    `json:"Data"`       // Data to be printed
 	Title      string `json:"Title"`      // Title of print out
 	ModeStatus bool   `json:"ModeStatus"` // bool to "OK/Failed"
-	SkipEmpty  bool   `json:"SkipEmpty"`  // Return empty string if Data is empty
+	SkipEmpty  bool   `json:"SkipEmpty"`  //  - Return empty string if Data is empty
 	SingleLine bool   `json:"SingleLine"` // No need line after title
 }
 
 // Print any data(optional) with title(optional).
-// If <skipEmpty> is true, will not print title if <data> is empty.
-// If <singleLine> is true, <data> will not start on new line.
+//  - If <skipEmpty> is true, will not print title if <data> is empty.
+//  - If <singleLine> is true, <data> will not start on new line.
 func Report(data any, title string, skipEmpty bool, singleLine bool) {
 	fmt.Print(*ReportNew(data, title, skipEmpty, singleLine).StringP())
 }
 
 // Only print if helper.Debug is true.
-// Print any data(optional) with title(optional).
-// If <skipEmpty> is true, will not print title if <data> is empty.
-// If <singleLine> is true, <data> will not start on new line.
+//  - Print any data(optional) with title(optional).
+//  - If <skipEmpty> is true, will not print title if <data> is empty.
+//  - If <singleLine> is true, <data> will not start on new line.
 func ReportDebug(data any, title string, skipEmpty bool, singleLine bool) {
 	if Debug {
 		fmt.Print(*ReportNew(data, title, skipEmpty, singleLine).StringP())
@@ -53,18 +53,18 @@ func ReportDebug(data any, title string, skipEmpty bool, singleLine bool) {
 }
 
 // Print any data(optional) with title(optional) into a string.
-// If <skipEmpty> is true, will not print title if <data> is empty.
-// If <singleLine> is true, <data> will not start on new line.
-// Return a string pointer.
+//  - If <skipEmpty> is true, will not print title if <data> is empty.
+//  - If <singleLine> is true, <data> will not start on new line.
+//  - Return a string pointer.
 func ReportSp(data any, title string, skipEmpty bool, singleLine bool) *string {
 	return ReportNew(data, title, skipEmpty, singleLine).StringP()
 }
 
 // Only print if helper.Debug is true.
-// Print any data(optional) with title(optional) into a string.
-// If <skipEmpty> is true, will not print title if <data> is empty.
-// If <singleLine> is true, <data> will not start on new line.
-// Return a string pointer.
+//  - Print any data(optional) with title(optional) into a string.
+//  - If <skipEmpty> is true, will not print title if <data> is empty.
+//  - If <singleLine> is true, <data> will not start on new line.
+//  - Return a string pointer.
 func ReportSpDebug(data any, title string, skipEmpty bool, singleLine bool) *string {
 	if Debug {
 		return ReportNew(data, title, skipEmpty, singleLine).StringP()
@@ -75,8 +75,8 @@ func ReportSpDebug(data any, title string, skipEmpty bool, singleLine bool) *str
 }
 
 // Print bool into true/false, with title(optional).
-// If <skipEmpty> is true, will not print title if <data> is empty.
-// If <singleLine> is true, <data> will not start on new line.
+//  - If <skipEmpty> is true, will not print title if <data> is empty.
+//  - If <singleLine> is true, <data> will not start on new line.
 func ReportStatus(data bool, title string, singleLine bool) {
 	r := ReportNew(data, title, false, singleLine)
 	r.ModeStatus = true
@@ -84,10 +84,10 @@ func ReportStatus(data bool, title string, singleLine bool) {
 }
 
 // Only print if helper.Debug is true.
-// Print bool into true/false, with title(optional), into a string.
-// If <skipEmpty> is true, will not print title if <data> is empty.
-// If <singleLine> is true, <data> will not start on new line.
-// Return a string pointer.
+//  - Print bool into true/false, with title(optional), into a string.
+//  - If <skipEmpty> is true, will not print title if <data> is empty.
+//  - If <singleLine> is true, <data> will not start on new line.
+//  - Return a string pointer.
 func ReportStatusSp(data bool, title string, singleLine bool) *string {
 	r := ReportNew(data, title, false, singleLine)
 	r.ModeStatus = true
@@ -95,7 +95,7 @@ func ReportStatusSp(data bool, title string, singleLine bool) *string {
 }
 
 // Setup ReportT with data(optional/nil), title(optional/""), <skipEmpty>, <singleLine>.
-// Return the ReportT pointer.
+//  - Return the ReportT pointer.
 func ReportNew(data any, title string, skipEmpty bool, singleLine bool) *ReportT {
 	var r ReportT
 	r.Data = data
@@ -106,23 +106,23 @@ func ReportNew(data any, title string, skipEmpty bool, singleLine bool) *ReportT
 }
 
 // Print self.Data, self.Title to string
-// If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
-// If self.SingleLine is true, self.Data will not start on new line.
+//  - If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
+//  - If self.SingleLine is true, self.Data will not start on new line.
 func (self *ReportT) String() string {
 	return *self.StringP()
 }
 
 // Only print if helper.Debug is true.
-// Print self.Data, self.Title to string
-// If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
-// If self.SingleLine is true, self.Data will not start on new line.
+//  - Print self.Data, self.Title to string
+//  - If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
+//  - If self.SingleLine is true, self.Data will not start on new line.
 func (self *ReportT) StringDebug() string {
 	return *self.StringPDebug()
 }
 
 // Print self.Data, self.Title to string pointer
-// If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
-// If self.SingleLine is true, self.Data will not start on new line.
+//  - If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
+//  - If self.SingleLine is true, self.Data will not start on new line.
 func (self *ReportT) StringP() *string {
 	var output string
 
@@ -262,9 +262,9 @@ func (self *ReportT) StringP() *string {
 }
 
 // Only print if helper.Debug is true.
-// Print self.Data, self.Title to string pointer
-// If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
-// If self.SingleLine is true, self.Data will not start on new line.
+//  - Print self.Data, self.Title to string pointer
+//  - If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
+//  - If self.SingleLine is true, self.Data will not start on new line.
 func (self *ReportT) StringPDebug() *string {
 	if Debug {
 		return self.StringP()

@@ -7,23 +7,23 @@ import (
 )
 
 // Get full path of current directory.
-// Return string pointer.
+//  - Return string pointer.
 func CurrentPath() *string {
 	p, _ := os.Getwd()
 	return &p
 }
 
 // Get current directory name. Not full path.
-// Return string pointer.
+//  - Return string pointer.
 func CurrentDirBase() *string {
 	p := path.Base(*CurrentPath())
 	return &p
 }
 
 // Return full path of path provided.
-// If <workPathP> is empty/nil, use current path.
-// <workPathP> not modified.
-// Return string pointer.
+//  - If <workPathP> is empty/nil, use current path.
+//  - <workPathP> not modified.
+//  - Return string pointer.
 func FullPath(workPathP *string) *string {
 	var p string
 	if workPathP == nil || *workPathP == "" {
@@ -40,8 +40,8 @@ func FullPath(workPathP *string) *string {
 }
 
 // Return full path of path provided.
-// If <workPath> is empty, use current path.
-// Return string pointer.
+//  - If <workPath> is empty, use current path.
+//  - Return string pointer.
 func FullPathStr(workPath string) *string {
 	return FullPath(&workPath)
 }
