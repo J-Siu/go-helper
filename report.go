@@ -245,7 +245,7 @@ func (self *ReportT) StringP() *string {
 	// Title
 	var title string
 	if len(self.Title) > 0 {
-		title = self.Title + ":"
+		title = self.Title + ": "
 	}
 
 	// Output
