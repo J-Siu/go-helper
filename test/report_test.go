@@ -7,7 +7,7 @@ import (
 	"github.com/J-Siu/go-helper"
 )
 
-func TestReportEmptyEmptytruetrue(t *testing.T) {
+func TestReportEmptyEmptyTrueTrue(t *testing.T) {
 	var info string = ""
 	var title string = ""
 	var skip bool = true
@@ -19,7 +19,7 @@ func TestReportEmptyEmptytruetrue(t *testing.T) {
 		t.Fatalf(`ReportSp(%s, %s, %t, %t) = "%s"`, info, title, skip, single, msg)
 	}
 }
-func TestReportEmptyEmptyfalsetrue(t *testing.T) {
+func TestReportEmptyEmptyFalseTrue(t *testing.T) {
 	var info string = ""
 	var title string = ""
 	var skip bool = false
@@ -31,7 +31,7 @@ func TestReportEmptyEmptyfalsetrue(t *testing.T) {
 		t.Fatalf(`ReportSp(%s, %s, %t, %t) = "%s"`, info, title, skip, single, msg)
 	}
 }
-func TestReportEmptyEmptytruefalse(t *testing.T) {
+func TestReportEmptyEmptyTrueFalse(t *testing.T) {
 	var info string = ""
 	var title string = ""
 	var skip bool = true
@@ -43,7 +43,7 @@ func TestReportEmptyEmptytruefalse(t *testing.T) {
 		t.Fatalf(`ReportSp(%s, %s, %t, %t) = "%s"`, info, title, skip, single, msg)
 	}
 }
-func TestReportEmptyEmptyfalsefalse(t *testing.T) {
+func TestReportEmptyEmptyFalseFalse(t *testing.T) {
 	var info string = ""
 	var title string = ""
 	var skip bool = false
@@ -55,7 +55,7 @@ func TestReportEmptyEmptyfalsefalse(t *testing.T) {
 		t.Fatalf(`ReportSp(%s, %s, %t, %t) = "%s"`, info, title, skip, single, msg)
 	}
 }
-func TestReportInfoEmptytruetrue(t *testing.T) {
+func TestReportInfoEmptyTrueTrue(t *testing.T) {
 	var info string = "This is info"
 	var title string = ""
 	var skip bool = true
@@ -67,7 +67,7 @@ func TestReportInfoEmptytruetrue(t *testing.T) {
 		t.Fatalf(`ReportSp(%s, %s, %t, %t) = "%s"`, info, title, skip, single, msg)
 	}
 }
-func TestReportInfoEmptyfalsetrue(t *testing.T) {
+func TestReportInfoEmptyFalseTrue(t *testing.T) {
 	var info string = "This is info"
 	var title string = ""
 	var skip bool = false
@@ -79,7 +79,7 @@ func TestReportInfoEmptyfalsetrue(t *testing.T) {
 		t.Fatalf(`ReportSp(%s, %s, %t, %t) = "%s"`, info, title, skip, single, msg)
 	}
 }
-func TestReportInfoEmptytruefalse(t *testing.T) {
+func TestReportInfoEmptyTrueFalse(t *testing.T) {
 	var info string = "This is info"
 	var title string = ""
 	var skip bool = true
@@ -91,7 +91,7 @@ func TestReportInfoEmptytruefalse(t *testing.T) {
 		t.Fatalf(`ReportSp(%s, %s, %t, %t) = "%s"`, info, title, skip, single, msg)
 	}
 }
-func TestReportInfoEmptyfalsefalse(t *testing.T) {
+func TestReportInfoEmptyFalseFalse(t *testing.T) {
 	var info string = "This is info"
 	var title string = ""
 	var skip bool = false
@@ -103,7 +103,7 @@ func TestReportInfoEmptyfalsefalse(t *testing.T) {
 		t.Fatalf(`ReportSp(%s, %s, %t, %t) = "%s"`, info, title, skip, single, msg)
 	}
 }
-func TestReportEmptyTitletruetrue(t *testing.T) {
+func TestReportEmptyTitleTrueTrue(t *testing.T) {
 	var info string = ""
 	var title string = "title"
 	var skip bool = true
@@ -115,19 +115,19 @@ func TestReportEmptyTitletruetrue(t *testing.T) {
 		t.Fatalf(`ReportSp(%s, %s, %t, %t) = "%s"`, info, title, skip, single, msg)
 	}
 }
-func TestReportEmptyTitlefalsetrue(t *testing.T) {
+func TestReportEmptyTitleFalseTrue(t *testing.T) {
 	var info string = ""
 	var title string = "title"
 	var skip bool = false
 	var single bool = true
-	var want string = title + ":\n"
+	var want string = title + ": \n"
 	var msg string = *helper.ReportSp(info, title, skip, single)
 	fmt.Print(msg)
 	if msg != want {
 		t.Fatalf(`ReportSp(%s, %s, %t, %t) = "%s"`, info, title, skip, single, msg)
 	}
 }
-func TestReportEmptyTitletruefalse(t *testing.T) {
+func TestReportEmptyTitleTrueFalse(t *testing.T) {
 	var info string = ""
 	var title string = "title"
 	var skip bool = true
@@ -139,12 +139,12 @@ func TestReportEmptyTitletruefalse(t *testing.T) {
 		t.Fatalf(`ReportSp(%s, %s, %t, %t) = "%s"`, info, title, skip, single, msg)
 	}
 }
-func TestReportEmptyTitlefalsefalse(t *testing.T) {
+func TestReportEmptyTitleFalseFalse(t *testing.T) {
 	var info string = ""
 	var title string = "title"
 	var skip bool = false
 	var single bool = false
-	var want string = title + ":\n"
+	var want string = title + ": \n"
 	var msg string = *helper.ReportSp(info, title, skip, single)
 	fmt.Print(msg)
 	if msg != want {
@@ -152,12 +152,12 @@ func TestReportEmptyTitlefalsefalse(t *testing.T) {
 	}
 }
 
-func TestReportInfoTitletruetrue(t *testing.T) {
+func TestReportInfoTitleTrueTrue(t *testing.T) {
 	var info string = "This is info"
 	var title string = "title"
 	var skip bool = true
 	var single bool = true
-	var want string = title + ":" + info + "\n"
+	var want string = title + ": " + info + "\n"
 	var msg string = *helper.ReportSp(info, title, skip, single)
 	fmt.Print(msg)
 	if msg != want {
@@ -165,36 +165,36 @@ func TestReportInfoTitletruetrue(t *testing.T) {
 	}
 }
 
-func TestReportInfoTitlefalsetrue(t *testing.T) {
+func TestReportInfoTitleFalseTrue(t *testing.T) {
 	var info string = "This is info"
 	var title string = "title"
 	var skip bool = false
 	var single bool = true
-	var want string = title + ":" + info + "\n"
+	var want string = title + ": " + info + "\n"
 	msg := *helper.ReportSp(info, title, skip, single)
 	fmt.Print(msg)
 	if msg != want {
 		t.Fatalf(`ReportSp(%s, %s, %t, %t) = "%s"`, info, title, skip, single, msg)
 	}
 }
-func TestReportInfoTitletruefalse(t *testing.T) {
+func TestReportInfoTitleTrueFalse(t *testing.T) {
 	var info string = "This is info"
 	var title string = "title"
 	var skip bool = true
 	var single bool = false
-	var want string = title + ":\n" + info + "\n"
+	var want string = title + ": \n" + info + "\n"
 	var msg string = *helper.ReportSp(info, title, skip, single)
 	fmt.Print(msg)
 	if msg != want {
 		t.Fatalf(`ReportSp(%s, %s, %t, %t) = "%s"`, info, title, skip, single, msg)
 	}
 }
-func TestReportInfoTitlefalsefalse(t *testing.T) {
+func TestReportInfoTitleFalseFalse(t *testing.T) {
 	var info string = "This is info"
 	var title string = "title"
 	var skip bool = false
 	var single bool = false
-	var want string = title + ":\n" + info + "\n"
+	var want string = title + ": \n" + info + "\n"
 	var msg string = *helper.ReportSp(info, title, skip, single)
 	fmt.Print(msg)
 	if msg != want {
