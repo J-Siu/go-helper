@@ -129,7 +129,7 @@ func JsonIndentSp(baP *[]byte, endLn bool) *string {
 // Change number type to string
 //  - Only used by AnyToJsonMarshalIndentSp(), AnyToJsonMarshalSp()
 //  - Provide consistent output when transforming number types and their pointers
-func NumToStr(data any) *string {
+func numToStr(data any) *string {
 	var str string
 	switch v := data.(type) {
 	case int:
@@ -244,7 +244,7 @@ func AnyToJsonMarshalIndentSp(data any, endLn bool) *string {
 
 	switch v := data.(type) {
 	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *int, *int8, *int16, *int32, *int64, *uint, *uint8, *uint16, *uint32, *uint64, *float32, *float64:
-		str = *NumToStr(v)
+		str = *numToStr(v)
 	default:
 		if DebugReport {
 			fmt.Println("case default")
@@ -278,7 +278,7 @@ func AnyToJsonMarshalSp(data any, endLn bool) *string {
 
 	switch v := data.(type) {
 	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *int, *int8, *int16, *int32, *int64, *uint, *uint8, *uint16, *uint32, *uint64, *float32, *float64:
-		str = *NumToStr(v)
+		str = *numToStr(v)
 	default:
 		if DebugReport {
 			fmt.Println("case default")
