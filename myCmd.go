@@ -31,14 +31,15 @@ import (
 
 // A exec.Cmd wrapper
 type MyCmd struct {
-	ArgsP   *[]string    `json:"ArgsP"`  // Command args
-	CmdName string       `json:"Name"`   // Command name
-	WorkDir string       `json:"Dir"`    // Command working dir
-	Ran     bool         `json:"Ran"`    // Out: Set to true by Run()
-	CmdLn   string       `json:"CmdLn"`  // Out: Command Line
-	Err     error        `json:"Err"`    // Out: run error
-	Stdout  bytes.Buffer `json:"Stdout"` // Out: Stdout
-	Stderr  bytes.Buffer `json:"Stderr"` // Out: Stderr
+	ArgsP   *[]string    `json:"ArgsP"`   // In : Command args
+	CmdLn   string       `json:"CmdLn"`   // Out: Command line
+	CmdName string       `json:"CmdName"` // In : Command name
+	Err     error        `json:"Err"`     // Out: run error
+	Errs    *ErrsT       `json:"Errs"`    // In : Errs queue
+	Ran     bool         `json:"Ran"`     // Out: Set to true by Run()
+	Stderr  bytes.Buffer `json:"Stderr"`  // Out: Stderr
+	Stdout  bytes.Buffer `json:"Stdout"`  // Out: Stdout
+	WorkDir string       `json:"WorkDir"` // In : Command working dir
 }
 
 // MyCmd run func wrapper.
@@ -79,6 +80,13 @@ func (self *MyCmd) Init(name string, argsP *[]string, workPathP *string) *MyCmd 
 	return self
 }
 
+// Reset MyCmd
+func (self *MyCmd) Reset() *MyCmd {
+	var myCmd MyCmd
+	*self = myCmd
+	return self
+}
+
 // A exec.Cmd.Run() wrapper.
 func (self *MyCmd) Run() error {
 	execCmd := exec.Command(self.CmdName, *self.ArgsP...)
@@ -94,7 +102,7 @@ func (self *MyCmd) Run() error {
 	return self.Err
 }
 
-//  - Return exit code
+// Return exit code
 func (self *MyCmd) ExitCode() int {
 	var exitErr *exec.ExitError
 	if errors.As(self.Err, &exitErr) {
