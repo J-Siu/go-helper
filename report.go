@@ -23,6 +23,7 @@ THE SOFTWARE.
 package helper
 
 import (
+	"bytes"
 	"fmt"
 )
 
@@ -123,57 +124,61 @@ func (self *ReportT) StringDebug() string {
 // Print self.Data, self.Title to string pointer
 //  - If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
 //  - If self.SingleLine is true, self.Data will not start on new line.
+//  - self.Data formatting
+//    - []byte, string, Err, ErrsT, including array and pointer, will be treated as string and processed by JsonIndentSp()
+//    - int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, including pointer, will be processed by AnyToJsonMarshalSp()
+//    - Others, usually struct, not specified, will be processed by AnyToJsonIndent()
 func (self *ReportT) StringP() *string {
 	var output string
 
 	switch v := self.Data.(type) {
-	case Err:
+	case bool:
 		if DebugReport {
-			fmt.Println("case Err")
+			fmt.Println("case bool")
 		}
-		output = *StrToJsonIndentSp(v.Error(), true)
-	case ErrsT:
+		if self.ModeStatus {
+			output = BoolStatus(v) + "\n"
+		} else {
+			output = BoolString(v) + "\n"
+		}
+	case *bool:
 		if DebugReport {
-			fmt.Println("case ErrsT")
+			fmt.Println("case *bool")
 		}
-		for _, e := range v {
-			output += *StrToJsonIndentSp(e.Error(), true)
+		if v != nil {
+			if self.ModeStatus {
+				output = BoolStatus(*v) + "\n"
+			} else {
+				output = BoolString(*v) + "\n"
+			}
 		}
-	case error:
+	case []byte:
 		if DebugReport {
-			fmt.Println("case error")
+			fmt.Println("case []byte")
 		}
-		output = *StrToJsonIndentSp(v.Error(), true)
-	case []error:
+		if len(v) > 0 {
+			output = *JsonIndentSp(&v, true)
+		}
+	case *[]byte:
 		if DebugReport {
-			fmt.Println("case []error")
+			fmt.Println("case *[]byte")
 		}
-		for _, e := range v {
-			output += *StrToJsonIndentSp(e.Error(), true)
+		if v != nil && len(*v) > 0 {
+			output = *JsonIndentSp(v, true)
 		}
-	case Warning:
+	case bytes.Buffer:
 		if DebugReport {
-			fmt.Println("case Warning")
+			fmt.Println("case bytes.Buffer")
 		}
-		output = *StrPtrToJsonIndentSp(v.StringP(), true)
-	case Warnings:
+		var b = v.Bytes()
+		output = *JsonIndentSp(&b, true)
+	case *bytes.Buffer:
 		if DebugReport {
-			fmt.Println("case Warnings")
+			fmt.Println("case *bytes.Buffer")
 		}
-		for _, w := range v {
-			output = *StrPtrToJsonIndentSp(w.StringP(), true)
-		}
-	case *Warning:
-		if DebugReport {
-			fmt.Println("case *Warning")
-		}
-		output = *StrPtrToJsonIndentSp(v.StringP(), true)
-	case *Warnings:
-		if DebugReport {
-			fmt.Println("case *Warnings")
-		}
-		for _, w := range *v {
-			output = *StrPtrToJsonIndentSp(w.StringP(), true)
+		if v != nil {
+			var b = v.Bytes()
+			output = *JsonIndentSp(&b, true)
 		}
 	case string:
 		if DebugReport {
@@ -207,39 +212,72 @@ func (self *ReportT) StringP() *string {
 				output += *StrPtrToJsonIndentSp(&s, true)
 			}
 		}
-	case []byte:
+	case Err:
 		if DebugReport {
-			fmt.Println("case []byte")
+			fmt.Println("case Err")
 		}
-		output = *JsonIndentSp(&v, true)
-	case *[]byte:
+		output = *StrToJsonIndentSp(v.Error(), true)
+	case *Err:
 		if DebugReport {
-			fmt.Println("case *[]byte")
+			fmt.Println("case Err")
 		}
-		output = *JsonIndentSp(v, true)
-	case bool:
+		if v != nil {
+			output = *StrToJsonIndentSp(v.Error(), true)
+		}
+	case ErrsT:
 		if DebugReport {
-			fmt.Println("case bool")
+			fmt.Println("case ErrsT")
 		}
-		if self.ModeStatus {
-			output = BoolStatus(v) + "\n"
-		} else {
-			output = BoolString(v) + "\n"
+		for _, e := range v {
+			output += *StrToJsonIndentSp(e.Error(), true)
 		}
-	case *bool:
+	case *ErrsT:
 		if DebugReport {
-			fmt.Println("case *bool")
+			fmt.Println("case ErrsT")
 		}
-		if self.ModeStatus {
-			output = BoolStatus(*v) + "\n"
-		} else {
-			output = BoolString(*v) + "\n"
+		if v != nil {
+			for _, e := range *v {
+				output += *StrToJsonIndentSp(e.Error(), true)
+			}
 		}
+	case Warning:
+		if DebugReport {
+			fmt.Println("case Warning")
+		}
+		output = *StrPtrToJsonIndentSp(v.StringP(), true)
+	case Warnings:
+		if DebugReport {
+			fmt.Println("case Warnings")
+		}
+		for _, w := range v {
+			output = *StrPtrToJsonIndentSp(w.StringP(), true)
+		}
+	case *Warning:
+		if DebugReport {
+			fmt.Println("case *Warning")
+		}
+		if v != nil {
+			output = *StrPtrToJsonIndentSp(v.StringP(), true)
+		}
+	case *Warnings:
+		if DebugReport {
+			fmt.Println("case *Warnings")
+		}
+		if v != nil {
+			for _, w := range *v {
+				output = *StrPtrToJsonIndentSp(w.StringP(), true)
+			}
+		}
+	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *int, *int8, *int16, *int32, *int64, *uint, *uint8, *uint16, *uint32, *uint64, *float32, *float64:
+		if DebugReport {
+			Report("case *(u)int/8/16/32/64, *float32/64", self.Title, false, true)
+		}
+		output = *AnyToJsonMarshalSp(v, true)
 	default:
 		if DebugReport {
 			fmt.Println("case default")
 		}
-		output = *AnyToJsonIndentSp(self.Data, true)
+		output = *AnyToJsonMarshalIndentSp(self.Data, true)
 	}
 
 	// Title

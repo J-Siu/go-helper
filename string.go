@@ -26,6 +26,8 @@ package helper
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -51,26 +53,6 @@ func BoolYesNo(b bool) string {
 		return "yes"
 	}
 	return "no"
-}
-
-// Json indent *[]byte to *string.
-//  - If <endLn> is true, add new line at end of string if not exist.
-//  - Return string pointer.
-func JsonIndentSp(baP *[]byte, endLn bool) *string {
-	var output string
-	if len(*baP) > 0 {
-		var dst bytes.Buffer
-		err := json.Indent(&dst, *baP, "", "  ")
-		if err == nil {
-			output = dst.String()
-		} else {
-			output = string(*baP)
-		}
-	}
-	if len(output) > 0 && output[len(output)-1] != '\n' && endLn {
-		output += "\n"
-	}
-	return &output
 }
 
 // Check if string array contain a string.
@@ -102,14 +84,14 @@ func StrArrayPtrRemoveEmpty(saP *[]string) *[]string {
 	return &sa
 }
 
-// *[]string output
+// *[]string output, each element followed by "\n"
 func StrArrayPtrPrintln(saP *[]string) {
 	for _, s := range *saP {
 		println(s)
 	}
 }
 
-// *string output
+// *[]string to *string, each element followed by "\n"
 func StrArrayPtrPrintlnSp(saP *[]string) *string {
 	var output string
 	for _, s := range *saP {
@@ -118,13 +100,210 @@ func StrArrayPtrPrintlnSp(saP *[]string) *string {
 	return &output
 }
 
-// Split *string to *[]string by new line("\n")
+// *string to *[]string, split by "\n"
 func StrPtrToArrayPtr(sP *string) *[]string {
 	var output []string = strings.Split(*sP, "\n")
 	return &output
 }
 
-// Json indent *string to *string.
+// Json marshal indent format
+//  - If <endLn> is true, add new line at end of string if not exist.
+//  - Return string pointer.
+func JsonIndentSp(baP *[]byte, endLn bool) *string {
+	var output string
+	if len(*baP) > 0 {
+		var dst bytes.Buffer
+		err := json.Indent(&dst, *baP, "", "  ")
+		if err == nil {
+			output = dst.String()
+		} else {
+			output = string(*baP)
+		}
+	}
+	if len(output) > 0 && output[len(output)-1] != '\n' && endLn {
+		output += "\n"
+	}
+	return &output
+}
+
+// Change number type to string
+//  - Only used by AnyToJsonMarshalIndentSp(), AnyToJsonMarshalSp()
+//  - Provide consistent output when transforming number types and their pointers
+func NumToStr(data any) *string {
+	var str string
+	switch v := data.(type) {
+	case int:
+		str = strconv.FormatInt(int64(v), 10)
+	case int8:
+		str = strconv.FormatInt(int64(v), 10)
+	case int16:
+		str = strconv.FormatInt(int64(v), 10)
+	case int32:
+		str = strconv.FormatInt(int64(v), 10)
+	case int64:
+		str = strconv.FormatInt(int64(v), 10)
+	case uint:
+		str = strconv.FormatInt(int64(v), 10)
+	case uint8:
+		str = strconv.FormatInt(int64(v), 10)
+	case uint16:
+		str = strconv.FormatInt(int64(v), 10)
+	case uint32:
+		str = strconv.FormatInt(int64(v), 10)
+	case uint64:
+		str = strconv.FormatInt(int64(v), 10)
+	case float32:
+		str = strconv.FormatInt(int64(v), 10)
+	case float64:
+		str = strconv.FormatInt(int64(v), 10)
+	case *int:
+		if v == nil {
+			str = NIL_JSON
+		} else {
+			str = strconv.FormatInt(int64(*v), 10)
+		}
+	case *int8:
+		if v == nil {
+			str = NIL_JSON
+		} else {
+			str = strconv.FormatInt(int64(*v), 10)
+		}
+	case *int16:
+		if v == nil {
+			str = NIL_JSON
+		} else {
+			str = strconv.FormatInt(int64(*v), 10)
+		}
+	case *int32:
+		if v == nil {
+			str = NIL_JSON
+		} else {
+			str = strconv.FormatInt(int64(*v), 10)
+		}
+	case *int64:
+		if v == nil {
+			str = NIL_JSON
+		} else {
+			str = strconv.FormatInt(int64(*v), 10)
+		}
+	case *uint:
+		if v == nil {
+			str = NIL_JSON
+		} else {
+			str = strconv.FormatInt(int64(*v), 10)
+		}
+	case *uint8:
+		if v == nil {
+			str = NIL_JSON
+		} else {
+			str = strconv.FormatInt(int64(*v), 10)
+		}
+	case *uint16:
+		if v == nil {
+			str = NIL_JSON
+		} else {
+			str = strconv.FormatInt(int64(*v), 10)
+		}
+	case *uint32:
+		if v == nil {
+			str = NIL_JSON
+		} else {
+			str = strconv.FormatInt(int64(*v), 10)
+		}
+	case *uint64:
+		if v == nil {
+			str = NIL_JSON
+		} else {
+			str = strconv.FormatInt(int64(*v), 10)
+		}
+	case *float32:
+		if v == nil {
+			str = NIL_JSON
+		} else {
+			str = strconv.FormatInt(int64(*v), 10)
+		}
+	case *float64:
+		if v == nil {
+			str = NIL_JSON
+		} else {
+			str = strconv.FormatInt(int64(*v), 10)
+		}
+	default:
+		str = "Not number type."
+	}
+	return &str
+}
+
+// Json marshal indent format any
+//	- String to json indent format
+//  - If <endLn> is true, add new line at end of string if not exist.
+//  - Return string pointer.
+func AnyToJsonMarshalIndentSp(data any, endLn bool) *string {
+	var str string
+	var err error
+
+	switch v := data.(type) {
+	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *int, *int8, *int16, *int32, *int64, *uint, *uint8, *uint16, *uint32, *uint64, *float32, *float64:
+		str = *NumToStr(v)
+	default:
+		if DebugReport {
+			fmt.Println("case default")
+		}
+		j, err := json.MarshalIndent(data, "", "  ")
+		if err == nil {
+			str = string(j)
+		} else {
+			Errs = append(Errs, err)
+		}
+	}
+
+	if err == nil && len(str) > 0 {
+		if endLn && str[len(str)-1] != '\n' {
+			str += "\n"
+		}
+	} else {
+		str = ""
+	}
+
+	return &str
+}
+
+// Json marshal format any
+//	- String to json format
+//  - If <endLn> is true, add new line at end of string if not exist.
+//  - Return string pointer.
+func AnyToJsonMarshalSp(data any, endLn bool) *string {
+	var str string
+	var err error
+
+	switch v := data.(type) {
+	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *int, *int8, *int16, *int32, *int64, *uint, *uint8, *uint16, *uint32, *uint64, *float32, *float64:
+		str = *NumToStr(v)
+	default:
+		if DebugReport {
+			fmt.Println("case default")
+		}
+		j, err := json.Marshal(data)
+		if err == nil {
+			str = string(j)
+		} else {
+			Errs = append(Errs, err)
+		}
+	}
+
+	if err == nil && len(str) > 0 {
+		if endLn && str[len(str)-1] != '\n' {
+			str += "\n"
+		}
+	} else {
+		str = ""
+	}
+
+	return &str
+}
+
+// Json marshal indent format
+//  - String to json indent format
 //  - If <endLn> is true, add new line at end of string if not exist.
 //  - Return string pointer.
 func StrPtrToJsonIndentSp(strP *string, endLn bool) *string {
@@ -132,27 +311,11 @@ func StrPtrToJsonIndentSp(strP *string, endLn bool) *string {
 	return JsonIndentSp(&byteA, endLn)
 }
 
-// Json indent *string to *string.
+// Json marshal indent format
+//  - String to json indent format
 //  - If <endLn> is true, add new line at end of string if not exist.
 //  - Return string pointer.
 func StrToJsonIndentSp(str string, endLn bool) *string {
 	var byteA = []byte(str)
 	return JsonIndentSp(&byteA, endLn)
-}
-
-// Json indent any to *string.
-//  - If <endLn> is true, add new line at end of string if not exist.
-//  - Return string pointer.
-func AnyToJsonIndentSp(data any, endLn bool) *string {
-	var str string
-	j, e := json.MarshalIndent(data, "", "  ")
-	if e != nil {
-		Errs = append(Errs, e)
-	} else if len(j) > 0 {
-		str = string(j)
-		if str[len(str)-1] != '\n' {
-			str += "\n"
-		}
-	}
-	return &str
 }

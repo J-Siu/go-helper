@@ -22,6 +22,11 @@ THE SOFTWARE.
 
 package helper
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 // Debug flag
 // General debug flag to enable/disable ReportDebug*
 var Debug bool = false
@@ -34,3 +39,14 @@ var Errs ErrsT
 
 // warning list
 var Warns Warnings
+
+// nil pointer to string by sprint
+var NIL_SPRINT string = fmt.Sprint(nil)
+
+// nil pointer to string by json.Marshal
+var NIL_JSON string
+
+func init() {
+	j, _ := json.Marshal(nil)
+	NIL_JSON = string(j)
+}
