@@ -17,6 +17,7 @@ Collections of Golang helper functions.
   - [report.go](#reportgo)
   - [string.go](#stringgo)
   - [warning.go](#warninggo)
+- [Doc](#doc)
 - [Usage](#usage)
 - [Test](#test)
 - [Used By Project](#used-by-project)
@@ -139,6 +140,10 @@ warning.go|warning type
 - func (self *Warning) StringP() *string
 - func (self *Warnings) NotEmpty() bool
 
+### Doc
+
+- https://pkg.go.dev/github.com/J-Siu/go-helper
+
 ### Usage
 
 ```go
@@ -242,6 +247,8 @@ go test report_test.go
   - Add number types/pointers support in ReportT.StringP()
   - Fix #6 - ReportT().StringP add space after title ":"
   - Fix BoxSealAnonymous() decoding length checking
+- v1.1.4
+  - ReportT.StringP() handle nil *[]string
 
 ### License
 
