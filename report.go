@@ -207,7 +207,7 @@ func (self *ReportT) StringP() *string {
 		if DebugReport {
 			fmt.Println("case *[]string")
 		}
-		if len(*v) > 0 {
+		if v != nil && len(*v) > 0 {
 			for _, s := range *v {
 				output += *StrPtrToJsonIndentSp(&s, true)
 			}
