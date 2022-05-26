@@ -13,10 +13,10 @@ Collections of Golang helper functions.
   - [err.go](#errgo)
   - [file.go](#filego)
   - [gitCmd.go](#gitcmdgo)
+  - [myArray.go](#myarraygo)
   - [myCmd.go](#mycmdgo)
   - [report.go](#reportgo)
   - [string.go](#stringgo)
-  - [warning.go](#warninggo)
 - [Doc](#doc)
 - [Usage](#usage)
 - [Test](#test)
@@ -39,15 +39,15 @@ debug.go|Debug functions
 err.go|Basic error type
 file.go|File/directory functions
 gitCmd.go|Git functions
+myArray.go|A simple generic array type
 myCmd.go|exec.Command shell wrapper
 report.go|report/log functions auto detect and apply json marshal indent
 string.go|string/array functions
-warning.go|warning type
 
 #### common.go
 - var Debug bool = false
 - var DebugReport bool = false
-- var Errs ErrsT
+- var Errs ErrsType
 - var Warns Warnings
 - var NIL_SPRINT string = fmt.Sprint(nil)
 - var NIL_JSON string
@@ -60,13 +60,10 @@ warning.go|warning type
 - func ErrCheck(e error)
 #### err.go
 - type Err string
-- type ErrsT []error
+- type ErrsType struct
 - func (self Err) Error() string
 - func (self *Err) String() string
 - func (self *Err) StringP() *string
-- func (self *ErrsT) Empty() bool
-- func (self *ErrsT) NotEmpty() bool
-- func (self *ErrsT) Clear()
 #### file.go
 - func CurrentPath() *string
 - func CurrentDirBase() *string
@@ -95,6 +92,12 @@ warning.go|warning type
 - func GitRemoteRemoveAll(workPathP *string)
 - func GitRoot(workPathP *string) string
 - func GitRootSubmodule(workPathP *string) string
+#### myArray.go
+- type myArray[T any] []T
+- func (self *myArray[T]) Empty() bool
+- func (self *myArray[T]) NotEmpty() bool
+- func (self *myArray[T]) Clear()
+- func (self *myArray[T]) Add(t T) *myArray[T]
 #### myCmd.go
 - type MyCmd struct
 - func MyCmdRun(cmdName string, argsP *[]string, workPathP *string) *MyCmd
@@ -132,13 +135,6 @@ warning.go|warning type
 - func AnyToJsonMarshalSp(data any, endLn bool) *string
 - func StrPtrToJsonIndentSp(strP *string, endLn bool) *string
 - func StrToJsonIndentSp(str string, endLn bool) *string
-#### warning.go
-- type Warning string
-- type Warnings []Warning
-- func (self Warning) Error() string
-- func (self *Warning) String() string
-- func (self *Warning) StringP() *string
-- func (self *Warnings) NotEmpty() bool
 
 ### Doc
 
@@ -241,7 +237,7 @@ go test report_test.go
   - If !Debug, short circuit ReportDebug() ReportSpDebug()
   - Report() support error type
 - v1.1.3
-  - Add ErrsT.Empty(), ErrsT.Clear()
+  - Add ErrsType.Empty(), ErrsType.Clear()
   - Add FullPathStr(), FileRemoveExt(), FileInDir(), FileSimplifyName(), FileHasExt()
   - Add MyCmd.Reset(), MyCmd.Init()
   - Add number types/pointers support in ReportT.StringP()

@@ -52,7 +52,7 @@ func IsRegularFile(workPath string) bool {
 	if err != nil {
 		if Debug {
 			ReportDebug(fileInfo, "IsRegularFile:fileInfo", false, false)
-			Errs = append(Errs, err)
+			Errs.Add(err)
 		}
 		return false
 	}
@@ -64,7 +64,7 @@ func IsDir(workPath string) bool {
 	fileInfo, err := os.Stat(workPath)
 	if err != nil {
 		if Debug {
-			Errs = append(Errs, err)
+			Errs.Add(err)
 		}
 		return false
 	}
@@ -96,7 +96,7 @@ func FileInDir(dir, filename string) string {
 	var fileBase string = strings.ToLower(path.Base(filename))
 	dirEntry, err := os.ReadDir(dir)
 	if err != nil {
-		Errs = append(Errs, err)
+		Errs.Add(err)
 		return ""
 	}
 	for _, f := range dirEntry {

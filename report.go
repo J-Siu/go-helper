@@ -134,11 +134,11 @@ func (self *ReportT) StringDebug() string {
 //  - If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
 //  - If self.SingleLine is true, self.Data will not start on new line.
 //  - self.Data formatting
-//    - []byte, string, Err, ErrsT, including array and pointer, will be treated as string and processed by JsonIndentSp()
-//    - int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, including pointer, will be processed by AnyToJsonMarshalSp()
-//    - Others, usually struct, not specified, will be processed by AnyToJsonIndent()
-//    - Following pointer types, if nil, will be treated as empty string:
-//      *bool, *[]byte, *bytes.Buffer, *string, *[]string, *Err, *ErrsT, *Warning, *Warnings
+//    - []byte, string, Err, MyArray[error], MyArray[string], including array and pointer, are treated as string and processed by StrToJsonIndentSp()/StrPtrToJsonIndentSp()
+//    - MyArray[any] is processed by AnyToJsonMarshalIndentSp()
+//    - int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, including pointer, are processed by AnyToJsonMarshalSp()
+//    - All pointer types mentioned above, if nil, are treated as empty string
+//    - Others, usually struct, not specified, are processed by AnyToJsonMarshalIndentSp()
 func (self *ReportT) StringP() *string {
 	var output string
 
@@ -235,48 +235,52 @@ func (self *ReportT) StringP() *string {
 		if v != nil {
 			output = *StrToJsonIndentSp(v.Error(), true)
 		}
-	case ErrsT:
+	case MyArray[error]:
 		if DebugReport {
-			fmt.Println("case ErrsT")
+			fmt.Println("case MyArray[error]")
 		}
 		for _, e := range v {
 			output += *StrToJsonIndentSp(e.Error(), true)
 		}
-	case *ErrsT:
+	case *MyArray[error]:
 		if DebugReport {
-			fmt.Println("case ErrsT")
+			fmt.Println("case *MyArray[error]")
 		}
 		if v != nil {
 			for _, e := range *v {
 				output += *StrToJsonIndentSp(e.Error(), true)
 			}
 		}
-	case Warning:
+	case MyArray[string]:
 		if DebugReport {
-			fmt.Println("case Warning")
+			fmt.Println("case MyArray[string]")
 		}
-		output = *StrPtrToJsonIndentSp(v.StringP(), true)
-	case Warnings:
+		for _, str := range v {
+			output = *StrPtrToJsonIndentSp(&str, true)
+		}
+	case *MyArray[string]:
 		if DebugReport {
-			fmt.Println("case Warnings")
-		}
-		for _, w := range v {
-			output = *StrPtrToJsonIndentSp(w.StringP(), true)
-		}
-	case *Warning:
-		if DebugReport {
-			fmt.Println("case *Warning")
+			fmt.Println("case *MyArray[string]")
 		}
 		if v != nil {
-			output = *StrPtrToJsonIndentSp(v.StringP(), true)
+			for _, str := range *v {
+				output = *StrPtrToJsonIndentSp(&str, true)
+			}
 		}
-	case *Warnings:
+	case MyArray[any]:
 		if DebugReport {
-			fmt.Println("case *Warnings")
+			fmt.Println("case MyArray[any]")
+		}
+		for _, a := range v {
+			output = *AnyToJsonMarshalIndentSp(a, true)
+		}
+	case *MyArray[any]:
+		if DebugReport {
+			fmt.Println("case *MyArray[any]")
 		}
 		if v != nil {
-			for _, w := range *v {
-				output = *StrPtrToJsonIndentSp(w.StringP(), true)
+			for _, a := range *v {
+				output = *AnyToJsonMarshalIndentSp(a, true)
 			}
 		}
 	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *int, *int8, *int16, *int32, *int64, *uint, *uint8, *uint16, *uint32, *uint64, *float32, *float64:
@@ -288,7 +292,7 @@ func (self *ReportT) StringP() *string {
 		if DebugReport {
 			fmt.Println("case default")
 		}
-		output = *AnyToJsonMarshalIndentSp(self.Data, true)
+		output = *AnyToJsonMarshalIndentSp(v, true)
 	}
 
 	// Title

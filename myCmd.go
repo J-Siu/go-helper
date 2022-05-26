@@ -35,7 +35,6 @@ type MyCmd struct {
 	CmdLn   string       `json:"CmdLn"`   // Out: Command line
 	CmdName string       `json:"CmdName"` // In : Command name
 	Err     error        `json:"Err"`     // Out: run error
-	Errs    *ErrsT       `json:"Errs"`    // In : Errs queue
 	Ran     bool         `json:"Ran"`     // Out: Set to true by Run()
 	Stderr  bytes.Buffer `json:"Stderr"`  // Out: Stderr
 	Stdout  bytes.Buffer `json:"Stdout"`  // Out: Stdout

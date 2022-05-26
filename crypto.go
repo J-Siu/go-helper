@@ -60,7 +60,7 @@ func BoxSealAnonymous(base64PublicKey, msg *string) *string {
 	}
 	// Add error to Errs
 	if err != nil {
-		Errs = append(Errs, err)
+		Errs.Add(err)
 	}
 
 	return &base64EncryptedMsg

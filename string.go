@@ -253,7 +253,7 @@ func AnyToJsonMarshalIndentSp(data any, endLn bool) *string {
 		if err == nil {
 			str = string(j)
 		} else {
-			Errs = append(Errs, err)
+			Errs.Add(err)
 		}
 	}
 
@@ -287,7 +287,7 @@ func AnyToJsonMarshalSp(data any, endLn bool) *string {
 		if err == nil {
 			str = string(j)
 		} else {
-			Errs = append(Errs, err)
+			Errs.Add(err)
 		}
 	}
 
