@@ -24,32 +24,32 @@ package helper
 
 import (
 	"bytes"
-	"errors"
 	"os/exec"
 	"sync"
 )
 
 // A exec.Cmd wrapper
 type MyCmd struct {
-	ArgsP   *[]string    `json:"ArgsP"`   // In : Command args
-	CmdLn   string       `json:"CmdLn"`   // Out: Command line
-	CmdName string       `json:"CmdName"` // In : Command name
-	Err     error        `json:"Err"`     // Out: run error
-	Ran     bool         `json:"Ran"`     // Out: Set to true by Run()
-	Stderr  bytes.Buffer `json:"Stderr"`  // Out: Stderr
-	Stdout  bytes.Buffer `json:"Stdout"`  // Out: Stdout
-	WorkDir string       `json:"WorkDir"` // In : Command working dir
+	ArgsP    *[]string    `json:"ArgsP"`   // In : Command args
+	CmdLn    string       `json:"CmdLn"`   // Out: Command line
+	CmdName  string       `json:"CmdName"` // In : Command name
+	Err      error        `json:"Err"`     // Out: run error
+	ExitCode int          `json:ExitCode`  // Out: Exit Code
+	Ran      bool         `json:"Ran"`     // Out: Set to true by Run()
+	Stderr   bytes.Buffer `json:"Stderr"`  // Out: Stderr
+	Stdout   bytes.Buffer `json:"Stdout"`  // Out: Stdout
+	WorkDir  string       `json:"WorkDir"` // In : Command working dir
 }
 
 // MyCmd run func wrapper.
-//  - If <workPathP> is empty/nil, current directory is used.
+//   - If <workPathP> is empty/nil, current directory is used.
 func MyCmdRun(cmdName string, argsP *[]string, workPathP *string) *MyCmd {
 	return MyCmdRunWg(cmdName, argsP, workPathP, nil, nil, false)
 }
 
 // MyCmd run func wrapper with sync.WaitGroup support.
-//  - If <workPathP> is empty/nil, current directory is used.
-//  - Print if <output> is true
+//   - If <workPathP> is empty/nil, current directory is used.
+//   - Print if <output> is true
 func MyCmdRunWg(cmdName string, argsP *[]string, workPathP *string, title *string, wgP *sync.WaitGroup, output bool) *MyCmd {
 	if wgP != nil {
 		defer wgP.Done()
@@ -64,17 +64,18 @@ func MyCmdRunWg(cmdName string, argsP *[]string, workPathP *string, title *strin
 }
 
 // Setup and return MyCmd pointer.
-//  - If <workPathP> is empty/nil, current directory is used.
+//   - If <workPathP> is empty/nil, current directory is used.
 func MyCmdInit(name string, argsP *[]string, workPathP *string) *MyCmd {
 	var self MyCmd
 	return self.Init(name, argsP, workPathP)
 }
 
 // Setup and return MyCmd pointer.
-//  - If <workPathP> is empty/nil, current directory is used.
+//   - If <workPathP> is empty/nil, current directory is used.
 func (self *MyCmd) Init(name string, argsP *[]string, workPathP *string) *MyCmd {
 	self.ArgsP = argsP
 	self.CmdName = name
+	self.ExitCode = 0
 	self.WorkDir = *FullPath(workPathP)
 	return self
 }
@@ -95,18 +96,18 @@ func (self *MyCmd) Run() error {
 	self.CmdLn = execCmd.String()
 	self.Err = execCmd.Run()
 	self.Ran = true
-	ReportDebug(&self, "myCmd:", false, false)
+
+	if exitErr, ok := self.Err.(*exec.ExitError); ok {
+		// fmt.Println("*** self.Err ok, get cmd exit code ***")
+		self.ExitCode = exitErr.ExitCode()
+	} else if self.Err != nil {
+		// For simplicity, force exit code to 1
+		// fmt.Println("*** self.Err != nil ***")
+	}
+
+	ReportDebug(&self, "myCmd", false, false)
 	ReportDebug(self.Stderr.String(), "myCmd:Stderr", false, false)
 	ReportDebug(self.Stdout.String(), "myCmd:Stdout", false, false)
+	ReportDebug(self.Err, "myCmd:Err", false, false)
 	return self.Err
-}
-
-// Return exit code
-func (self *MyCmd) ExitCode() int {
-	var exitErr *exec.ExitError
-	if errors.As(self.Err, &exitErr) {
-		return exitErr.ExitCode()
-	}
-	// No error
-	return 0
 }
