@@ -247,6 +247,11 @@ go test report_test.go
   - ReportT.StringP() handle nil *[]string
 - v1.1.5
   - Go 1.20
+- v1.1.6
+  - MyCmd struct
+    - Add ExitCode
+    - Run() will handle exit code properly
+    - Update test cases
 
 ### License
 
