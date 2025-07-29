@@ -1,5 +1,7 @@
 /*
-Copyright © 2022 John, Sing Dao, Siu <john.sd.siu@gmail.com>
+The MIT License
+
+Copyright © 2025 John, Sing Dao, Siu <john.sd.siu@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -37,17 +39,19 @@ type ReportT struct {
 }
 
 // Print any data(optional) with title(optional).
-//  - If <skipEmpty> is true, will not print title if <data> is empty.
-//  - If <singleLine> is true, <data> will not start on new line.
+//   - If <skipEmpty> is true, will not print title if <data> is empty.
+//   - If <singleLine> is true, <data> will not start on new line.
+//
 // Refer to ReportT.StringP() for format handling
 func Report(data any, title string, skipEmpty bool, singleLine bool) {
 	fmt.Print(*ReportNew(data, title, skipEmpty, singleLine).StringP())
 }
 
 // Only print if helper.Debug is true.
-//  - Print any data(optional) with title(optional).
-//  - If <skipEmpty> is true, will not print title if <data> is empty.
-//  - If <singleLine> is true, <data> will not start on new line.
+//   - Print any data(optional) with title(optional).
+//   - If <skipEmpty> is true, will not print title if <data> is empty.
+//   - If <singleLine> is true, <data> will not start on new line.
+//
 // Refer to ReportT.StringP() for format handling
 func ReportDebug(data any, title string, skipEmpty bool, singleLine bool) {
 	if Debug {
@@ -56,19 +60,21 @@ func ReportDebug(data any, title string, skipEmpty bool, singleLine bool) {
 }
 
 // Print any data(optional) with title(optional) into a string.
-//  - If <skipEmpty> is true, will not print title if <data> is empty.
-//  - If <singleLine> is true, <data> will not start on new line.
-//  - Return a string pointer.
+//   - If <skipEmpty> is true, will not print title if <data> is empty.
+//   - If <singleLine> is true, <data> will not start on new line.
+//   - Return a string pointer.
+//
 // Refer to ReportT.StringP() for format handling
 func ReportSp(data any, title string, skipEmpty bool, singleLine bool) *string {
 	return ReportNew(data, title, skipEmpty, singleLine).StringP()
 }
 
 // Only print if helper.Debug is true.
-//  - Print any data(optional) with title(optional) into a string.
-//  - If <skipEmpty> is true, will not print title if <data> is empty.
-//  - If <singleLine> is true, <data> will not start on new line.
-//  - Return a string pointer.
+//   - Print any data(optional) with title(optional) into a string.
+//   - If <skipEmpty> is true, will not print title if <data> is empty.
+//   - If <singleLine> is true, <data> will not start on new line.
+//   - Return a string pointer.
+//
 // Refer to ReportT.StringP() for format handling
 func ReportSpDebug(data any, title string, skipEmpty bool, singleLine bool) *string {
 	if Debug {
@@ -80,8 +86,9 @@ func ReportSpDebug(data any, title string, skipEmpty bool, singleLine bool) *str
 }
 
 // Print bool into true/false, with title(optional).
-//  - If <skipEmpty> is true, will not print title if <data> is empty.
-//  - If <singleLine> is true, <data> will not start on new line.
+//   - If <skipEmpty> is true, will not print title if <data> is empty.
+//   - If <singleLine> is true, <data> will not start on new line.
+//
 // Refer to ReportT.StringP() for format handling
 func ReportStatus(data bool, title string, singleLine bool) {
 	r := ReportNew(data, title, false, singleLine)
@@ -90,10 +97,11 @@ func ReportStatus(data bool, title string, singleLine bool) {
 }
 
 // Only print if helper.Debug is true.
-//  - Print bool into true/false, with title(optional), into a string.
-//  - If <skipEmpty> is true, will not print title if <data> is empty.
-//  - If <singleLine> is true, <data> will not start on new line.
-//  - Return a string pointer.
+//   - Print bool into true/false, with title(optional), into a string.
+//   - If <skipEmpty> is true, will not print title if <data> is empty.
+//   - If <singleLine> is true, <data> will not start on new line.
+//   - Return a string pointer.
+//
 // Refer to ReportT.StringP() for format handling
 func ReportStatusSp(data bool, title string, singleLine bool) *string {
 	r := ReportNew(data, title, false, singleLine)
@@ -102,7 +110,8 @@ func ReportStatusSp(data bool, title string, singleLine bool) *string {
 }
 
 // Setup ReportT with data(optional/nil), title(optional/""), <skipEmpty>, <singleLine>.
-//  - Return the ReportT pointer.
+//   - Return the ReportT pointer.
+//
 // Refer to ReportT.StringP() for format handling
 func ReportNew(data any, title string, skipEmpty bool, singleLine bool) *ReportT {
 	var r ReportT
@@ -114,40 +123,42 @@ func ReportNew(data any, title string, skipEmpty bool, singleLine bool) *ReportT
 }
 
 // Print self.Data, self.Title to string
-//  - If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
-//  - If self.SingleLine is true, self.Data will not start on new line.
+//   - If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
+//   - If self.SingleLine is true, self.Data will not start on new line.
+//
 // Refer to ReportT.StringP() for format handling
-func (self *ReportT) String() string {
-	return *self.StringP()
+func (reportT *ReportT) String() string {
+	return *reportT.StringP()
 }
 
 // Only print if helper.Debug is true.
-//  - Print self.Data, self.Title to string
-//  - If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
-//  - If self.SingleLine is true, self.Data will not start on new line.
+//   - Print self.Data, self.Title to string
+//   - If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
+//   - If self.SingleLine is true, self.Data will not start on new line.
+//
 // Refer to ReportT.StringP() for format handling
-func (self *ReportT) StringDebug() string {
-	return *self.StringPDebug()
+func (reportT *ReportT) StringDebug() string {
+	return *reportT.StringPDebug()
 }
 
 // Print self.Data, self.Title to string pointer
-//  - If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
-//  - If self.SingleLine is true, self.Data will not start on new line.
-//  - self.Data formatting
-//    - []byte, string, Err, MyArray[error], MyArray[string], including array and pointer, are treated as string and processed by StrToJsonIndentSp()/StrPtrToJsonIndentSp()
-//    - MyArray[any] is processed by AnyToJsonMarshalIndentSp()
-//    - int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, including pointer, are processed by AnyToJsonMarshalSp()
-//    - All pointer types mentioned above, if nil, are treated as empty string
-//    - Others, usually struct, not specified, are processed by AnyToJsonMarshalIndentSp()
-func (self *ReportT) StringP() *string {
+//   - If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
+//   - If self.SingleLine is true, self.Data will not start on new line.
+//   - self.Data formatting
+//   - []byte, string, Err, MyArray[error], MyArray[string], including array and pointer, are treated as string and processed by StrToJsonIndentSp()/StrPtrToJsonIndentSp()
+//   - MyArray[any] is processed by AnyToJsonMarshalIndentSp()
+//   - int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, including pointer, are processed by AnyToJsonMarshalSp()
+//   - All pointer types mentioned above, if nil, are treated as empty string
+//   - Others, usually struct, not specified, are processed by AnyToJsonMarshalIndentSp()
+func (reportT *ReportT) StringP() *string {
 	var output string
 
-	switch v := self.Data.(type) {
+	switch v := reportT.Data.(type) {
 	case bool:
 		if DebugReport {
 			fmt.Println("case bool")
 		}
-		if self.ModeStatus {
+		if reportT.ModeStatus {
 			output = BoolStatus(v) + "\n"
 		} else {
 			output = BoolString(v) + "\n"
@@ -157,7 +168,7 @@ func (self *ReportT) StringP() *string {
 			fmt.Println("case *bool")
 		}
 		if v != nil {
-			if self.ModeStatus {
+			if reportT.ModeStatus {
 				output = BoolStatus(*v) + "\n"
 			} else {
 				output = BoolString(*v) + "\n"
@@ -285,7 +296,7 @@ func (self *ReportT) StringP() *string {
 		}
 	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *int, *int8, *int16, *int32, *int64, *uint, *uint8, *uint16, *uint32, *uint64, *float32, *float64:
 		if DebugReport {
-			Report("case *(u)int/8/16/32/64, *float32/64", self.Title, false, true)
+			Report("case *(u)int/8/16/32/64, *float32/64", reportT.Title, false, true)
 		}
 		output = *AnyToJsonMarshalSp(v, true)
 	default:
@@ -297,14 +308,14 @@ func (self *ReportT) StringP() *string {
 
 	// Title
 	var title string
-	if len(self.Title) > 0 {
-		title = self.Title + ": "
+	if len(reportT.Title) > 0 {
+		title = reportT.Title + ": "
 	}
 
 	// Output
 	if len(title) > 0 {
-		if !self.SkipEmpty && (len(output) == 0 || !self.SingleLine) ||
-			!self.SingleLine && len(output) != 0 {
+		if !reportT.SkipEmpty && (len(output) == 0 || !reportT.SingleLine) ||
+			!reportT.SingleLine && len(output) != 0 {
 			output = title + "\n" + output
 		} else if len(output) > 0 {
 			output = title + output
@@ -315,13 +326,14 @@ func (self *ReportT) StringP() *string {
 }
 
 // Only print if helper.Debug is true.
-//  - Print self.Data, self.Title to string pointer
-//  - If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
-//  - If self.SingleLine is true, self.Data will not start on new line.
+//   - Print self.Data, self.Title to string pointer
+//   - If self.SkipEmpty is true, will not print self.Title if self.Data is empty.
+//   - If self.SingleLine is true, self.Data will not start on new line.
+//
 // Refer to ReportT.StringP() for format handling
-func (self *ReportT) StringPDebug() *string {
+func (reportT *ReportT) StringPDebug() *string {
 	if Debug {
-		return self.StringP()
+		return reportT.StringP()
 	}
 	var s string = ""
 	return &s

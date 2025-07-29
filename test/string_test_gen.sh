@@ -1,6 +1,8 @@
 #!bash
 
-# Copyright © 2022 John, Sing Dao, Siu <john.sd.siu@gmail.com>
+# The MIT License
+#
+# Copyright © 2025 John, Sing Dao, Siu <john.sd.siu@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +23,9 @@
 # THE SOFTWARE.
 
 echo '/*
-Copyright © 2022 John, Sing Dao, Siu <john.sd.siu@gmail.com>
+The MIT License
+
+Copyright © 2025 John, Sing Dao, Siu <john.sd.siu@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

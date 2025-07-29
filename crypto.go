@@ -1,5 +1,7 @@
 /*
-Copyright © 2022 John, Sing Dao, Siu <john.sd.siu@gmail.com>
+The MIT License
+
+Copyright © 2025 John, Sing Dao, Siu <john.sd.siu@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,9 +32,9 @@ import (
 )
 
 // Encrypt msg with public key using nacl box seal anonymous.
-//  - Parameter "base64PublicKey" and returning string are base64 encoded.
-//  - Return nil if error
-//  - All errors append to Errs
+//   - Parameter "base64PublicKey" and returning string are base64 encoded.
+//   - Return nil if error
+//   - All errors append to Errs
 func BoxSealAnonymous(base64PublicKey, msg *string) *string {
 	var err error
 	var decodedKeyByte []byte

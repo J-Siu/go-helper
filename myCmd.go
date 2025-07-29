@@ -1,5 +1,7 @@
 /*
-Copyright © 2022 John, Sing Dao, Siu <john.sd.siu@gmail.com>
+The MIT License
+
+Copyright © 2025 John, Sing Dao, Siu <john.sd.siu@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,15 +32,15 @@ import (
 
 // A exec.Cmd wrapper
 type MyCmd struct {
-	ArgsP    *[]string    `json:"ArgsP"`   // In : Command args
-	CmdLn    string       `json:"CmdLn"`   // Out: Command line
-	CmdName  string       `json:"CmdName"` // In : Command name
-	Err      error        `json:"Err"`     // Out: run error
-	ExitCode int          `json:ExitCode`  // Out: Exit Code
-	Ran      bool         `json:"Ran"`     // Out: Set to true by Run()
-	Stderr   bytes.Buffer `json:"Stderr"`  // Out: Stderr
-	Stdout   bytes.Buffer `json:"Stdout"`  // Out: Stdout
-	WorkDir  string       `json:"WorkDir"` // In : Command working dir
+	ArgsP    *[]string    `json:"ArgsP"`    // In : Command args
+	CmdLn    string       `json:"CmdLn"`    // Out: Command line
+	CmdName  string       `json:"CmdName"`  // In : Command name
+	Err      error        `json:"Err"`      // Out: run error
+	ExitCode int          `json:"ExitCode"` // Out: Exit Code
+	Ran      bool         `json:"Ran"`      // Out: Set to true by Run()
+	Stderr   bytes.Buffer `json:"Stderr"`   // Out: Stderr
+	Stdout   bytes.Buffer `json:"Stdout"`   // Out: Stdout
+	WorkDir  string       `json:"WorkDir"`  // In : Command working dir
 }
 
 // MyCmd run func wrapper.
@@ -72,42 +74,42 @@ func MyCmdInit(name string, argsP *[]string, workPathP *string) *MyCmd {
 
 // Setup and return MyCmd pointer.
 //   - If <workPathP> is empty/nil, current directory is used.
-func (self *MyCmd) Init(name string, argsP *[]string, workPathP *string) *MyCmd {
-	self.ArgsP = argsP
-	self.CmdName = name
-	self.ExitCode = 0
-	self.WorkDir = *FullPath(workPathP)
-	return self
+func (myCmd *MyCmd) Init(name string, argsP *[]string, workPathP *string) *MyCmd {
+	myCmd.ArgsP = argsP
+	myCmd.CmdName = name
+	myCmd.ExitCode = 0
+	myCmd.WorkDir = *FullPath(workPathP)
+	return myCmd
 }
 
 // Reset MyCmd
-func (self *MyCmd) Reset() *MyCmd {
-	var myCmd MyCmd
-	*self = myCmd
-	return self
+func (myCmd *MyCmd) Reset() *MyCmd {
+	var newMyCmd MyCmd
+	*myCmd = newMyCmd
+	return myCmd
 }
 
 // A exec.Cmd.Run() wrapper.
-func (self *MyCmd) Run() error {
-	execCmd := exec.Command(self.CmdName, *self.ArgsP...)
-	execCmd.Stdout = &self.Stdout
-	execCmd.Stderr = &self.Stderr
-	execCmd.Dir = self.WorkDir
-	self.CmdLn = execCmd.String()
-	self.Err = execCmd.Run()
-	self.Ran = true
+func (myCmd *MyCmd) Run() error {
+	execCmd := exec.Command(myCmd.CmdName, *myCmd.ArgsP...)
+	execCmd.Stdout = &myCmd.Stdout
+	execCmd.Stderr = &myCmd.Stderr
+	execCmd.Dir = myCmd.WorkDir
+	myCmd.CmdLn = execCmd.String()
+	myCmd.Err = execCmd.Run()
+	myCmd.Ran = true
 
-	if exitErr, ok := self.Err.(*exec.ExitError); ok {
+	if exitErr, ok := myCmd.Err.(*exec.ExitError); ok {
 		// fmt.Println("*** self.Err ok, get cmd exit code ***")
-		self.ExitCode = exitErr.ExitCode()
-	} else if self.Err != nil {
+		myCmd.ExitCode = exitErr.ExitCode()
+	} else if myCmd.Err != nil {
 		// For simplicity, force exit code to 1
 		// fmt.Println("*** self.Err != nil ***")
 	}
 
-	ReportDebug(&self, "myCmd", false, false)
-	ReportDebug(self.Stderr.String(), "myCmd:Stderr", false, false)
-	ReportDebug(self.Stdout.String(), "myCmd:Stdout", false, false)
-	ReportDebug(self.Err, "myCmd:Err", false, false)
-	return self.Err
+	ReportDebug(&myCmd, "myCmd", false, false)
+	ReportDebug(myCmd.Stderr.String(), "myCmd:Stderr", false, false)
+	ReportDebug(myCmd.Stdout.String(), "myCmd:Stdout", false, false)
+	ReportDebug(myCmd.Err, "myCmd:Err", false, false)
+	return myCmd.Err
 }
