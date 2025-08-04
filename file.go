@@ -27,6 +27,7 @@ package helper
 import (
 	"os"
 	"path"
+	"regexp"
 	"strings"
 )
 
@@ -142,4 +143,14 @@ func FileSimplifyName(filename string) string {
 	filename = strings.ReplaceAll(filename, "-", "")
 	filename = strings.ReplaceAll(filename, "_", "")
 	return filename
+}
+
+func TildeEnvExpand(strIn string) (strOut string) {
+	if strIn == "~" {
+		strOut = "$HOME"
+	} else {
+		re := regexp.MustCompile(`^~/`)
+		strOut = re.ReplaceAllString(strIn, "$$HOME/")
+	}
+	return os.ExpandEnv(strOut)
 }
