@@ -5,7 +5,6 @@ Collections of Golang helper functions.
 ### Table Of Content
 <!-- TOC -->
 
-- [Table Of Content](#table-of-content)
 - [Features](#features)
   - [common.go](#commongo)
   - [crypto.go](#cryptogo)
@@ -254,6 +253,8 @@ go test report_test.go
     - Update test cases
 - v1.1.7
   - Use proper receiver var
+- v1.1.8
+  - Add TildeEnvExpand()
 
 ### License
 
