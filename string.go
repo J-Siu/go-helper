@@ -29,9 +29,21 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"os"
+	"regexp"
 	"strconv"
 	"strings"
 )
+
+func TildeEnvExpand(strIn string) (strOut string) {
+	if strIn == "~" {
+		strOut = "$HOME"
+	} else {
+		re := regexp.MustCompile(`^~/`)
+		strOut = re.ReplaceAllString(strIn, "$$HOME/")
+	}
+	return os.ExpandEnv(strOut)
+}
 
 // bool to "true"/"false"
 func BoolString(b bool) string {
