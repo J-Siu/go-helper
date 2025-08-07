@@ -255,6 +255,8 @@ go test report_test.go
   - Use proper receiver var
 - v1.1.8
   - Add TildeEnvExpand()
+- v1.1.9
+  - Add error, *error type support in ReportT.StringP()
 
 ### License
 

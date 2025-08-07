@@ -241,10 +241,22 @@ func (reportT *ReportT) StringP() *string {
 		output = *StrToJsonIndentSp(v.Error(), true)
 	case *Err:
 		if DebugReport {
-			fmt.Println("case Err")
+			fmt.Println("case *Err")
 		}
 		if v != nil {
 			output = *StrToJsonIndentSp(v.Error(), true)
+		}
+	case error:
+		if DebugReport {
+			fmt.Println("case error")
+		}
+		output = *StrToJsonIndentSp(v.Error(), true)
+	case *error:
+		if DebugReport {
+			fmt.Println("case *error")
+		}
+		if v != nil {
+			output = *StrToJsonIndentSp((*v).Error(), true)
 		}
 	case MyArray[error]:
 		if DebugReport {
