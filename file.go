@@ -145,6 +145,7 @@ func FileSimplifyName(filename string) string {
 	return filename
 }
 
+// Expand Linux `~` and environment variable in string
 func TildeEnvExpand(strIn string) (strOut string) {
 	if strIn == "~" {
 		strOut = "$HOME"
@@ -153,4 +154,22 @@ func TildeEnvExpand(strIn string) (strOut string) {
 		strOut = re.ReplaceAllString(strIn, "$$HOME/")
 	}
 	return os.ExpandEnv(strOut)
+}
+
+// Read file into []string.
+//
+// Lines are split by "\n".
+func FileStrArrRead(filePath string) (strArray []string, err error) {
+	var byteRead []byte
+	byteRead, err = os.ReadFile(filePath)
+	if err == nil {
+		strArray = strings.Split(string(byteRead), "\n")
+	}
+	return strArray, err
+}
+
+// Write []string into file
+func FileStrArrWrite(filePath string, strArray []string, perm os.FileMode) (err error) {
+	err = os.WriteFile(filePath, []byte(strings.Join(strArray, "\n")), perm)
+	return err
 }

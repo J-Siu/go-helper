@@ -28,6 +28,7 @@ package helper
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -131,8 +132,7 @@ func JsonIndentSp(baP *[]byte, endLn bool) *string {
 // Change number type to string
 //   - Only used by AnyToJsonMarshalIndentSp(), AnyToJsonMarshalSp()
 //   - Provide consistent output when transforming number types and their pointers
-func numToStr(data any) *string {
-	var str string
+func NumToStr(data any) (str string, err error) {
 	switch v := data.(type) {
 	case int:
 		str = strconv.FormatInt(int64(v), 10)
@@ -231,9 +231,9 @@ func numToStr(data any) *string {
 			str = strconv.FormatInt(int64(*v), 10)
 		}
 	default:
-		str = "Not number type."
+		err = errors.New("not numeric type")
 	}
-	return &str
+	return str, err
 }
 
 // Json marshal indent format any
@@ -241,21 +241,21 @@ func numToStr(data any) *string {
 //   - If <endLn> is true, add new line at end of string if not exist.
 //   - Return string pointer.
 func AnyToJsonMarshalIndentSp(data any, endLn bool) *string {
+	// prefix := "AnyToJsonMarshalIndentSp"
 	var str string
 	var err error
 
 	switch v := data.(type) {
 	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *int, *int8, *int16, *int32, *int64, *uint, *uint8, *uint16, *uint32, *uint64, *float32, *float64:
-		str = *numToStr(v)
+		str, _ = NumToStr(v)
 	default:
 		if DebugReport {
 			fmt.Println("case default")
 		}
-		j, err := json.MarshalIndent(data, "", "  ")
+		var j []byte
+		j, err = json.MarshalIndent(data, "", "  ")
 		if err == nil {
 			str = string(j)
-		} else {
-			Errs.Add(err)
 		}
 	}
 
@@ -266,7 +266,7 @@ func AnyToJsonMarshalIndentSp(data any, endLn bool) *string {
 	} else {
 		str = ""
 	}
-
+	// ErrsQueue(err, prefix)
 	return &str
 }
 
@@ -275,21 +275,21 @@ func AnyToJsonMarshalIndentSp(data any, endLn bool) *string {
 //   - If <endLn> is true, add new line at end of string if not exist.
 //   - Return string pointer.
 func AnyToJsonMarshalSp(data any, endLn bool) *string {
+	// prefix := "AnyToJsonMarshalSp"
 	var str string
 	var err error
 
 	switch v := data.(type) {
 	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64, *int, *int8, *int16, *int32, *int64, *uint, *uint8, *uint16, *uint32, *uint64, *float32, *float64:
-		str = *numToStr(v)
+		str, _ = NumToStr(v)
 	default:
 		if DebugReport {
 			fmt.Println("case default")
 		}
-		j, err := json.Marshal(data)
+		var j []byte
+		j, err = json.Marshal(data)
 		if err == nil {
 			str = string(j)
-		} else {
-			Errs.Add(err)
 		}
 	}
 
@@ -300,7 +300,7 @@ func AnyToJsonMarshalSp(data any, endLn bool) *string {
 	} else {
 		str = ""
 	}
-
+	// ErrsQueue(err, prefix)
 	return &str
 }
 

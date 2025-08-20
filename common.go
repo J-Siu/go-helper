@@ -26,6 +26,7 @@ package helper
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 )
 
@@ -38,6 +39,13 @@ var DebugReport bool = false
 
 // error list
 var Errs MyArray[error]
+
+// If `err` != nil, add `err` to helper Errs array
+func ErrsQueue(err error, prefix string) {
+	if err != nil {
+		Errs.Add(errors.New(*ReportSp(err, prefix, true, true)))
+	}
+}
 
 // warning list
 var Warns MyArray[string]
