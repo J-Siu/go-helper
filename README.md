@@ -44,26 +44,28 @@ report.go|report/log functions auto detect and apply json marshal indent
 string.go|string/array functions
 
 #### common.go
-- var Debug bool = false
-- var DebugReport bool = false
-- var Errs ErrsType
-- var Warns Warnings
-- var NIL_SPRINT string = fmt.Sprint(nil)
-- var NIL_JSON string
+
+- func ErrsQueue(err error, prefix string)
 - func init()
+
 #### crypto.go
+
 - func BoxSealAnonymous(base64PublicKey, msg *string) *string
+
 #### debug.go
+
 - func DebugEnv() bool
 - func DebugLog(msg ...interface{})
 - func ErrCheck(e error)
+
 #### err.go
-- type Err string
-- type ErrsType struct
-- func (self Err) Error() string
-- func (self *Err) String() string
-- func (self *Err) StringP() *string
+
+- func (err Err) Error() string
+- func (err *Err) String() string
+- func (err *Err) StringP() *string
+
 #### file.go
+
 - func CurrentPath() *string
 - func CurrentDirBase() *string
 - func FullPath(workPathP *string) *string
@@ -75,7 +77,12 @@ string.go|string/array functions
 - func FileRemoveExt(filename string) string
 - func FileInDir(dir, filename string) string
 - func FileSimplifyName(filename string) string
+- func TildeEnvExpand(strIn string) (strOut string)
+- func FileStrArrRead(filePath string) (strArray []string, err error)
+- func FileStrArrWrite(filePath string, strArray []string, perm os.FileMode) (err error)
+
 #### gitCmd.go
+
 - func Git(workPathP *string, optionsP *[]string) *MyCmd
 - func GitClone(workPathP *string, optionsP *[]string) *MyCmd
 - func GitExecExist() bool
@@ -91,23 +98,25 @@ string.go|string/array functions
 - func GitRemoteRemoveAll(workPathP *string)
 - func GitRoot(workPathP *string) string
 - func GitRootSubmodule(workPathP *string) string
+
 #### myArray.go
-- type myArray[T any] []T
-- func (self *myArray[T]) Empty() bool
-- func (self *myArray[T]) NotEmpty() bool
-- func (self *myArray[T]) Clear()
-- func (self *myArray[T]) Add(t T) *myArray[T]
+
+- func (self *MyArray[T]) Empty() bool
+- func (self *MyArray[T]) NotEmpty() bool
+- func (self *MyArray[T]) Clear()
+- func (self *MyArray[T]) Add(t T) *MyArray[T]
+
 #### myCmd.go
-- type MyCmd struct
+
 - func MyCmdRun(cmdName string, argsP *[]string, workPathP *string) *MyCmd
 - func MyCmdRunWg(cmdName string, argsP *[]string, workPathP *string, title *string, wgP *sync.WaitGroup, output bool) *MyCmd
 - func MyCmdInit(name string, argsP *[]string, workPathP *string) *MyCmd
-- func (self *MyCmd) Init(name string, argsP *[]string, workPathP *string) *MyCmd
-- func (self *MyCmd) Reset() *MyCmd
-- func (self *MyCmd) Run() error
-- func (self *MyCmd) ExitCode() int
+- func (myCmd *MyCmd) Init(name string, argsP *[]string, workPathP *string) *MyCmd
+- func (myCmd *MyCmd) Reset() *MyCmd
+- func (myCmd *MyCmd) Run() error
+
 #### report.go
-- type ReportT struct
+
 - func Report(data any, title string, skipEmpty bool, singleLine bool)
 - func ReportDebug(data any, title string, skipEmpty bool, singleLine bool)
 - func ReportSp(data any, title string, skipEmpty bool, singleLine bool) *string
@@ -115,11 +124,13 @@ string.go|string/array functions
 - func ReportStatus(data bool, title string, singleLine bool)
 - func ReportStatusSp(data bool, title string, singleLine bool) *string
 - func ReportNew(data any, title string, skipEmpty bool, singleLine bool) *ReportT
-- func (self *ReportT) String() string
-- func (self *ReportT) StringDebug() string
-- func (self *ReportT) StringP() *string
-- func (self *ReportT) StringPDebug() *string
+- func (reportT *ReportT) String() string
+- func (reportT *ReportT) StringDebug() string
+- func (reportT *ReportT) StringP() *string
+- func (reportT *ReportT) StringPDebug() *string
+
 #### string.go
+
 - func BoolString(b bool) string
 - func BoolStatus(b bool) string
 - func BoolYesNo(b bool) string
@@ -129,7 +140,7 @@ string.go|string/array functions
 - func StrArrayPtrPrintlnSp(saP *[]string) *string
 - func StrPtrToArrayPtr(sP *string) *[]string
 - func JsonIndentSp(baP *[]byte, endLn bool) *string
-- func numToStr(data any) *string
+- func NumToStr(data any) (str string, err error)
 - func AnyToJsonMarshalIndentSp(data any, endLn bool) *string
 - func AnyToJsonMarshalSp(data any, endLn bool) *string
 - func StrPtrToJsonIndentSp(strP *string, endLn bool) *string
@@ -257,6 +268,12 @@ go test report_test.go
   - Add TildeEnvExpand()
 - v1.1.9
   - Add error, *error type support in ReportT.StringP()
+- v1.1.10
+  - Added
+    - ErrsQueue()
+    - FileStrArrRead()
+    - FileStrArrWrite()
+    - NumToStr()
 
 ### License
 
