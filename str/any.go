@@ -21,7 +21,7 @@ THE SOFTWARE.
 */
 
 // Convert anything to string
-package strany
+package str
 
 import (
 	"bytes"
@@ -29,7 +29,7 @@ import (
 	"fmt"
 )
 
-type strAny struct {
+type Any struct {
 	err          error
 	indentEnable bool   // If `true`, true, use `json.MarshalIndent` for struct, else `json.Marshal`
 	indent       string // `indent` of json.MarshalIndent(v any, prefix, indent string)
@@ -37,38 +37,38 @@ type strAny struct {
 }
 
 // Initialize
-func (e *strAny) New() *strAny {
-	e.err = nil
-	e.indent = "  "
-	e.prefix = ""
-	return e
+func (s *Any) New() *Any {
+	s.err = nil
+	s.indent = "  "
+	s.prefix = ""
+	return s
 }
 
 // `enable` = `true“, use `json.MarshalIndent` for struct, else `json.Marshal`
-func (e *strAny) IndentEnable(enable bool) *strAny {
-	e.indentEnable = enable
-	return e
+func (s *Any) IndentEnable(enable bool) *Any {
+	s.indentEnable = enable
+	return s
 }
 
 // `indent` of json.MarshalIndent(v any, prefix, indent string)
-func (e *strAny) Indent(indent string) *strAny {
-	e.indent = indent
-	return e
+func (s *Any) Indent(indent string) *Any {
+	s.indent = indent
+	return s
 }
 
 // `prefix` of json.MarshalIndent(v any, prefix, indent string)
-func (e *strAny) Prefix(prefix string) *strAny {
-	e.prefix = prefix
-	return e
+func (s *Any) Prefix(prefix string) *Any {
+	s.prefix = prefix
+	return s
 }
 
 // Return json.Marshal* error
-func (e *strAny) Err() error { return e.err }
+func (s *Any) Err() error { return s.err }
 
 // Output `data` as string
 //
 // If `IndentEnable` is true, struct will be converted with `json.MarshalIndent`, else `json.Marshal`
-func (e *strAny) Str(data any) (str string) {
+func (s *Any) Str(data any) (str string) {
 	switch v := data.(type) {
 	case string:
 		str = v
@@ -158,38 +158,14 @@ func (e *strAny) Str(data any) (str string) {
 		}
 	default:
 		var b []byte
-		if e.indentEnable {
-			b, e.err = json.MarshalIndent(v, e.prefix, e.indent)
+		if s.indentEnable {
+			b, s.err = json.MarshalIndent(v, s.prefix, s.indent)
 		} else {
-			b, e.err = json.Marshal(v)
+			b, s.err = json.Marshal(v)
 		}
-		if e.err == nil {
+		if s.err == nil {
 			str = string(b)
 		}
 	}
 	return str
 }
-
-// ---
-
-var fromAny = New()
-
-// Initialize
-func New() *strAny { return new(strAny).New() }
-
-// `enable` = `true“, use `json.MarshalIndent` for struct, else `json.Marshal`
-func IndentEnable(enable bool) *strAny { return fromAny.IndentEnable(enable) }
-
-// `indent` of json.MarshalIndent(v any, prefix, indent string)
-func Indent(indent string) *strAny { return fromAny.Indent(indent) }
-
-// `prefix` of json.MarshalIndent(v any, prefix, indent string)
-func Prefix(prefix string) *strAny { return fromAny.Prefix(prefix) }
-
-// Return json.Marshal* error
-func Err() error { return fromAny.Err() }
-
-// Output `data` as string
-//
-// If `IndentEnable` is true, struct will be converted with `json.MarshalIndent`, else `json.Marshal`
-func Str(data any) string { return fromAny.Str(data) }

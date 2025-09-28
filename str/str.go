@@ -27,6 +27,8 @@ package str
 
 import (
 	"strings"
+
+	"github.com/charlievieth/strcase"
 )
 
 // Check if string array contain a string.
@@ -75,6 +77,28 @@ func ArraySPrintln(arrIn *[]string) *string {
 		strOut += s + "\n"
 	}
 	return &strOut
+}
+
+// Check if string contains any substring of an array
+//   - result (bool)
+//   - if result is true, `resultVal` == matching substring
+//   - if result is false, `resultVal` == ""
+func ContainsAnySubStrings(strIn string, subStrings *[]string) (result bool, resultVal string) {
+	// prefix := "matchList"
+	for _, subStr := range *subStrings {
+		if strcase.Contains(strIn, subStr) {
+			result = true
+			resultVal = subStr
+			break
+		}
+	}
+	return result, resultVal
+}
+
+// Return only bool from [ContainsAnySubStrings]
+func ContainsAnySubStringsBool(str string, subStrings *[]string) (result bool) {
+	result, _ = ContainsAnySubStrings(str, subStrings)
+	return result
 }
 
 // *string to *[]string, split by "\n"
