@@ -276,6 +276,8 @@ go test report_test.go
     - NumToStr()
 - v2.0.0
   - Cleanup
+- v2.1.0
+  - Add strany
 
 ### License
 
