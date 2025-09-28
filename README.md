@@ -279,7 +279,15 @@ go test report_test.go
 - v2.1.0
   - Add strany
 - v2.2.0
-  - Add ezlog, str.Any
+  - add ezlog, str.Any
+- v2.2.1
+  - Remove array.go
+  - cmd.go
+    - Cmd stuct is now exported
+    - Add package level functions
+  - str.Any
+    - New() will enable indent
+    - Add []error and *[]error support
 
 ### License
 

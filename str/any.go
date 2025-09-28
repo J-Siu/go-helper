@@ -40,6 +40,7 @@ type Any struct {
 func (s *Any) New() *Any {
 	s.err = nil
 	s.indent = "  "
+	s.indentEnable = true
 	s.prefix = ""
 	return s
 }
@@ -78,6 +79,24 @@ func (s *Any) Str(data any) (str string) {
 		str = v.Error()
 	case *error:
 		str = (*v).Error()
+	case []error:
+		last := len(v) - 1
+		for i, e := range v {
+			str += e.Error()
+			if i < last {
+				str += "\n"
+			}
+		}
+	case *[]error:
+		if v != nil {
+			last := len(*v) - 1
+			for i, e := range *v {
+				str += e.Error()
+				if i < last {
+					str += "\n"
+				}
+			}
+		}
 	case bytes.Buffer:
 		str = v.String()
 	case *bytes.Buffer:

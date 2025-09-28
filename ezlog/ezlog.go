@@ -69,7 +69,7 @@ type ezlog struct {
 }
 
 func (ez *ezlog) New() *ezlog {
-	ez.StrAny = new(str.Any).New().IndentEnable(true)
+	ez.StrAny = new(str.Any).New()
 	ez.SetLogLevel(ErrLevel)
 	ez.SetOutPrintLn()
 	return ez
@@ -210,61 +210,61 @@ func (ez *ezlog) Trace() *ezlog {
 
 // ---
 
-var log = New()
+var logger = New()
 
 func New() *ezlog {
 	return new(ezlog).New()
 }
 
 // Set all log func to use fmt.Print()
-func SetOutPrint() *ezlog { return log.SetOutPrint() }
+func SetOutPrint() *ezlog { return logger.SetOutPrint() }
 
 // Set all log func to use fmt.Println()
-func SetOutPrintLn() *ezlog { return log.SetOutPrintLn() }
+func SetOutPrintLn() *ezlog { return logger.SetOutPrintLn() }
 
 // Get log level
-func GetLogLevel() Level { return log.GetLogLevel() }
+func GetLogLevel() Level { return logger.GetLogLevel() }
 
 // Set log level
-func SetLogLevel(level Level) *ezlog { return log.SetLogLevel(level) }
+func SetLogLevel(level Level) *ezlog { return logger.SetLogLevel(level) }
 
 func Log() *ezlog {
-	log.Clear().msgLogLevel = LogLevel
-	return log
+	logger.Clear().msgLogLevel = LogLevel
+	return logger
 }
 func Emerg() *ezlog {
-	log.Clear().msgLogLevel = EmergLevel
-	return log
+	logger.Clear().msgLogLevel = EmergLevel
+	return logger
 }
 func Alert() *ezlog {
-	log.Clear().msgLogLevel = AlertLevel
-	return log
+	logger.Clear().msgLogLevel = AlertLevel
+	return logger
 }
 func Crit() *ezlog {
-	log.Clear().msgLogLevel = CritLevel
-	return log
+	logger.Clear().msgLogLevel = CritLevel
+	return logger
 }
 func Err() *ezlog {
-	log.Clear().msgLogLevel = ErrLevel
-	return log
+	logger.Clear().msgLogLevel = ErrLevel
+	return logger
 }
 func Warning() *ezlog {
-	log.Clear().msgLogLevel = WarningLevel
-	return log
+	logger.Clear().msgLogLevel = WarningLevel
+	return logger
 }
 func Notice() *ezlog {
-	log.Clear().msgLogLevel = NoticeLevel
-	return log
+	logger.Clear().msgLogLevel = NoticeLevel
+	return logger
 }
 func Info() *ezlog {
-	log.Clear().msgLogLevel = InfoLevel
-	return log
+	logger.Clear().msgLogLevel = InfoLevel
+	return logger
 }
 func Debug() *ezlog {
-	log.Clear().msgLogLevel = DebugLevel
-	return log
+	logger.Clear().msgLogLevel = DebugLevel
+	return logger
 }
 func Trace() *ezlog {
-	log.Clear().msgLogLevel = TraceLevel
-	return log
+	logger.Clear().msgLogLevel = TraceLevel
+	return logger
 }

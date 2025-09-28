@@ -1,4 +1,4 @@
-# go-StrAny
+# StrAny
 
 Convert anything to string.
 

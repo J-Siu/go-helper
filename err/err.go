@@ -24,16 +24,17 @@ THE SOFTWARE.
 
 package err
 
-import (
-	"github.com/J-Siu/go-helper/v2/array"
-)
-
 // error list
-var Errs array.Array[error]
+var Errs []error
+
+// var Errs array.Array[error]
 
 // If `err` != nil, add `err` to helper Errs array
-func ErrsQueue(err error) {
-	if err != nil {
-		Errs.Add(err)
+func Queue(e error) {
+	if e != nil {
+		Errs = append(Errs, e)
+		// Errs.Add(e)
 	}
 }
+func Len() int    { return len(Errs) }
+func Empty() bool { return len(Errs) == 0 }
