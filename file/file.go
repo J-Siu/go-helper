@@ -83,6 +83,28 @@ func IsRegularFile(workPath string) (result bool) {
 	return result
 }
 
+// --- Directory
+
+// Search for file in a directory
+//   - filename path info removed automatically, only base is used
+//   - case insensitive search
+//   - return actually filename if found
+//   - return empty if not found or error
+//   - error is added to Errs
+func InDir(dir, filename string) (result string) {
+	fileBase := path.Base(filename)
+	files, err := os.ReadDir(dir)
+	if err == nil {
+		for _, f := range files {
+			if strings.EqualFold(fileBase, f.Name()) {
+				// case insensitive matched, return real name
+				return f.Name()
+			}
+		}
+	}
+	return result
+}
+
 // Check workPath is directory
 func IsDir(workPath string) (result bool) {
 	fileInfo, err := os.Stat(workPath)
@@ -97,42 +119,26 @@ func SameDir(path1, path2 string) bool {
 	return path.Dir(path1) == path.Dir(path2)
 }
 
+// --- Extension
+
 // Check file has supplied extension
-func FileHasExt(name, ext string) bool {
+func ExtHas(name, ext string) bool {
 	return strings.EqualFold(path.Ext(name), ext)
 }
 
 // Return filename/path with extension removed
-func FileRemoveExt(filename string) string {
+func ExtRemove(filename string) string {
 	return strings.TrimSuffix(filename, path.Ext(filename))
 }
 
-// Search for file in a directory
-//   - filename path info removed automatically, only base is used
-//   - case insensitive search
-//   - return actually filename if found
-//   - return empty if not found or error
-//   - error is added to Errs
-func FileInDir(dir, filename string) (result string) {
-	var fileBase string = strings.ToLower(path.Base(filename))
-	dirEntry, err := os.ReadDir(dir)
-	if err == nil {
-		for _, f := range dirEntry {
-			if fileBase == strings.ToLower(f.Name()) {
-				// case insensitive matched, return real name
-				return f.Name()
-			}
-		}
-	}
-	return result
-}
+// --- Filename
 
 // Apply following to filename:
 //   - remove extension
 //   - to lowercase
 //   - remove -,_
-func FileSimplifyName(filename string) string {
-	filename = FileRemoveExt(filename)
+func SimplifyName(filename string) string {
+	filename = ExtRemove(filename)
 	filename = strings.ToLower(filename)
 	filename = strings.ReplaceAll(filename, "-", "")
 	filename = strings.ReplaceAll(filename, "_", "")
@@ -150,10 +156,12 @@ func TildeEnvExpand(strIn string) (strOut string) {
 	return os.ExpandEnv(strOut)
 }
 
+// --- Array
+
 // Read file into []string.
 //
 // Lines are split by "\n".
-func FileStrArrRead(filePath string) (strArray []string, err error) {
+func ArrayRead(filePath string) (strArray []string, err error) {
 	var byteRead []byte
 	byteRead, err = os.ReadFile(filePath)
 	if err == nil {
@@ -163,7 +171,7 @@ func FileStrArrRead(filePath string) (strArray []string, err error) {
 }
 
 // Write []string into file
-func FileStrArrWrite(filePath string, strArray []string, perm os.FileMode) (err error) {
+func ArrayWrite(filePath string, strArray []string, perm os.FileMode) (err error) {
 	err = os.WriteFile(filePath, []byte(strings.Join(strArray, "\n")), perm)
 	return err
 }

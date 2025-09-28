@@ -274,6 +274,8 @@ go test report_test.go
     - FileStrArrRead()
     - FileStrArrWrite()
     - NumToStr()
+- v2.0.0
+  - Cleanup
 
 ### License
 

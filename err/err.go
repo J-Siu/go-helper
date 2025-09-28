@@ -22,26 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package array
+package err
 
-type Array[T any] []T
+import (
+	"github.com/J-Siu/go-helper/v2/array"
+)
 
-// Return true if ErrsType array is empty
-func (a *Array[T]) Empty() bool {
-	return len(*a) == 0
-}
+// error list
+var Errs array.Array[error]
 
-// Return true if ErrsType array is not empty
-func (a *Array[T]) NotEmpty() bool {
-	return len(*a) > 0
-}
-
-// Clear the ErrsType array
-func (a *Array[T]) Clear() {
-	a = &Array[T]{}
-}
-
-func (a *Array[T]) Add(t T) *Array[T] {
-	*a = append(*a, t)
-	return a
+// If `err` != nil, add `err` to helper Errs array
+func ErrsQueue(err error) {
+	if err != nil {
+		Errs.Add(err)
+	}
 }

@@ -23,7 +23,7 @@ func Test_ExitCode_0(t *testing.T) {
 }
 
 // Exit code should not be 0
-func Test_ExitCode_Not_Equal_0(t *testing.T) {
+func Test_ExitCode_Not_0(t *testing.T) {
 	var (
 		notWanted int    = 0
 		cli       string = "ls"
