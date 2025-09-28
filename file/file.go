@@ -22,7 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package helper
+// collection of file helper functions
+package file
 
 import (
 	"os"
@@ -72,28 +73,23 @@ func FullPathStr(workPath string) *string {
 }
 
 // Check workPath is regular file
-func IsRegularFile(workPath string) bool {
+//
+// Return false on stat() error
+func IsRegularFile(workPath string) (result bool) {
 	fileInfo, err := os.Stat(workPath)
-	if err != nil {
-		if Debug {
-			ReportDebug(fileInfo, "IsRegularFile:fileInfo", false, false)
-			Errs.Add(err)
-		}
-		return false
+	if err == nil {
+		result = fileInfo.Mode().IsRegular()
 	}
-	return fileInfo.Mode().IsRegular()
+	return result
 }
 
 // Check workPath is directory
-func IsDir(workPath string) bool {
+func IsDir(workPath string) (result bool) {
 	fileInfo, err := os.Stat(workPath)
-	if err != nil {
-		if Debug {
-			Errs.Add(err)
-		}
-		return false
+	if err == nil {
+		result = fileInfo.IsDir()
 	}
-	return fileInfo.IsDir()
+	return result
 }
 
 // Check two paths have same parent directory
@@ -117,20 +113,18 @@ func FileRemoveExt(filename string) string {
 //   - return actually filename if found
 //   - return empty if not found or error
 //   - error is added to Errs
-func FileInDir(dir, filename string) string {
+func FileInDir(dir, filename string) (result string) {
 	var fileBase string = strings.ToLower(path.Base(filename))
 	dirEntry, err := os.ReadDir(dir)
-	if err != nil {
-		Errs.Add(err)
-		return ""
-	}
-	for _, f := range dirEntry {
-		if fileBase == strings.ToLower(f.Name()) {
-			// case insensitive matched, return real name
-			return f.Name()
+	if err == nil {
+		for _, f := range dirEntry {
+			if fileBase == strings.ToLower(f.Name()) {
+				// case insensitive matched, return real name
+				return f.Name()
+			}
 		}
 	}
-	return ""
+	return result
 }
 
 // Apply following to filename:

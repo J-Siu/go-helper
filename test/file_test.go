@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/J-Siu/go-helper"
+	"github.com/J-Siu/go-helper/v2/file"
 )
 
 func Test_CurrentDirBase(t *testing.T) {
 	var wanted string = "test"
-	var msg *string = helper.CurrentDirBase()
+	var msg *string = file.CurrentDirBase()
 	fmt.Println("CurrentDirBase() is `" + *msg + "`")
 	if *msg != wanted {
 		t.Fatalf(`CurrentDirBase() = "%s", not "%s"`, *msg, wanted)

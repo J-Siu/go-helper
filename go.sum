@@ -1,4 +1,4 @@
-golang.org/x/crypto v0.40.0 h1:r4x+VvoG5Fm+eJcxMaY8CQM7Lb0l1lsmjGBQ6s8BfKM=
-golang.org/x/crypto v0.40.0/go.mod h1:Qr1vMER5WyS2dfPHAlsOj01wgLbsyWtFn/aY+5+ZdxY=
-golang.org/x/sys v0.34.0 h1:H5Y5sJ2L2JRdyv7ROF1he/lPdvFsd0mJHFw2ThKHxLA=
-golang.org/x/sys v0.34.0/go.mod h1:BJP2sWEmIv4KK5OTEluFJCKSidICx8ciO85XgH3Ak8k=
+github.com/J-Siu/go-ezlog/v2 v2.1.3 h1:A3LWSvSbvUByTSWuHsvTIenPTvNMbp2K1s5lwfxKH18=
+github.com/J-Siu/go-ezlog/v2 v2.1.3/go.mod h1:lHk52GUbR9icnpM4TFIo39Vqt+7P8VF7hg5MNzZ+pnI=
+github.com/J-Siu/go-strany v1.0.0 h1:iF9RCnNqWky690eqrpjIA+TsRzR60FKZwxBuQmaJiRE=
+github.com/J-Siu/go-strany v1.0.0/go.mod h1:Yk/0OvltUlhYPOvfiM2twmvNFHtEVhkSu/Aw8IjtW5Q=

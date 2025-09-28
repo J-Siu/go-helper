@@ -4,17 +4,18 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/J-Siu/go-helper"
+	"github.com/J-Siu/go-helper/v2/cmd"
 )
 
 // Exit code should be 0
 func Test_ExitCode_0(t *testing.T) {
-	helper.Debug = true
-	var wanted int = 0
-	var cmd string = "ls"
-	var args []string = []string{"."}
-	var myCmd *helper.MyCmd = helper.MyCmdRun(cmd, &args, nil)
-	var msg int = myCmd.ExitCode
+	var (
+		wanted int    = 0
+		cli    string = "ls"
+		args          = []string{"."}
+		myCmd         = cmd.New(cli, &args, nil).Run()
+		msg    int    = myCmd.ExitCode
+	)
 	fmt.Printf("myCmd.ExitCode() = %d\n", msg)
 	if msg != wanted {
 		t.Fatalf("myCmd.ExitCode() = %d, not %d", msg, wanted)
@@ -23,12 +24,13 @@ func Test_ExitCode_0(t *testing.T) {
 
 // Exit code should not be 0
 func Test_ExitCode_Not_Equal_0(t *testing.T) {
-	helper.Debug = true
-	var notWanted int = 0
-	var cmd string = "ls"
-	var args []string = []string{"__This_Path_Does_Not_Exist__"}
-	var myCmd *helper.MyCmd = helper.MyCmdRun(cmd, &args, nil)
-	var msg int = myCmd.ExitCode
+	var (
+		notWanted int    = 0
+		cli       string = "ls"
+		args             = []string{"__This_Path_Does_Not_Exist__"}
+		myCmd            = cmd.New(cli, &args, nil).Run()
+		msg       int    = myCmd.ExitCode
+	)
 	fmt.Printf("myCmd.Err = %s\n", myCmd.Err.Error())
 	fmt.Printf("myCmd.ExitCode() = %d\n", msg)
 	if msg == notWanted {

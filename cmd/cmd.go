@@ -22,16 +22,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package helper
+// exec.Cmd wrapper
+package cmd
 
 import (
 	"bytes"
 	"os/exec"
 	"sync"
+
+	"github.com/J-Siu/go-ezlog/v2"
+	"github.com/J-Siu/go-helper/v2/file"
 )
 
-// A exec.Cmd wrapper
-type MyCmd struct {
+type cmd struct {
 	ArgsP    *[]string    `json:"ArgsP"`    // In : Command args
 	CmdLn    string       `json:"CmdLn"`    // Out: Command line
 	CmdName  string       `json:"CmdName"`  // In : Command name
@@ -43,73 +46,61 @@ type MyCmd struct {
 	WorkDir  string       `json:"WorkDir"`  // In : Command working dir
 }
 
-// MyCmd run func wrapper.
+// Setup and return cmd pointer.
 //   - If <workPathP> is empty/nil, current directory is used.
-func MyCmdRun(cmdName string, argsP *[]string, workPathP *string) *MyCmd {
-	return MyCmdRunWg(cmdName, argsP, workPathP, nil, nil, false)
-}
-
-// MyCmd run func wrapper with sync.WaitGroup support.
-//   - If <workPathP> is empty/nil, current directory is used.
-//   - Print if <output> is true
-func MyCmdRunWg(cmdName string, argsP *[]string, workPathP *string, title *string, wgP *sync.WaitGroup, output bool) *MyCmd {
-	if wgP != nil {
-		defer wgP.Done()
-	}
-	var self *MyCmd = MyCmdInit(cmdName, argsP, workPathP)
-	self.Run()
-	if output {
-		Report(self.Stdout.String(), *title+":Stdout", true, false)
-		Report(self.Stderr.String(), *title+":Stderr", true, false)
-	}
-	return self
-}
-
-// Setup and return MyCmd pointer.
-//   - If <workPathP> is empty/nil, current directory is used.
-func MyCmdInit(name string, argsP *[]string, workPathP *string) *MyCmd {
-	var self MyCmd
-	return self.Init(name, argsP, workPathP)
-}
-
-// Setup and return MyCmd pointer.
-//   - If <workPathP> is empty/nil, current directory is used.
-func (myCmd *MyCmd) Init(name string, argsP *[]string, workPathP *string) *MyCmd {
-	myCmd.ArgsP = argsP
-	myCmd.CmdName = name
-	myCmd.ExitCode = 0
-	myCmd.WorkDir = *FullPath(workPathP)
-	return myCmd
-}
-
-// Reset MyCmd
-func (myCmd *MyCmd) Reset() *MyCmd {
-	var newMyCmd MyCmd
-	*myCmd = newMyCmd
-	return myCmd
+func (c *cmd) New(name string, argsP *[]string, workPathP *string) *cmd {
+	c.ArgsP = argsP
+	c.CmdName = name
+	c.ExitCode = 0
+	c.WorkDir = *file.FullPath(workPathP)
+	return c
 }
 
 // A exec.Cmd.Run() wrapper.
-func (myCmd *MyCmd) Run() error {
-	execCmd := exec.Command(myCmd.CmdName, *myCmd.ArgsP...)
-	execCmd.Stdout = &myCmd.Stdout
-	execCmd.Stderr = &myCmd.Stderr
-	execCmd.Dir = myCmd.WorkDir
-	myCmd.CmdLn = execCmd.String()
-	myCmd.Err = execCmd.Run()
-	myCmd.Ran = true
+func (c *cmd) Run() *cmd {
+	execCmd := exec.Command(c.CmdName, *c.ArgsP...)
+	execCmd.Stdout = &c.Stdout
+	execCmd.Stderr = &c.Stderr
+	execCmd.Dir = c.WorkDir
+	c.CmdLn = execCmd.String()
+	c.Err = execCmd.Run()
+	c.Ran = true
 
-	if exitErr, ok := myCmd.Err.(*exec.ExitError); ok {
+	if exitErr, ok := c.Err.(*exec.ExitError); ok {
 		// fmt.Println("*** self.Err ok, get cmd exit code ***")
-		myCmd.ExitCode = exitErr.ExitCode()
-	} else if myCmd.Err != nil {
+		c.ExitCode = exitErr.ExitCode()
+	} else if c.Err != nil {
 		// For simplicity, force exit code to 1
 		// fmt.Println("*** self.Err != nil ***")
 	}
 
-	ReportDebug(&myCmd, "myCmd", false, false)
-	ReportDebug(myCmd.Stderr.String(), "myCmd:Stderr", false, false)
-	ReportDebug(myCmd.Stdout.String(), "myCmd:Stdout", false, false)
-	ReportDebug(myCmd.Err, "myCmd:Err", false, false)
-	return myCmd.Err
+	prefix := "cmd.Run"
+	ezlog.Debug().Name(prefix).Msg(&c).Out()
+	ezlog.Debug().Name(prefix).Name("Stdout").Msg(c.Stdout).Out()
+	ezlog.Debug().Name(prefix).Name("Stderr").Msg(c.Stderr).Out()
+	ezlog.Debug().Name(prefix).Name("Err").Msg(c.Err).Out()
+	return c
+}
+
+// run func wrapper with sync.WaitGroup support.
+//   - If <workPathP> is empty/nil, current directory is used.
+//   - Print if <output> is true
+func (c *cmd) RunWg(title *string, wgP *sync.WaitGroup, output bool) *cmd {
+	if wgP != nil {
+		defer wgP.Done()
+	}
+	c.Run()
+	if output {
+		ezlog.Log().Name(title).Name("Stdout").Msg(c.Stdout).Out()
+		ezlog.Log().Name(title).Name("Stderr").Msg(c.Stderr).Out()
+	}
+	return c
+}
+
+func (c *cmd) Error() error { return c.Err }
+
+// Setup and return MyCmd pointer.
+//   - If <workPathP> is empty/nil, current directory is used.
+func New(name string, argsP *[]string, workPathP *string) *cmd {
+	return new(cmd).New(name, argsP, workPathP)
 }

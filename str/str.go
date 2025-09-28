@@ -22,32 +22,53 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package helper
+// collection of string related helper functions
+package str
 
 import (
-	"fmt"
-	"os"
+	"strings"
 )
 
-// DebugEnv - set debug flag from env
-func DebugEnv() bool {
-	if os.Getenv("_DEBUG") == "true" {
-		Debug = true
+// Check if string array contain a string.
+func StrArrayPtrContain(aP *[]string, sP *string) bool {
+	for _, s := range *aP {
+		if s == *sP {
+			return true
+		}
 	}
-	return Debug
+	return false
 }
 
-// DebugLog - msg
-func DebugLog(msg ...interface{}) {
-	if Debug {
-		fmt.Println("log:", msg)
+// Return a new *[]string with empty lines removed from *[]string.
+//   - Original []string not modified.
+func StrArrayPtrRemoveEmpty(saP *[]string) *[]string {
+	var sa []string
+	for _, s := range *saP {
+		if s != "" {
+			sa = append(sa, s)
+		}
+	}
+	return &sa
+}
+
+// *[]string output, each element followed by "\n"
+func StrArrayPtrPrintln(saP *[]string) {
+	for _, s := range *saP {
+		println(s)
 	}
 }
 
-// ErrCheck - check error
-func ErrCheck(e error) {
-	if e != nil {
-		fmt.Println(e)
-		os.Exit(1)
+// *[]string to *string, each element followed by "\n"
+func StrArrayPtrPrintlnSp(saP *[]string) *string {
+	var output string
+	for _, s := range *saP {
+		output += s + "\n"
 	}
+	return &output
+}
+
+// *string to *[]string, split by "\n"
+func StrPtrToArrayPtr(sP *string) *[]string {
+	var output []string = strings.Split(*sP, "\n")
+	return &output
 }

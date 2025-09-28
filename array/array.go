@@ -24,24 +24,24 @@ THE SOFTWARE.
 
 package helper
 
-type MyArray[T any] []T
+type Array[T any] []T
 
 // Return true if ErrsType array is empty
-func (self *MyArray[T]) Empty() bool {
-	return len(*self) == 0
+func (a *Array[T]) Empty() bool {
+	return len(*a) == 0
 }
 
 // Return true if ErrsType array is not empty
-func (self *MyArray[T]) NotEmpty() bool {
-	return len(*self) > 0
+func (a *Array[T]) NotEmpty() bool {
+	return len(*a) > 0
 }
 
 // Clear the ErrsType array
-func (self *MyArray[T]) Clear() {
-	self = &MyArray[T]{}
+func (a *Array[T]) Clear() {
+	a = &Array[T]{}
 }
 
-func (self *MyArray[T]) Add(t T) *MyArray[T] {
-	*self = append(*self, t)
-	return self
+func (a *Array[T]) Add(t T) *Array[T] {
+	*a = append(*a, t)
+	return a
 }

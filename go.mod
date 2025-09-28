@@ -1,7 +1,7 @@
-module github.com/J-Siu/go-helper
+module github.com/J-Siu/go-helper/v2
 
-go 1.24.5
+go 1.25.1
 
-require golang.org/x/crypto v0.40.0
+require github.com/J-Siu/go-ezlog/v2 v2.1.3
 
-require golang.org/x/sys v0.34.0 // indirect
+require github.com/J-Siu/go-strany v1.0.0 // indirect
