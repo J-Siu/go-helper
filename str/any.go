@@ -97,6 +97,12 @@ func (s *Any) Str(data any) (str string) {
 				}
 			}
 		}
+	case []byte:
+		str = string(v)
+	case *[]byte:
+		if v != nil {
+			str = string(*v)
+		}
 	case bytes.Buffer:
 		str = v.String()
 	case *bytes.Buffer:
