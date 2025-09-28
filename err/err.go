@@ -27,13 +27,10 @@ package err
 // error list
 var Errs []error
 
-// var Errs array.Array[error]
-
 // If `err` != nil, add `err` to helper Errs array
 func Queue(e error) {
 	if e != nil {
 		Errs = append(Errs, e)
-		// Errs.Add(e)
 	}
 }
 func Len() int    { return len(Errs) }
