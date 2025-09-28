@@ -278,6 +278,8 @@ go test report_test.go
   - Cleanup
 - v2.1.0
   - Add strany
+- v2.2.0
+  - Add ezlog, str.Any
 
 ### License
 
