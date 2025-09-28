@@ -30,9 +30,19 @@ import (
 )
 
 // Check if string array contain a string.
-func StrArrayPtrContain(aP *[]string, sP *string) bool {
-	for _, s := range *aP {
-		if s == *sP {
+func ArrayContains(arrIn *[]string, strIn *string) bool {
+	for _, s := range *arrIn {
+		if s == *strIn {
+			return true
+		}
+	}
+	return false
+}
+
+// Check if string array contains a substring
+func ArrayContainsSubString(arrIn []string, strIn string) bool {
+	for _, s := range arrIn {
+		if strings.Contains(strIn, s) {
 			return true
 		}
 	}
@@ -41,34 +51,34 @@ func StrArrayPtrContain(aP *[]string, sP *string) bool {
 
 // Return a new *[]string with empty lines removed from *[]string.
 //   - Original []string not modified.
-func StrArrayPtrRemoveEmpty(saP *[]string) *[]string {
-	var sa []string
-	for _, s := range *saP {
+func ArrayPtrRemoveEmpty(arrIn *[]string) *[]string {
+	var arrOut []string
+	for _, s := range *arrIn {
 		if s != "" {
-			sa = append(sa, s)
+			arrOut = append(arrOut, s)
 		}
 	}
-	return &sa
+	return &arrOut
 }
 
 // *[]string output, each element followed by "\n"
-func StrArrayPtrPrintln(saP *[]string) {
-	for _, s := range *saP {
+func ArrayPrintln(arrIn *[]string) {
+	for _, s := range *arrIn {
 		println(s)
 	}
 }
 
 // *[]string to *string, each element followed by "\n"
-func StrArrayPtrPrintlnSp(saP *[]string) *string {
-	var output string
-	for _, s := range *saP {
-		output += s + "\n"
+func ArraySPrintln(arrIn *[]string) *string {
+	var strOut string
+	for _, s := range *arrIn {
+		strOut += s + "\n"
 	}
-	return &output
+	return &strOut
 }
 
 // *string to *[]string, split by "\n"
-func StrPtrToArrayPtr(sP *string) *[]string {
-	var output []string = strings.Split(*sP, "\n")
-	return &output
+func LnSplit(strIn *string) *[]string {
+	var strOut []string = strings.Split(*strIn, "\n")
+	return &strOut
 }

@@ -30,6 +30,7 @@ import (
 	"path"
 	"regexp"
 	"strings"
+	"time"
 )
 
 // Get full path of current directory.
@@ -83,6 +84,32 @@ func IsRegularFile(workPath string) (result bool) {
 	return result
 }
 
+// if (file1 and file2 have same modification time and size) -> true
+//
+// else -> false
+//
+// WARNING: This is a very rough check
+func FileSame(file1 string, file2 string) (same bool) {
+	var (
+		e     error
+		info1 os.FileInfo
+		info2 os.FileInfo
+	)
+
+	info1, e = os.Stat(file1)
+	if e == nil {
+		info2, e = os.Stat(file2)
+	}
+	if e == nil {
+		if time.Time.Equal(info1.ModTime(), info2.ModTime()) &&
+			info1.Size() == info2.Size() {
+			same = true
+		}
+	}
+
+	return same
+}
+
 // --- Directory
 
 // Search for file in a directory
@@ -106,10 +133,10 @@ func InDir(dir, filename string) (result string) {
 }
 
 // Check workPath is directory
-func IsDir(workPath string) (result bool) {
-	fileInfo, err := os.Stat(workPath)
-	if err == nil {
-		result = fileInfo.IsDir()
+func IsDir(path string) (result bool) {
+	info, e := os.Stat(path)
+	if e == nil {
+		result = info.IsDir()
 	}
 	return result
 }
