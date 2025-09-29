@@ -296,6 +296,9 @@ go test report_test.go
   - errs - add Clean()
 - v2.3.1
   - str - strIn use *string
+- v2.3.2
+  - ezlog.Sp() takes rune instead of any
+  - JsonIndent() will trim "\n"
 
 ### License
 

@@ -111,28 +111,28 @@ func LnSplit(strIn *string) *[]string {
 
 // Return original *string if strP is nil failed
 func JsonIndent(strIn *string) *string {
-	var output string
+	var strOut string
 	if strIn != nil {
 		var byteA = []byte(*strIn)
 		p := ByteJsonIndent(&byteA)
 		if *p != "" {
-			output = string(*p)
+			strOut = string(*p)
 		} else {
-			return strIn
+			strOut = strings.Trim(*strIn, "\n")
 		}
 	}
-	return &output
+	return &strOut
 }
 
 // Return "" if json.Indent failed
 func ByteJsonIndent(baP *[]byte) *string {
-	var output string
+	var strOut string
 	if baP != nil {
 		var dst bytes.Buffer
 		err := json.Indent(&dst, *baP, "", "  ")
 		if err == nil {
-			output = strings.Trim(dst.String(), "\n")
+			strOut = strings.Trim(dst.String(), "\n")
 		}
 	}
-	return &output
+	return &strOut
 }

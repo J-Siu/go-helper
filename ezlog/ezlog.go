@@ -119,20 +119,20 @@ func (ez *ezlog) Out() *ezlog {
 func (ez *ezlog) String() string { return *ez.StringP() }
 
 func (ez *ezlog) StringP() *string {
-	str := ""
+	var strOut string
 	if ez.msgLogLevel <= ez.logLevel {
 		if ez.strBuf != nil {
 			// str = strings.Join(l.strBuf, " ")
 			for _, s := range ez.strBuf {
-				_, size := utf8.DecodeLastRuneInString(str)
-				if size > 0 && str[len(str)-size] != '\n' {
-					str += " "
+				_, size := utf8.DecodeLastRuneInString(strOut)
+				if size > 0 && strOut[len(strOut)-size] != '\n' {
+					strOut += " "
 				}
-				str += s
+				strOut += s
 			}
 		}
 	}
-	return &str
+	return &strOut
 }
 
 // --- Build log message
@@ -145,22 +145,24 @@ func (ez *ezlog) Msg(data any) *ezlog {
 	return ez
 }
 
-// Add separator to message
-func (ez *ezlog) Sp(data any) *ezlog {
+// Append character/rune to message
+func (ez *ezlog) Sp(ch rune) *ezlog {
 	if ez.msgLogLevel <= ez.logLevel {
-		ez.strBuf[len(ez.strBuf)-1] = ez.strBuf[len(ez.strBuf)-1] + *ez.StrAny.Str(data)
+		ez.strBuf[len(ez.strBuf)-1] += string(ch)
 	}
 	return ez
 }
 
 // Add newline to message
-func (ez *ezlog) Ln() *ezlog { return ez.Msg("\n") }
+func (ez *ezlog) Ln() *ezlog {
+	return ez.Sp('\n')
+}
 
 // Log on new line
 func (ez *ezlog) MsgLn(data any) *ezlog { return ez.Msg(data).Ln() }
 
 // Add : after data
-func (ez *ezlog) Name(data any) *ezlog { return ez.Msg(data).Sp(":") }
+func (ez *ezlog) Name(data any) *ezlog { return ez.Msg(data).Sp(':') }
 
 // Add : and newline after data
 func (ez *ezlog) NameLn(data any) *ezlog { return ez.Name(data).Ln() }
