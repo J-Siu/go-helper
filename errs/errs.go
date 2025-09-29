@@ -22,16 +22,25 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package err
+// A simple array to stash errors
+package errs
+
+import "errors"
 
 // error list
 var Errs []error
 
+func Clear()        { Errs = nil }
+func IsEmpty() bool { return len(Errs) == 0 }
+func Len() int      { return len(Errs) }
+
 // If `err` != nil, add `err` to helper Errs array
-func Queue(e error) {
+func Queue(prefix string, e error) {
 	if e != nil {
-		Errs = append(Errs, e)
+		tmp := e
+		if prefix != "" {
+			tmp = errors.New(prefix + ":" + e.Error())
+		}
+		Errs = append(Errs, tmp)
 	}
 }
-func Len() int    { return len(Errs) }
-func Empty() bool { return len(Errs) == 0 }
