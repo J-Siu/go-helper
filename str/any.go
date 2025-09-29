@@ -66,120 +66,162 @@ func (s *Any) Prefix(prefix string) *Any {
 // Return json.Marshal* error
 func (s *Any) Err() error { return s.err }
 
+func (s *Any) processStr(sP *string) *string {
+	if s.indentEnable {
+		return JsonIndent(sP)
+	}
+	return sP
+}
+
+func (s *Any) processStrArray(saP *[]string) *string {
+	var out string
+	if saP != nil {
+		last := len(*saP) - 1
+		for index, item := range *saP {
+			if s.indentEnable {
+				out += *JsonIndent(&item)
+			} else {
+				out += item
+			}
+			if index < last {
+				out += "\n"
+			}
+		}
+	}
+	return &out
+}
+
+func (s *Any) processByteArray(baP *[]byte) *string {
+	var out string
+	if baP != nil && len(*baP) > 0 {
+		if s.indentEnable {
+			return ByteJsonIndent(baP)
+		} else {
+			out = string(*baP)
+		}
+	}
+	return &out
+}
+
+func (s *Any) processErrArray(eaP *[]error) *string {
+	var out string
+	if eaP != nil {
+		last := len(*eaP) - 1
+		for i, e := range *eaP {
+			out += e.Error()
+			if i < last {
+				out += "\n"
+			}
+		}
+	}
+	return &out
+}
+
 // Output `data` as string
 //
 // If `IndentEnable` is true, struct will be converted with `json.MarshalIndent`, else `json.Marshal`
-func (s *Any) Str(data any) (str string) {
+func (s *Any) Str(data any) (output *string) {
+	var out string
 	switch v := data.(type) {
 	case string:
-		str = v
+		return s.processStr(&v)
 	case *string:
-		str = *v
-	case error:
-		str = v.Error()
-	case *error:
-		str = (*v).Error()
-	case []error:
-		last := len(v) - 1
-		for i, e := range v {
-			str += e.Error()
-			if i < last {
-				str += "\n"
-			}
-		}
-	case *[]error:
-		if v != nil {
-			last := len(*v) - 1
-			for i, e := range *v {
-				str += e.Error()
-				if i < last {
-					str += "\n"
-				}
-			}
-		}
+		return s.processStr(v)
+	case []string:
+		return s.processStrArray(&v)
+	case *[]string:
+		return s.processStrArray(v)
 	case []byte:
-		str = string(v)
+		return s.processByteArray(&v)
 	case *[]byte:
-		if v != nil {
-			str = string(*v)
-		}
+		return s.processByteArray(v)
 	case bytes.Buffer:
-		str = v.String()
+		var b = v.Bytes()
+		return s.processByteArray(&b)
 	case *bytes.Buffer:
 		if v != nil {
-			str = v.String()
+			var b = v.Bytes()
+			return s.processByteArray(&b)
 		}
+	case error:
+		out = v.Error()
+	case *error:
+		out = (*v).Error()
+	case []error:
+		return s.processErrArray(&v)
+	case *[]error:
+		return s.processErrArray(v)
 	case int:
-		str = fmt.Sprint(v)
+		out = fmt.Sprint(v)
 	case int8:
-		str = fmt.Sprint(v)
+		out = fmt.Sprint(v)
 	case int16:
-		str = fmt.Sprint(v)
+		out = fmt.Sprint(v)
 	case int32:
-		str = fmt.Sprint(v)
+		out = fmt.Sprint(v)
 	case int64:
-		str = fmt.Sprint(v)
+		out = fmt.Sprint(v)
 	case uint:
-		str = fmt.Sprint(v)
+		out = fmt.Sprint(v)
 	case uint8:
-		str = fmt.Sprint(v)
+		out = fmt.Sprint(v)
 	case uint16:
-		str = fmt.Sprint(v)
+		out = fmt.Sprint(v)
 	case uint32:
-		str = fmt.Sprint(v)
+		out = fmt.Sprint(v)
 	case uint64:
-		str = fmt.Sprint(v)
+		out = fmt.Sprint(v)
 	case float32:
-		str = fmt.Sprint(v)
+		out = fmt.Sprint(v)
 	case float64:
-		str = fmt.Sprint(v)
+		out = fmt.Sprint(v)
 	case *int:
 		if v != nil {
-			str = fmt.Sprint(*v)
+			out = fmt.Sprint(*v)
 		}
 	case *int8:
 		if v != nil {
-			str = fmt.Sprint(*v)
+			out = fmt.Sprint(*v)
 		}
 	case *int16:
 		if v != nil {
-			str = fmt.Sprint(*v)
+			out = fmt.Sprint(*v)
 		}
 	case *int32:
 		if v != nil {
-			str = fmt.Sprint(*v)
+			out = fmt.Sprint(*v)
 		}
 	case *int64:
 		if v != nil {
-			str = fmt.Sprint(*v)
+			out = fmt.Sprint(*v)
 		}
 	case *uint:
 		if v != nil {
-			str = fmt.Sprint(*v)
+			out = fmt.Sprint(*v)
 		}
 	case *uint8:
 		if v != nil {
-			str = fmt.Sprint(*v)
+			out = fmt.Sprint(*v)
 		}
 	case *uint16:
 		if v != nil {
-			str = fmt.Sprint(*v)
+			out = fmt.Sprint(*v)
 		}
 	case *uint32:
 		if v != nil {
-			str = fmt.Sprint(*v)
+			out = fmt.Sprint(*v)
 		}
 	case *uint64:
 		if v != nil {
-			str = fmt.Sprint(*v)
+			out = fmt.Sprint(*v)
 		}
 	case *float32:
 		if v != nil {
-			str = fmt.Sprint(*v)
+			out = fmt.Sprint(*v)
 		}
 	case *float64:
 		if v != nil {
-			str = fmt.Sprint(*v)
+			out = fmt.Sprint(*v)
 		}
 	default:
 		var b []byte
@@ -189,8 +231,8 @@ func (s *Any) Str(data any) (str string) {
 			b, s.err = json.Marshal(v)
 		}
 		if s.err == nil {
-			str = string(b)
+			out = string(b)
 		}
 	}
-	return str
+	return &out
 }

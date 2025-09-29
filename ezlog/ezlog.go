@@ -140,7 +140,7 @@ func (ez *ezlog) StringP() *string {
 // Add msg to log
 func (ez *ezlog) Msg(data any) *ezlog {
 	if ez.msgLogLevel <= ez.logLevel {
-		ez.strBuf = append(ez.strBuf, ez.StrAny.Str(data))
+		ez.strBuf = append(ez.strBuf, *ez.StrAny.Str(data))
 	}
 	return ez
 }
@@ -148,7 +148,7 @@ func (ez *ezlog) Msg(data any) *ezlog {
 // Add separator to message
 func (ez *ezlog) Sp(data any) *ezlog {
 	if ez.msgLogLevel <= ez.logLevel {
-		ez.strBuf[len(ez.strBuf)-1] = ez.strBuf[len(ez.strBuf)-1] + ez.StrAny.Str(data)
+		ez.strBuf[len(ez.strBuf)-1] = ez.strBuf[len(ez.strBuf)-1] + *ez.StrAny.Str(data)
 	}
 	return ez
 }

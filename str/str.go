@@ -26,6 +26,8 @@ THE SOFTWARE.
 package str
 
 import (
+	"bytes"
+	"encoding/json"
 	"strings"
 
 	"github.com/charlievieth/strcase"
@@ -105,4 +107,32 @@ func ContainsAnySubStringsBool(str string, subStrings *[]string) (result bool) {
 func LnSplit(strIn *string) *[]string {
 	var strOut []string = strings.Split(*strIn, "\n")
 	return &strOut
+}
+
+// Return original *string if strP is nil failed
+func JsonIndent(strP *string) *string {
+	var output string
+	if strP != nil {
+		var byteA = []byte(*strP)
+		p := ByteJsonIndent(&byteA)
+		if *p != "" {
+			output = string(*p)
+		} else {
+			return strP
+		}
+	}
+	return &output
+}
+
+// Return "" if json.Indent failed
+func ByteJsonIndent(baP *[]byte) *string {
+	var output string
+	if baP != nil {
+		var dst bytes.Buffer
+		err := json.Indent(&dst, *baP, "", "  ")
+		if err == nil {
+			output = strings.Trim(dst.String(), "\n")
+		}
+	}
+	return &output
 }
