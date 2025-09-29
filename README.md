@@ -283,11 +283,17 @@ go test report_test.go
 - v2.2.1
   - Remove array.go
   - cmd.go
-    - Cmd stuct is now exported
+    - Cmd struct is now exported
     - Add package level functions
   - str.Any
     - New() will enable indent
     - Add []error and *[]error support
+- v2.3.0
+  - ezlog
+    - improve json indent output support
+    - add byte support
+  - rename err->errs, as err is too commonly used for var
+  - errs - add Clean()
 
 ### License
 
