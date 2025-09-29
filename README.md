@@ -294,6 +294,8 @@ go test report_test.go
     - add byte support
   - rename err->errs, as err is too commonly used for var
   - errs - add Clean()
+- v2.3.1
+  - str - strIn use *string
 
 ### License
 

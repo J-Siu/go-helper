@@ -44,8 +44,8 @@ func ArrayContains(arrIn *[]string, strIn *string) bool {
 }
 
 // Check if string array contains a substring
-func ArrayContainsSubString(arrIn []string, strIn string) bool {
-	for _, s := range arrIn {
+func ArrayContainsSubString(arrIn *[]string, strIn string) bool {
+	for _, s := range *arrIn {
 		if strings.Contains(strIn, s) {
 			return true
 		}
@@ -85,10 +85,10 @@ func ArraySPrintln(arrIn *[]string) *string {
 //   - result (bool)
 //   - if result is true, `resultVal` == matching substring
 //   - if result is false, `resultVal` == ""
-func ContainsAnySubStrings(strIn string, subStrings *[]string) (result bool, resultVal string) {
+func ContainsAnySubStrings(strIn *string, subStrings *[]string) (result bool, resultVal string) {
 	// prefix := "matchList"
 	for _, subStr := range *subStrings {
-		if strcase.Contains(strIn, subStr) {
+		if strcase.Contains(*strIn, subStr) {
 			result = true
 			resultVal = subStr
 			break
@@ -98,8 +98,8 @@ func ContainsAnySubStrings(strIn string, subStrings *[]string) (result bool, res
 }
 
 // Return only bool from [ContainsAnySubStrings]
-func ContainsAnySubStringsBool(str string, subStrings *[]string) (result bool) {
-	result, _ = ContainsAnySubStrings(str, subStrings)
+func ContainsAnySubStringsBool(strIn *string, subStrings *[]string) (result bool) {
+	result, _ = ContainsAnySubStrings(strIn, subStrings)
 	return result
 }
 
@@ -110,15 +110,15 @@ func LnSplit(strIn *string) *[]string {
 }
 
 // Return original *string if strP is nil failed
-func JsonIndent(strP *string) *string {
+func JsonIndent(strIn *string) *string {
 	var output string
-	if strP != nil {
-		var byteA = []byte(*strP)
+	if strIn != nil {
+		var byteA = []byte(*strIn)
 		p := ByteJsonIndent(&byteA)
 		if *p != "" {
 			output = string(*p)
 		} else {
-			return strP
+			return strIn
 		}
 	}
 	return &output

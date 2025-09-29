@@ -120,7 +120,7 @@ func (s *Any) processErrArray(eaP *[]error) *string {
 // Output `data` as string
 //
 // If `IndentEnable` is true, struct will be converted with `json.MarshalIndent`, else `json.Marshal`
-func (s *Any) Str(data any) (output *string) {
+func (s *Any) Str(data any) *string {
 	var out string
 	switch v := data.(type) {
 	case string:
