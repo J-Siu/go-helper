@@ -169,6 +169,9 @@ func (ez *ezlog) Ln() *ezlog { return ez.Sp('\n') }
 func (ez *ezlog) M(date any) *ezlog { return ez.Msg(date) }
 
 // Add new line to message (shorthand for MsgLn())
+func (ez *ezlog) Mn(date any) *ezlog { return ez.MsgLn(date) }
+
+// Add new line to message (shorthand for MsgLn())
 func (ez *ezlog) MLn(date any) *ezlog { return ez.MsgLn(date) }
 
 // Add msg to log
@@ -190,6 +193,9 @@ func (ez *ezlog) MsgLn(data any) *ezlog { return ez.Msg(data).Ln() }
 
 // Add : after data (shorthand for Name())
 func (ez *ezlog) N(data any) *ezlog { return ez.Name(data) }
+
+// Add : and newline after data (shorthand for NameLn))
+func (ez *ezlog) Nn(data any) *ezlog { return ez.NameLn(data) }
 
 // Add : and newline after data (shorthand for NameLn))
 func (ez *ezlog) NLn(data any) *ezlog { return ez.NameLn(data) }
