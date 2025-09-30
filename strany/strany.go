@@ -21,23 +21,25 @@ THE SOFTWARE.
 */
 
 // Convert anything to string
-package str
+package strany
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+
+	"github.com/J-Siu/go-helper/v2/str"
 )
 
-type Any struct {
+type StrAny struct {
 	err          error
-	indentEnable bool   // If `true`, true, use `json.MarshalIndent` for struct, else `json.Marshal`
 	indent       string // `indent` of json.MarshalIndent(v any, prefix, indent string)
+	indentEnable bool   // If `true`, true, use `json.MarshalIndent` for struct, else `json.Marshal`
 	prefix       string // `prefix` of json.MarshalIndent(v any, prefix, indent string)
 }
 
 // Initialize
-func (s *Any) New() *Any {
+func (s *StrAny) New() *StrAny {
 	s.err = nil
 	s.indent = "  "
 	s.indentEnable = true
@@ -46,40 +48,40 @@ func (s *Any) New() *Any {
 }
 
 // `enable` = `true“, use `json.MarshalIndent` for struct, else `json.Marshal`
-func (s *Any) IndentEnable(enable bool) *Any {
+func (s *StrAny) IndentEnable(enable bool) *StrAny {
 	s.indentEnable = enable
 	return s
 }
 
 // `indent` of json.MarshalIndent(v any, prefix, indent string)
-func (s *Any) Indent(indent string) *Any {
+func (s *StrAny) Indent(indent string) *StrAny {
 	s.indent = indent
 	return s
 }
 
 // `prefix` of json.MarshalIndent(v any, prefix, indent string)
-func (s *Any) Prefix(prefix string) *Any {
+func (s *StrAny) Prefix(prefix string) *StrAny {
 	s.prefix = prefix
 	return s
 }
 
 // Return json.Marshal* error
-func (s *Any) Err() error { return s.err }
+func (s *StrAny) Err() error { return s.err }
 
-func (s *Any) processStr(sP *string) *string {
+func (s *StrAny) processStr(sP *string) *string {
 	if s.indentEnable {
-		return JsonIndent(sP)
+		return str.JsonIndent(sP)
 	}
 	return sP
 }
 
-func (s *Any) processStrArray(saP *[]string) *string {
+func (s *StrAny) processStrArray(saP *[]string) *string {
 	var out string
 	if saP != nil {
 		last := len(*saP) - 1
 		for index, item := range *saP {
 			if s.indentEnable {
-				out += *JsonIndent(&item)
+				out += *str.JsonIndent(&item)
 			} else {
 				out += item
 			}
@@ -91,11 +93,11 @@ func (s *Any) processStrArray(saP *[]string) *string {
 	return &out
 }
 
-func (s *Any) processByteArray(baP *[]byte) *string {
+func (s *StrAny) processByteArray(baP *[]byte) *string {
 	var out string
 	if baP != nil && len(*baP) > 0 {
 		if s.indentEnable {
-			return ByteJsonIndent(baP)
+			return str.ByteJsonIndent(baP)
 		} else {
 			out = string(*baP)
 		}
@@ -103,7 +105,7 @@ func (s *Any) processByteArray(baP *[]byte) *string {
 	return &out
 }
 
-func (s *Any) processErrArray(eaP *[]error) *string {
+func (s *StrAny) processErrArray(eaP *[]error) *string {
 	var out string
 	if eaP != nil {
 		last := len(*eaP) - 1
@@ -120,7 +122,7 @@ func (s *Any) processErrArray(eaP *[]error) *string {
 // Output `data` as string
 //
 // If `IndentEnable` is true, struct will be converted with `json.MarshalIndent`, else `json.Marshal`
-func (s *Any) Str(data any) *string {
+func (s *StrAny) String(data any) *string {
 	var strOut string
 	switch v := data.(type) {
 	case string:
@@ -236,3 +238,11 @@ func (s *Any) Str(data any) *string {
 	}
 	return &strOut
 }
+
+func (s *StrAny) Str(data any) *string { return s.String(data) }
+
+var strAny = New()
+
+func New() *StrAny { return new(StrAny).New() }
+
+func Any(data any) *string { return strAny.Str(data) }

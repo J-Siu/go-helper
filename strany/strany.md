@@ -5,7 +5,7 @@ Convert anything to string.
 ## Installation
 
 ```sh
-go get github.com/J-Siu/go-helper/v2/str
+go get github.com/J-Siu/go-helper/v2/strany
 ```
 
 ## Example
@@ -16,7 +16,7 @@ package main
 import (
   "fmt"
 
-  "github.com/J-Siu/go-helper/v2/str"
+  "github.com/J-Siu/go-helper/v2/strany"
 )
 
 type NUM struct {
@@ -75,19 +75,16 @@ func (N *NUM) New() *NUM {
 }
 
 func main() {
-
   var (
     n           = new(NUM).New()
     f32 float32 = 100.000001
     f64 float64 = 100.000001
-    any         = new(str.Any).New()
   )
-
-  fmt.Println(any.Str(n))
-  fmt.Println(any.Str(f32))
-  fmt.Println(any.Str(f64))
-  fmt.Println(any.Str(&f32))
-  fmt.Println(any.Str(&f64))
+  fmt.Println(*strany.Any(n))
+  fmt.Println(*strany.Any(f32))
+  fmt.Println(*strany.Any(f64))
+  fmt.Println(*strany.Any(&f32))
+  fmt.Println(*strany.Any(&f64))
 }
 ```
 
