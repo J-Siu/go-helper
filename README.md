@@ -22,10 +22,11 @@ Collections of Golang helper modules.
 
 Module|Description
 ---|---
-cmd|exec.Command shell wrapper
-errs|Simple error array for stacking error messages with prefix
+array|simple array template
+cmd|`exec.Command` shell wrapper
+errs|simple error array for stacking error messages with prefix
 ezlog|log functions auto detect and apply json marshal indent
-file|File/directory functions
+file|file/directory functions
 str|string/array functions
 
 ### Doc
@@ -174,6 +175,14 @@ go test file_test.go
 - v2.3.2
   - ezlog.Sp() takes rune instead of any
   - JsonIndent() will trim "\n"
+- v2.3.3
+  - add array
+  - strany - move to folder, to enable package level usage
+  - ezlog
+    - add trim support
+    - add log level prefix
+    - add shorthand L(), Ln(), N(), NLn(), N(), NLn(), S(). T(), Tab(), TxtEnd(), TxtStart()
+    - breaking: change Sp() to accept `rune` (previous `any`)
 
 ### License
 
