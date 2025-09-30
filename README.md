@@ -183,6 +183,9 @@ go test file_test.go
     - add log level prefix
     - add shorthand L(), Ln(), N(), NLn(), N(), NLn(), S(). T(), Tab(), TxtEnd(), TxtStart()
     - breaking: change Sp() to accept `rune` (previous `any`)
+- v2.3.4
+  - ezlog
+    - add shorthand Mn(), Nn()
 
 ### License
 
