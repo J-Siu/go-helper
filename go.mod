@@ -4,4 +4,4 @@ go 1.25.1
 
 require github.com/charlievieth/strcase v0.0.5
 
-require golang.org/x/sys v0.25.0 // indirect
+require golang.org/x/sys v0.36.0 // indirect
