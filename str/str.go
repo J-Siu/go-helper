@@ -118,7 +118,7 @@ func JsonIndent(strIn *string) *string {
 		if *p != "" {
 			strOut = string(*p)
 		} else {
-			strOut = strings.Trim(*strIn, "\n")
+			return strIn
 		}
 	}
 	return &strOut
