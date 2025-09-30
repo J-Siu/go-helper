@@ -1,21 +1,11 @@
 # go-helper [![Paypal donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate/?business=HZF49NM9D35SJ&no_recurring=0&currency_code=CAD)
 
-Collections of Golang helper functions.
+Collections of Golang helper modules.
 
 ### Table Of Content
 <!-- TOC -->
 
 - [Features](#features)
-  - [common.go](#commongo)
-  - [crypto.go](#cryptogo)
-  - [debug.go](#debuggo)
-  - [err.go](#errgo)
-  - [file.go](#filego)
-  - [gitCmd.go](#gitcmdgo)
-  - [myArray.go](#myarraygo)
-  - [myCmd.go](#mycmdgo)
-  - [report.go](#reportgo)
-  - [string.go](#stringgo)
 - [Doc](#doc)
 - [Usage](#usage)
 - [Test](#test)
@@ -30,121 +20,13 @@ Collections of Golang helper functions.
 
 ### Features
 
-File|Description
+Module|Description
 ---|---
-common.go|Debug flag
-crypto.go|Crypto function
-debug.go|Debug functions
-err.go|Basic error type
-file.go|File/directory functions
-gitCmd.go|Git functions
-myArray.go|A simple generic array type
-myCmd.go|exec.Command shell wrapper
-report.go|report/log functions auto detect and apply json marshal indent
-string.go|string/array functions
-
-#### common.go
-
-- func ErrsQueue(err error, prefix string)
-- func init()
-
-#### crypto.go
-
-- func BoxSealAnonymous(base64PublicKey, msg *string) *string
-
-#### debug.go
-
-- func DebugEnv() bool
-- func DebugLog(msg ...interface{})
-- func ErrCheck(e error)
-
-#### err.go
-
-- func (err Err) Error() string
-- func (err *Err) String() string
-- func (err *Err) StringP() *string
-
-#### file.go
-
-- func CurrentPath() *string
-- func CurrentDirBase() *string
-- func FullPath(workPathP *string) *string
-- func FullPathStr(workPath string) *string
-- func IsRegularFile(workPath string) bool
-- func IsDir(workPath string) bool
-- func SameDir(path1, path2 string) bool
-- func FileHasExt(name, ext string) bool
-- func FileRemoveExt(filename string) string
-- func FileInDir(dir, filename string) string
-- func FileSimplifyName(filename string) string
-- func TildeEnvExpand(strIn string) (strOut string)
-- func FileStrArrRead(filePath string) (strArray []string, err error)
-- func FileStrArrWrite(filePath string, strArray []string, perm os.FileMode) (err error)
-
-#### gitCmd.go
-
-- func Git(workPathP *string, optionsP *[]string) *MyCmd
-- func GitClone(workPathP *string, optionsP *[]string) *MyCmd
-- func GitExecExist() bool
-- func GitExecPath() string
-- func GitInit(workPathP *string) *MyCmd
-- func GitBranchCurrent(workPathP *string) *MyCmd
-- func GitPull(workPathP *string, optionsP *[]string) *MyCmd
-- func GitPush(workPathP *string, optionsP *[]string) *MyCmd
-- func GitRemote(workPathP *string, v bool) *[]string
-- func GitRemoteAdd(workPathP *string, name string, git string) *MyCmd
-- func GitRemoteExist(workPathP *string, name string) bool
-- func GitRemoteRemove(workPathP *string, name string) *MyCmd
-- func GitRemoteRemoveAll(workPathP *string)
-- func GitRoot(workPathP *string) string
-- func GitRootSubmodule(workPathP *string) string
-
-#### myArray.go
-
-- func (self *MyArray[T]) Empty() bool
-- func (self *MyArray[T]) NotEmpty() bool
-- func (self *MyArray[T]) Clear()
-- func (self *MyArray[T]) Add(t T) *MyArray[T]
-
-#### myCmd.go
-
-- func MyCmdRun(cmdName string, argsP *[]string, workPathP *string) *MyCmd
-- func MyCmdRunWg(cmdName string, argsP *[]string, workPathP *string, title *string, wgP *sync.WaitGroup, output bool) *MyCmd
-- func MyCmdInit(name string, argsP *[]string, workPathP *string) *MyCmd
-- func (myCmd *MyCmd) Init(name string, argsP *[]string, workPathP *string) *MyCmd
-- func (myCmd *MyCmd) Reset() *MyCmd
-- func (myCmd *MyCmd) Run() error
-
-#### report.go
-
-- func Report(data any, title string, skipEmpty bool, singleLine bool)
-- func ReportDebug(data any, title string, skipEmpty bool, singleLine bool)
-- func ReportSp(data any, title string, skipEmpty bool, singleLine bool) *string
-- func ReportSpDebug(data any, title string, skipEmpty bool, singleLine bool) *string
-- func ReportStatus(data bool, title string, singleLine bool)
-- func ReportStatusSp(data bool, title string, singleLine bool) *string
-- func ReportNew(data any, title string, skipEmpty bool, singleLine bool) *ReportT
-- func (reportT *ReportT) String() string
-- func (reportT *ReportT) StringDebug() string
-- func (reportT *ReportT) StringP() *string
-- func (reportT *ReportT) StringPDebug() *string
-
-#### string.go
-
-- func BoolString(b bool) string
-- func BoolStatus(b bool) string
-- func BoolYesNo(b bool) string
-- func StrArrayPtrContain(aP *[]string, sP *string) bool
-- func StrArrayPtrRemoveEmpty(saP *[]string) *[]string
-- func StrArrayPtrPrintln(saP *[]string)
-- func StrArrayPtrPrintlnSp(saP *[]string) *string
-- func StrPtrToArrayPtr(sP *string) *[]string
-- func JsonIndentSp(baP *[]byte, endLn bool) *string
-- func NumToStr(data any) (str string, err error)
-- func AnyToJsonMarshalIndentSp(data any, endLn bool) *string
-- func AnyToJsonMarshalSp(data any, endLn bool) *string
-- func StrPtrToJsonIndentSp(strP *string, endLn bool) *string
-- func StrToJsonIndentSp(str string, endLn bool) *string
+cmd|exec.Command shell wrapper
+errs|Simple error array for stacking error messages with prefix
+ezlog|log functions auto detect and apply json marshal indent
+file|File/directory functions
+str|string/array functions
 
 ### Doc
 
@@ -153,12 +35,7 @@ string.go|string/array functions
 ### Usage
 
 ```go
-import	"github.com/J-Siu/go-helper"
-
-func main() {
-	helper.Debug = true
-	helper.DebugLog("debug msg")
-}
+import "github.com/J-Siu/go-helper/v2"
 ```
 
 ### Test
@@ -168,10 +45,8 @@ cd test
 # All
 go test
 # Individual
+go test cmd_test.go
 go test file_test.go
-go test gitCmd_test.go
-go test myCmd_test.go
-go test report_test.go
 ```
 
 ### Used By Project
@@ -302,24 +177,12 @@ go test report_test.go
 
 ### License
 
-The MIT License
+The MIT License (MIT)
 
 Copyright © 2025 John, Sing Dao, Siu <john.sd.siu@gmail.com>
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
