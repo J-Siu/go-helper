@@ -20,72 +20,113 @@ A simple log module with Linux log level:
 go get github.com/J-Siu/go-helper/v2
 ```
 
-## Example
+## Usage
 
 ```go
-package main
+import "github.com/J-Siu/go-helper/v2/ezlog"
+```
 
-import (
-  "fmt"
+## Types and Functions
 
-  "github.com/J-Siu/go-helper/v2/ezlog"
+### Log Level
+
+```go
+type Level int8
+
+// log level
+const (
+  LogLevel Level = iota - 2 // `LogLevel` is not exactly a log level. It is for logging regardless of log level
+  Disabled
+  EMERG
+  ALERT
+  CRIT
+  ERR
+  WARNING
+  NOTICE
+  INFO
+  DEBUG
+  TRACE
 )
+```
 
-type NUM struct {
-  I     int
-  I8    int8
-  I16   int16
-  I32   int32
-  I64   int64
-  UI    uint
-  UI8   uint8
-  UI16  uint16
-  UI32  uint32
-  UI64  uint64
-  F32   float32
-  F64   float64
-  PI    *int
-  PI8   *int8
-  PI16  *int16
-  PI32  *int32
-  PI64  *int64
-  PUI   *uint
-  PUI8  *uint8
-  PUI16 *uint16
-  PUI32 *uint32
-  PUI64 *uint64
-  PF32  *float32
-  PF64  *float64
-}
+### EzLog Functions
 
-func (N *NUM) New() *NUM {
-  N.I = 255
-  N.I8 = 127
-  N.I16 = 255
-  N.I32 = 255
-  N.I64 = 255
-  N.UI = 255
-  N.UI8 = 255
-  N.UI16 = 255
-  N.UI32 = 255
-  N.UI64 = 255
-  N.F32 = 100.00000002
-  N.F64 = 100.00000001
-  N.PI = &N.I
-  N.PI8 = &N.I8
-  N.PI16 = &N.I16
-  N.PI32 = &N.I32
-  N.PI64 = &N.I64
-  N.PUI = &N.UI
-  N.PUI8 = &N.UI8
-  N.PUI16 = &N.UI16
-  N.PUI32 = &N.UI32
-  N.PUI64 = &N.UI64
-  N.PF32 = &N.F32
-  N.PF64 = &N.F64
-  return N
-}
+```go
+func (ez *EzLog) New() *EzLog
+func (ez *EzLog) Clear() *EzLog
+func (ez *EzLog) GetLogLevel() Level
+func (ez *EzLog) GetLogLevelPrefix() bool
+func (ez *EzLog) SetOutFunc(f OutFunc) *EzLog
+func (ez *EzLog) SetOutPrint() *EzLog
+func (ez *EzLog) SetOutPrintLn() *EzLog
+func (ez *EzLog) SetLogLevel(level Level) *EzLog
+func (ez *EzLog) SetLogLevelPrefix(enable bool) *EzLog
+func (ez *EzLog) SetTrim(enable bool) *EzLog
+func (ez *EzLog) Out() *EzLog
+func (ez *EzLog) String() string
+func (ez *EzLog) StringP() *string
+func (ez *EzLog) L() *EzLog
+func (ez *EzLog) Ln() *EzLog
+func (ez *EzLog) M(date any) *EzLog
+func (ez *EzLog) Mn(date any) *EzLog
+func (ez *EzLog) MLn(date any) *EzLog
+func (ez *EzLog) Msg(data any) *EzLog
+func (ez *EzLog) MsgLn(data any) *EzLog
+func (ez *EzLog) N(data any) *EzLog
+func (ez *EzLog) Nn(data any) *EzLog
+func (ez *EzLog) NLn(data any) *EzLog
+func (ez *EzLog) Name(data any) *EzLog
+func (ez *EzLog) NameLn(data any) *EzLog
+func (ez *EzLog) S(ch rune) *EzLog
+func (ez *EzLog) Sp(ch rune) *EzLog
+func (ez *EzLog) T() *EzLog
+func (ez *EzLog) Tab() *EzLog
+func (ez *EzLog) TxtEnd() *EzLog
+func (ez *EzLog) TxtStart() *EzLog
+func (ez *EzLog) LogL(level Level) *EzLog
+func (ez *EzLog) Log() *EzLog
+func (ez *EzLog) Emerg() *EzLog
+func (ez *EzLog) Alert() *EzLog
+func (ez *EzLog) Crit() *EzLog
+func (ez *EzLog) Err() *EzLog
+func (ez *EzLog) Warning() *EzLog
+func (ez *EzLog) Notice() *EzLog
+func (ez *EzLog) Info() *EzLog
+func (ez *EzLog) Debug() *EzLog
+func (ez *EzLog) Trace() *EzLog
+```
 
+### Package Functions
+
+```go
+func New() *EzLog
+func GetLogLevel() Level
+func GetLogLevelPrefix() bool
+func SetLogLevel(level Level) *EzLog
+func SetLogLevelPrefix(enable bool) *EzLog
+func SetOutPrint() *EzLog
+func SetOutPrintLn() *EzLog
+func SetTrim(enable bool) *EzLog
+func String() string
+func StringP() *string
+func LogL(level Level) *EzLog
+func Log() *EzLog
+func Emerg() *EzLog
+func Alert() *EzLog
+func Crit() *EzLog
+func Err() *EzLog
+func Warning() *EzLog
+func Notice() *EzLog
+func Info() *EzLog
+func Debug() *EzLog
+func Trace() *EzLog
+```
+
+## Example
+
+Full example in top level example folder.
+
+```go
 func main() {
   var (
     log         = ezlog.New().SetLogLevel(ezlog.DebugLevel)
@@ -112,35 +153,6 @@ func main() {
   fmt.Println("--- println")
   fmt.Println(str)
 }
-```
-
-## TYPES
-
-```go
-type Level int8
-
-const (
-        Disabled Level = iota - 1
-        EmergLevel
-        AlertLevel
-        CritLevel
-        ErrLevel
-        WarningLevel
-        NoticeLevel
-        InfoLevel
-        DebugLevel
-        TraceLevel
-)
-```
-ezlog log level
-
-```go
-func LogLevel() Level
-```
-Get log level
-
-```go
-type LogFunc func(msg *string)
 ```
 
 ## License

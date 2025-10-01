@@ -20,16 +20,16 @@ Collections of Golang helper modules.
 
 ### Features
 
-Module|Description
----|---
-array|simple array template
-basestruct|a simple struct with 5 common fields to be embedded by other structs.
-cmd|`exec.Command` shell wrapper
-errs|simple error array for stacking error messages with prefix
-ezlog|log functions auto detect and apply json marshal indent
-file|file/directory functions
-str|string/array functions
-strany|convert any to *string
+Module|Description|Readme
+---|---|---
+array|simple array template|
+basestruct|a simple struct with 5 common fields to be embedded by other structs|[basestruct.md](basestruct/basestruct.md)
+cmd|`exec.Command` shell wrapper|
+errs|simple error array for stacking error messages with prefix|
+ezlog|log functions auto detect and apply json marshal indent|[ezlog.md](ezlog/ezlog.md)
+file|file/directory functions|
+str|string/array functions|
+strany|convert any to *string|[strany.md](strany/strany.md)
 
 ### Doc
 

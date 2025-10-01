@@ -8,72 +8,17 @@ Convert anything to string.
 go get github.com/J-Siu/go-helper/v2/strany
 ```
 
-## Example
+## Usage
 
 ```go
-package main
+import "github.com/J-Siu/go-helper/v2/strany"
+```
 
-import (
-  "fmt"
+## Example
 
-  "github.com/J-Siu/go-helper/v2/strany"
-)
+Full example in top level example folder.
 
-type NUM struct {
-  I     int
-  I8    int8
-  I16   int16
-  I32   int32
-  I64   int64
-  UI    uint
-  UI8   uint8
-  UI16  uint16
-  UI32  uint32
-  UI64  uint64
-  F32   float32
-  F64   float64
-  PI    *int
-  PI8   *int8
-  PI16  *int16
-  PI32  *int32
-  PI64  *int64
-  PUI   *uint
-  PUI8  *uint8
-  PUI16 *uint16
-  PUI32 *uint32
-  PUI64 *uint64
-  PF32  *float32
-  PF64  *float64
-}
-
-func (N *NUM) New() *NUM {
-  N.I = 255
-  N.I8 = 127
-  N.I16 = 255
-  N.I32 = 255
-  N.I64 = 255
-  N.UI = 255
-  N.UI8 = 255
-  N.UI16 = 255
-  N.UI32 = 255
-  N.UI64 = 255
-  N.F32 = 100.00000002
-  N.F64 = 100.00000001
-  N.PI = &N.I
-  N.PI8 = &N.I8
-  N.PI16 = &N.I16
-  N.PI32 = &N.I32
-  N.PI64 = &N.I64
-  N.PUI = &N.UI
-  N.PUI8 = &N.UI8
-  N.PUI16 = &N.UI16
-  N.PUI32 = &N.UI32
-  N.PUI64 = &N.UI64
-  N.PF32 = &N.F32
-  N.PF64 = &N.F64
-  return N
-}
-
+```go
 func main() {
   var (
     n           = new(NUM).New()
