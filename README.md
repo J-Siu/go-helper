@@ -23,6 +23,7 @@ Collections of Golang helper modules.
 Module|Description
 ---|---
 array|simple array template
+basestruct|a simple struct with 5 common fields to be embedded by other structs.
 cmd|`exec.Command` shell wrapper
 errs|simple error array for stacking error messages with prefix
 ezlog|log functions auto detect and apply json marshal indent
@@ -186,6 +187,8 @@ go test file_test.go
 - v2.3.4
   - ezlog
     - add shorthand Mn(), Nn()
+- v2.4.0
+  - add basestruct
 
 ### License
 
