@@ -177,7 +177,7 @@ func (ez *ezlog) MLn(date any) *ezlog { return ez.MsgLn(date) }
 // Add msg to log
 func (ez *ezlog) Msg(data any) *ezlog {
 	if ez.msgLogLevel <= ez.logLevel {
-		tmp := *ez.StrAny.Str(data)
+		tmp := *ez.StrAny.Any(data)
 		if ez.trim {
 			tmp = strings.Trim(tmp, "\n")
 			tmp = strings.TrimSpace(tmp)

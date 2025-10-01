@@ -29,6 +29,7 @@ errs|simple error array for stacking error messages with prefix
 ezlog|log functions auto detect and apply json marshal indent
 file|file/directory functions
 str|string/array functions
+strany|convert any to *string
 
 ### Doc
 
@@ -189,6 +190,7 @@ go test file_test.go
     - add shorthand Mn(), Nn()
 - v2.4.0
   - add basestruct
+  - StrAny add unquote support
 
 ### License
 

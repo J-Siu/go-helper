@@ -85,6 +85,8 @@ func ArraySPrintln(arrIn *[]string) *string {
 //   - result (bool)
 //   - if result is true, `resultVal` == matching substring
 //   - if result is false, `resultVal` == ""
+//
+// This is a case insensitive compare.
 func ContainsAnySubStrings(strIn *string, subStrings *[]string) (result bool, resultVal string) {
 	// prefix := "matchList"
 	for _, subStr := range *subStrings {

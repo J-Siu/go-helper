@@ -27,6 +27,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/J-Siu/go-helper/v2/str"
 )
@@ -35,7 +37,8 @@ type StrAny struct {
 	err          error
 	indent       string // `indent` of json.MarshalIndent(v any, prefix, indent string)
 	indentEnable bool   // If `true`, true, use `json.MarshalIndent` for struct, else `json.Marshal`
-	prefix       string // `prefix` of json.MarshalIndent(v any, prefix, indent string)
+	indentPrefix string // `prefix` of json.MarshalIndent(v any, prefix, indent string)
+	unquote      bool
 }
 
 // Initialize
@@ -43,7 +46,17 @@ func (s *StrAny) New() *StrAny {
 	s.err = nil
 	s.indent = "  "
 	s.indentEnable = true
-	s.prefix = ""
+	s.indentPrefix = ""
+	s.unquote = true
+	return s
+}
+
+// Return json.Marshal* error
+func (s *StrAny) Err() error { return s.err }
+
+// `indent` of json.MarshalIndent(v any, prefix, indent string)
+func (s *StrAny) Indent(indent string) *StrAny {
+	s.indent = indent
 	return s
 }
 
@@ -53,30 +66,43 @@ func (s *StrAny) IndentEnable(enable bool) *StrAny {
 	return s
 }
 
-// `indent` of json.MarshalIndent(v any, prefix, indent string)
-func (s *StrAny) Indent(indent string) *StrAny {
-	s.indent = indent
-	return s
-}
-
 // `prefix` of json.MarshalIndent(v any, prefix, indent string)
-func (s *StrAny) Prefix(prefix string) *StrAny {
-	s.prefix = prefix
+func (s *StrAny) IndentPrefix(prefix string) *StrAny {
+	s.indentPrefix = prefix
 	return s
 }
 
-// Return json.Marshal* error
-func (s *StrAny) Err() error { return s.err }
+func (s *StrAny) UnquoteEnable(enable bool) *StrAny {
+	s.unquote = enable
+	return s
+}
 
-func (s *StrAny) processStr(sP *string) *string {
-	if s.indentEnable {
-		return str.JsonIndent(sP)
+// Unescape utf8 string
+func (s *StrAny) processUnquote(sP *string) *string {
+	out := ""
+	if sP != nil {
+		var e error
+		// From Coconut: https://stackoverflow.com/a/51579784/1810391
+		out, e = strconv.Unquote(strings.Replace(strconv.Quote(string(*sP)), `\\u`, `\u`, -1))
+		if e != nil {
+			// if unquote failed, return original string
+			return sP
+		}
 	}
-	return sP
+	return &out
+}
+func (s *StrAny) processStr(sP *string) *string {
+	out := ""
+	if sP != nil {
+		if s.indentEnable {
+			out = *str.JsonIndent(sP)
+		}
+	}
+	return &out
 }
 
 func (s *StrAny) processStrArray(saP *[]string) *string {
-	var out string
+	out := ""
 	if saP != nil {
 		last := len(*saP) - 1
 		for index, item := range *saP {
@@ -94,10 +120,10 @@ func (s *StrAny) processStrArray(saP *[]string) *string {
 }
 
 func (s *StrAny) processByteArray(baP *[]byte) *string {
-	var out string
+	out := ""
 	if baP != nil && len(*baP) > 0 {
 		if s.indentEnable {
-			return str.ByteJsonIndent(baP)
+			out = *str.ByteJsonIndent(baP)
 		} else {
 			out = string(*baP)
 		}
@@ -126,33 +152,33 @@ func (s *StrAny) String(data any) *string {
 	var strOut string
 	switch v := data.(type) {
 	case string:
-		return s.processStr(&v)
+		strOut = *s.processStr(&v)
 	case *string:
-		return s.processStr(v)
+		strOut = *s.processStr(v)
 	case []string:
-		return s.processStrArray(&v)
+		strOut = *s.processStrArray(&v)
 	case *[]string:
-		return s.processStrArray(v)
+		strOut = *s.processStrArray(v)
 	case []byte:
-		return s.processByteArray(&v)
+		strOut = *s.processByteArray(&v)
 	case *[]byte:
-		return s.processByteArray(v)
+		strOut = *s.processByteArray(v)
 	case bytes.Buffer:
 		var b = v.Bytes()
-		return s.processByteArray(&b)
+		strOut = *s.processByteArray(&b)
 	case *bytes.Buffer:
 		if v != nil {
 			var b = v.Bytes()
-			return s.processByteArray(&b)
+			strOut = *s.processByteArray(&b)
 		}
 	case error:
 		strOut = v.Error()
 	case *error:
 		strOut = (*v).Error()
 	case []error:
-		return s.processErrArray(&v)
+		strOut = *s.processErrArray(&v)
 	case *[]error:
-		return s.processErrArray(v)
+		strOut = *s.processErrArray(v)
 	case int:
 		strOut = fmt.Sprint(v)
 	case int8:
@@ -228,7 +254,7 @@ func (s *StrAny) String(data any) *string {
 	default:
 		var b []byte
 		if s.indentEnable {
-			b, s.err = json.MarshalIndent(v, s.prefix, s.indent)
+			b, s.err = json.MarshalIndent(v, s.indentPrefix, s.indent)
 		} else {
 			b, s.err = json.Marshal(v)
 		}
@@ -236,13 +262,18 @@ func (s *StrAny) String(data any) *string {
 			strOut = string(b)
 		}
 	}
+	if s.unquote {
+		strOut = *s.processUnquote(&strOut)
+	}
 	return &strOut
 }
 
-func (s *StrAny) Str(data any) *string { return s.String(data) }
+// Matching package level Any()
+func (s *StrAny) Any(data any) *string { return s.String(data) }
 
 var strAny = New()
 
 func New() *StrAny { return new(StrAny).New() }
 
-func Any(data any) *string { return strAny.Str(data) }
+// Convert any to *string
+func Any(data any) *string { return strAny.String(data) }
