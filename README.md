@@ -195,6 +195,11 @@ go test file_test.go
   - ezlog
     - fix ezlog.Sp() error
     - move example to /example folder
+- v2.4.2
+  - ezlog
+    - shorten log level name
+    - expose EzLog
+    - add LogL()
 
 ### License
 
