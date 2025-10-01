@@ -63,7 +63,7 @@ func (N *NUM) New() *NUM {
 
 func main() {
 	var (
-		log         = ezlog.New().SetLogLevel(ezlog.DebugLevel)
+		log         = ezlog.New().SetLogLevel(ezlog.DEBUG)
 		N           = new(NUM).New()
 		f32 float32 = 100.000001
 		f64 float64 = 100.000001

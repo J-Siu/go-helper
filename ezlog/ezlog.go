@@ -49,20 +49,20 @@ type Level int8
 const (
 	LogLevel Level = iota - 2 // `LogLevel` is not exactly a log level. It is for logging regardless of log level
 	Disabled
-	EmergLevel
-	AlertLevel
-	CritLevel
-	ErrLevel
-	WarningLevel
-	NoticeLevel
-	InfoLevel
-	DebugLevel
-	TraceLevel
+	EMERG
+	ALERT
+	CRIT
+	ERR
+	WARNING
+	NOTICE
+	INFO
+	DEBUG
+	TRACE
 )
 
 type OutFunc func(msg *string)
 
-type ezlog struct {
+type EzLog struct {
 	StrAny         *strany.StrAny `json:"str_any,omitempty"`
 	logLevel       Level
 	logLevelPrefix bool
@@ -72,8 +72,8 @@ type ezlog struct {
 	trim           bool
 }
 
-func (ez *ezlog) New() *ezlog {
-	ez.SetLogLevel(ErrLevel)
+func (ez *EzLog) New() *EzLog {
+	ez.SetLogLevel(ERR)
 	ez.SetLogLevelPrefix(true)
 	ez.SetOutPrintLn()
 	ez.SetTrim(true)
@@ -82,65 +82,65 @@ func (ez *ezlog) New() *ezlog {
 }
 
 // Clear message
-func (ez *ezlog) Clear() *ezlog {
+func (ez *EzLog) Clear() *EzLog {
 	ez.strBuf = nil
 	return ez
 }
 
 // Get log level
-func (ez *ezlog) GetLogLevel() Level { return ez.logLevel }
+func (ez *EzLog) GetLogLevel() Level { return ez.logLevel }
 
 // Get log level prefix enable or not
-func (ez *ezlog) GetLogLevelPrefix() bool { return ez.logLevelPrefix }
+func (ez *EzLog) GetLogLevelPrefix() bool { return ez.logLevelPrefix }
 
 // Set out function
-func (ez *ezlog) SetOutFunc(f OutFunc) *ezlog {
+func (ez *EzLog) SetOutFunc(f OutFunc) *EzLog {
 	ez.outFunc = f
 	return ez
 }
 
 // Set out function to fmt.Print()
-func (ez *ezlog) SetOutPrint() *ezlog {
+func (ez *EzLog) SetOutPrint() *EzLog {
 	ez.SetOutFunc(func(str *string) { fmt.Print(*str) })
 	return ez
 }
 
 // Set out function to fmt.Println()
-func (ez *ezlog) SetOutPrintLn() *ezlog {
+func (ez *EzLog) SetOutPrintLn() *EzLog {
 	ez.SetOutFunc(func(str *string) { fmt.Println(*str) })
 	return ez
 }
 
 // Set log level
-func (ez *ezlog) SetLogLevel(level Level) *ezlog {
+func (ez *EzLog) SetLogLevel(level Level) *EzLog {
 	ez.logLevel = level
 	return ez
 }
 
 // Set log level prefix true/false
-func (ez *ezlog) SetLogLevelPrefix(enable bool) *ezlog {
+func (ez *EzLog) SetLogLevelPrefix(enable bool) *EzLog {
 	ez.logLevelPrefix = enable
 	return ez
 }
 
 // Enable/Disable trim on `data`
-func (ez *ezlog) SetTrim(enable bool) *ezlog {
+func (ez *EzLog) SetTrim(enable bool) *EzLog {
 	ez.trim = enable
 	return ez
 }
 
 // --- Output
 
-func (ez *ezlog) Out() *ezlog {
+func (ez *EzLog) Out() *EzLog {
 	if ez.msgLogLevel <= ez.logLevel {
 		ez.outFunc(ez.StringP())
 	}
 	return ez
 }
 
-func (ez *ezlog) String() string { return *ez.StringP() }
+func (ez *EzLog) String() string { return *ez.StringP() }
 
-func (ez *ezlog) StringP() *string {
+func (ez *EzLog) StringP() *string {
 	var strOut string
 	if ez.msgLogLevel <= ez.logLevel {
 		if ez.strBuf != nil {
@@ -160,22 +160,22 @@ func (ez *ezlog) StringP() *string {
 // --- Build log message
 
 // Add newline to message. (shorthand for Ln())
-func (ez *ezlog) L() *ezlog { return ez.Ln() }
+func (ez *EzLog) L() *EzLog { return ez.Ln() }
 
 // Add newline to message
-func (ez *ezlog) Ln() *ezlog { return ez.Sp('\n') }
+func (ez *EzLog) Ln() *EzLog { return ez.Sp('\n') }
 
 // Add msg to log
-func (ez *ezlog) M(date any) *ezlog { return ez.Msg(date) }
+func (ez *EzLog) M(date any) *EzLog { return ez.Msg(date) }
 
 // Add new line to message (shorthand for MsgLn())
-func (ez *ezlog) Mn(date any) *ezlog { return ez.MsgLn(date) }
+func (ez *EzLog) Mn(date any) *EzLog { return ez.MsgLn(date) }
 
 // Add new line to message (shorthand for MsgLn())
-func (ez *ezlog) MLn(date any) *ezlog { return ez.MsgLn(date) }
+func (ez *EzLog) MLn(date any) *EzLog { return ez.MsgLn(date) }
 
 // Add msg to log
-func (ez *ezlog) Msg(data any) *ezlog {
+func (ez *EzLog) Msg(data any) *EzLog {
 	if ez.msgLogLevel <= ez.logLevel {
 		tmp := *ez.StrAny.Any(data)
 		if ez.trim {
@@ -189,28 +189,28 @@ func (ez *ezlog) Msg(data any) *ezlog {
 }
 
 // Add new line to message (shorthand for Msg().Ln())
-func (ez *ezlog) MsgLn(data any) *ezlog { return ez.Msg(data).Ln() }
+func (ez *EzLog) MsgLn(data any) *EzLog { return ez.Msg(data).Ln() }
 
 // Add : after data (shorthand for Name())
-func (ez *ezlog) N(data any) *ezlog { return ez.Name(data) }
+func (ez *EzLog) N(data any) *EzLog { return ez.Name(data) }
 
 // Add : and newline after data (shorthand for NameLn))
-func (ez *ezlog) Nn(data any) *ezlog { return ez.NameLn(data) }
+func (ez *EzLog) Nn(data any) *EzLog { return ez.NameLn(data) }
 
 // Add : and newline after data (shorthand for NameLn))
-func (ez *ezlog) NLn(data any) *ezlog { return ez.NameLn(data) }
+func (ez *EzLog) NLn(data any) *EzLog { return ez.NameLn(data) }
 
 // Add : after data (shorthand for Msg().Sp(':'))
-func (ez *ezlog) Name(data any) *ezlog { return ez.Msg(data).Sp(':') }
+func (ez *EzLog) Name(data any) *EzLog { return ez.Msg(data).Sp(':') }
 
 // Add : and newline after data (shorthand for Msg().Sp(':').Ln())
-func (ez *ezlog) NameLn(data any) *ezlog { return ez.Name(data).Ln() }
+func (ez *EzLog) NameLn(data any) *EzLog { return ez.Name(data).Ln() }
 
 // Append character/rune to message (shorthand for Sp())
-func (ez *ezlog) S(ch rune) *ezlog { return ez.Sp(ch) }
+func (ez *EzLog) S(ch rune) *EzLog { return ez.Sp(ch) }
 
 // Append character/rune to message
-func (ez *ezlog) Sp(ch rune) *ezlog {
+func (ez *EzLog) Sp(ch rune) *EzLog {
 	if ez.msgLogLevel <= ez.logLevel {
 		count := len(ez.strBuf)
 		if count == 0 {
@@ -223,83 +223,108 @@ func (ez *ezlog) Sp(ch rune) *ezlog {
 }
 
 // Add tab to message. (shorthand for Tab())
-func (ez *ezlog) T() *ezlog { return ez.Tab() }
+func (ez *EzLog) T() *EzLog { return ez.Tab() }
 
 // Add tab to message
-func (ez *ezlog) Tab() *ezlog { return ez.Sp('\t') }
+func (ez *EzLog) Tab() *EzLog { return ez.Sp('\t') }
 
 // Add "End" to message. (shorthand for Msg("End"))
-func (ez *ezlog) TxtEnd() *ezlog { return ez.Msg("End") }
+func (ez *EzLog) TxtEnd() *EzLog { return ez.Msg("End") }
 
 // Add "Start" to message. (shorthand for Msg("Start"))
-func (ez *ezlog) TxtStart() *ezlog { return ez.Msg("Start") }
+func (ez *EzLog) TxtStart() *EzLog { return ez.Msg("Start") }
 
 // -- Set log message level
 
-func (ez *ezlog) Log() *ezlog {
+// Log message as `level`
+func (ez *EzLog) LogL(level Level) *EzLog {
+	ez.Clear().msgLogLevel = level
+	return ez
+}
+
+// Log message without level (no level prefix)
+func (ez *EzLog) Log() *EzLog {
 	ez.Clear().msgLogLevel = LogLevel
 	return ez
 }
-func (ez *ezlog) Emerg() *ezlog {
-	ez.Clear().msgLogLevel = EmergLevel
+
+// Log message as `EMERG`
+func (ez *EzLog) Emerg() *EzLog {
+	ez.Clear().msgLogLevel = EMERG
 	if ez.logLevelPrefix {
-		ez.Name("EMERG")
+		ez.Name(ez.msgLogLevel.String())
 	}
 	return ez
 }
-func (ez *ezlog) Alert() *ezlog {
-	ez.Clear().msgLogLevel = AlertLevel
+
+// Log message as `ALERT`
+func (ez *EzLog) Alert() *EzLog {
+	ez.Clear().msgLogLevel = ALERT
 	if ez.logLevelPrefix {
-		ez.Name("ALERT")
+		ez.Name(ez.msgLogLevel.String())
 	}
 	return ez
 }
-func (ez *ezlog) Crit() *ezlog {
-	ez.Clear().msgLogLevel = CritLevel
+
+// Log message as `CRIT`
+func (ez *EzLog) Crit() *EzLog {
+	ez.Clear().msgLogLevel = CRIT
 	if ez.logLevelPrefix {
-		ez.Name("CRIT")
+		ez.Name(ez.msgLogLevel.String())
 	}
 	return ez
 }
-func (ez *ezlog) Err() *ezlog {
-	ez.Clear().msgLogLevel = ErrLevel
+
+// Log message as `ERR`
+func (ez *EzLog) Err() *EzLog {
+	ez.Clear().msgLogLevel = ERR
 	if ez.logLevelPrefix {
-		ez.Name("ERR")
+		ez.Name(ez.msgLogLevel.String())
 	}
 	return ez
 }
-func (ez *ezlog) Warning() *ezlog {
-	ez.Clear().msgLogLevel = WarningLevel
+
+// Log message as `WARN`
+func (ez *EzLog) Warning() *EzLog {
+	ez.Clear().msgLogLevel = WARNING
 	if ez.logLevelPrefix {
-		ez.Name("WARNING")
+		ez.Name(ez.msgLogLevel.String())
 	}
 	return ez
 }
-func (ez *ezlog) Notice() *ezlog {
-	ez.Clear().msgLogLevel = NoticeLevel
+
+// Log message as `NOTICE`
+func (ez *EzLog) Notice() *EzLog {
+	ez.Clear().msgLogLevel = NOTICE
 	if ez.logLevelPrefix {
-		ez.Name("NOTICE")
+		ez.Name(ez.msgLogLevel.String())
 	}
 	return ez
 }
-func (ez *ezlog) Info() *ezlog {
-	ez.Clear().msgLogLevel = InfoLevel
+
+// Log message as `INFO`
+func (ez *EzLog) Info() *EzLog {
+	ez.Clear().msgLogLevel = INFO
 	if ez.logLevelPrefix {
-		ez.Name("INFO")
+		ez.Name(ez.msgLogLevel.String())
 	}
 	return ez
 }
-func (ez *ezlog) Debug() *ezlog {
-	ez.Clear().msgLogLevel = DebugLevel
+
+// Log message as `DEBUG`
+func (ez *EzLog) Debug() *EzLog {
+	ez.Clear().msgLogLevel = DEBUG
 	if ez.logLevelPrefix {
-		ez.Name("DEBUG")
+		ez.Name(ez.msgLogLevel.String())
 	}
 	return ez
 }
-func (ez *ezlog) Trace() *ezlog {
-	ez.Clear().msgLogLevel = TraceLevel
+
+// Log message as `TRACE`
+func (ez *EzLog) Trace() *EzLog {
+	ez.Clear().msgLogLevel = TRACE
 	if ez.logLevelPrefix {
-		ez.Name("TRACE")
+		ez.Name(ez.msgLogLevel.String())
 	}
 	return ez
 }
@@ -308,7 +333,7 @@ func (ez *ezlog) Trace() *ezlog {
 
 var logger = New()
 
-func New() *ezlog { return new(ezlog).New() }
+func New() *EzLog { return new(EzLog).New() }
 
 // Get log level
 func GetLogLevel() Level { return logger.GetLogLevel() }
@@ -317,30 +342,52 @@ func GetLogLevel() Level { return logger.GetLogLevel() }
 func GetLogLevelPrefix() bool { return logger.GetLogLevelPrefix() }
 
 // Set log level
-func SetLogLevel(level Level) *ezlog { return logger.SetLogLevel(level) }
+func SetLogLevel(level Level) *EzLog { return logger.SetLogLevel(level) }
 
 // Enable/Disable log level prefix
-func SetLogLevelPrefix(enable bool) *ezlog { return logger.SetLogLevelPrefix(enable) }
+func SetLogLevelPrefix(enable bool) *EzLog { return logger.SetLogLevelPrefix(enable) }
 
 // Set all log func to use fmt.Print()
-func SetOutPrint() *ezlog { return logger.SetOutPrint() }
+func SetOutPrint() *EzLog { return logger.SetOutPrint() }
 
 // Set all log func to use fmt.Println()
-func SetOutPrintLn() *ezlog { return logger.SetOutPrintLn() }
+func SetOutPrintLn() *EzLog { return logger.SetOutPrintLn() }
 
 // Enable/Disable trim on message
-func SetTrim(enable bool) *ezlog { return logger.SetTrim(enable) }
+func SetTrim(enable bool) *EzLog { return logger.SetTrim(enable) }
 
 func String() string   { return logger.String() }
 func StringP() *string { return logger.StringP() }
 
-func Log() *ezlog     { return logger.Log() }
-func Emerg() *ezlog   { return logger.Emerg() }
-func Alert() *ezlog   { return logger.Alert() }
-func Crit() *ezlog    { return logger.Crit() }
-func Err() *ezlog     { return logger.Err() }
-func Warning() *ezlog { return logger.Warning() }
-func Notice() *ezlog  { return logger.Notice() }
-func Info() *ezlog    { return logger.Info() }
-func Debug() *ezlog   { return logger.Debug() }
-func Trace() *ezlog   { return logger.Trace() }
+// Log message as level
+func LogL(level Level) *EzLog { return logger.LogL(level) }
+
+// Log message without log level
+func Log() *EzLog { return logger.Log() }
+
+// Log message as `EMERG`
+func Emerg() *EzLog { return logger.Emerg() }
+
+// Log message as `ALERT`
+func Alert() *EzLog { return logger.Alert() }
+
+// Log message as `CRIT`
+func Crit() *EzLog { return logger.Crit() }
+
+// Log message as `ERR`
+func Err() *EzLog { return logger.Err() }
+
+// Log message as `WARNING`
+func Warning() *EzLog { return logger.Warning() }
+
+// Log message as `NOTICE`
+func Notice() *EzLog { return logger.Notice() }
+
+// Log message as `INFO`
+func Info() *EzLog { return logger.Info() }
+
+// Log message as `DEBUG`
+func Debug() *EzLog { return logger.Debug() }
+
+// Log message as `TRACE`
+func Trace() *EzLog { return logger.Trace() }
