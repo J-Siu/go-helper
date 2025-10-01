@@ -191,6 +191,10 @@ go test file_test.go
 - v2.4.0
   - add basestruct
   - StrAny add unquote support
+- v2.4.1
+  - ezlog
+    - fix ezlog.Sp() error
+    - move example to /example folder
 
 ### License
 

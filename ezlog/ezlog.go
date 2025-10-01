@@ -212,7 +212,12 @@ func (ez *ezlog) S(ch rune) *ezlog { return ez.Sp(ch) }
 // Append character/rune to message
 func (ez *ezlog) Sp(ch rune) *ezlog {
 	if ez.msgLogLevel <= ez.logLevel {
-		ez.strBuf[len(ez.strBuf)-1] += string(ch)
+		count := len(ez.strBuf)
+		if count == 0 {
+			ez.strBuf = append(ez.strBuf, string(ch))
+		} else {
+			ez.strBuf[count-1] += string(ch)
+		}
 	}
 	return ez
 }
