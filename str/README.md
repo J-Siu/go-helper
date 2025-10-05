@@ -1,43 +1,38 @@
-# basestruct
+# Str
 
-Provides a simple struct with 5 common fields to be embedded by other structs.
+Collection of string related helper functions.
 
-## TYPES
+## Installation
 
-### Base
-
-A simple struct to be embedded by other struct
-```go
-type Base struct {
-  Err           error  `json:"Err,omitempty"`
-  LogLevel      int    `json:"LogLevel,omitempty"`
-  Initialized   bool   `json:"Initialized,omitempty"`
-  MyType        string `json:"MyType,omitempty"` // Store typename. Cheaper way than reflector for logging.
-  OnErrContinue bool   `json:"OnErrContinue,omitempty"`
-}
+```sh
+go get github.com/J-Siu/go-helper/v2
 ```
 
-### CheckErrInit
+## Usage
 
 ```go
-func (b *Base) CheckErrInit(prefix string) (pass bool)
+import "github.com/J-Siu/go-helper/v2/str"
 ```
 
-To be put at the beginning of Check error and initialization state in following order:
+## Types and Functions
 
-1. If `OnErrContinue` is `true` -> check passed -> return `true`
-2. If `Err` not nil -> check failed -> return `false`
-3. If `Initialized` is `false` -> check failed -> set `Err` -> return `false`
-4. All else, check passed -> return `true`
+### Package Functions
 
-### Change Log
+```go
+// collection of string related helper functions
+func ArrayContains(arrIn *[]string, strIn *string) bool
+func ArrayContainsSubString(arrIn *[]string, strIn string) bool
+func ArrayPtrRemoveEmpty(arrIn *[]string) *[]string
+func ArrayPrintln(arrIn *[]string)
+func ArraySPrintln(arrIn *[]string) *string
+func ContainsAnySubStrings(strIn *string, subStrings *[]string) (result bool, resultVal string)
+func ContainsAnySubStringsBool(strIn *string, subStrings *[]string) (result bool)
+func LnSplit(strIn *string) *[]string
+func JsonIndent(strIn *string) *string
+func ByteJsonIndent(baP *[]byte) *string
+```
 
-- v1.0.0
-  - Initial commit
-- v1.1.0
-  - Add `OnErrContinue`
-
-### License
+## License
 
 The MIT License (MIT)
 

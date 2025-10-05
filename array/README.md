@@ -1,36 +1,35 @@
-# StrAny
+# Array
 
-Convert anything to string.
+A simple array template.
 
 ## Installation
 
 ```sh
-go get github.com/J-Siu/go-helper/v2/strany
+go get github.com/J-Siu/go-helper/v2
 ```
 
 ## Usage
 
 ```go
-import "github.com/J-Siu/go-helper/v2/strany"
+import "github.com/J-Siu/go-helper/v2/array"
 ```
 
-## Example
+## Types and Functions
 
-Full example in top level example folder.
+### Structure
 
 ```go
-func main() {
-  var (
-    n           = new(NUM).New()
-    f32 float32 = 100.000001
-    f64 float64 = 100.000001
-  )
-  fmt.Println(*strany.Any(n))
-  fmt.Println(*strany.Any(f32))
-  fmt.Println(*strany.Any(f64))
-  fmt.Println(*strany.Any(&f32))
-  fmt.Println(*strany.Any(&f64))
-}
+type Array[T any] []T
+```
+
+### Package Functions
+
+```go
+func (t *Array[T]) Add(i T) *Array[T]
+func (t *Array[T]) Clear() *Array[T]
+func (t *Array[T]) Empty() bool
+func (t *Array[T]) Len() int
+func (t *Array[T]) NotEmpty() bool
 ```
 
 ## License

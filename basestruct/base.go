@@ -43,20 +43,20 @@ type Base struct {
 //  1. If `Err` not nil -> check failed -> return `false`
 //  2. If `Initialized` is `false` -> check failed -> set `Err` -> then return `false`
 //  3. All else, check passed -> return `true`
-func (b *Base) CheckErrInit(prefix string) (pass bool) {
+func (t *Base) CheckErrInit(prefix string) (pass bool) {
 	pass = true
-	if !b.OnErrContinue {
+	if !t.OnErrContinue {
 		// check error first
-		if b.Err != nil {
+		if t.Err != nil {
 			pass = false
-		} else if !b.Initialized {
+		} else if !t.Initialized {
 			errMsg := "not initialized"
 			if prefix != "" {
 				errMsg = prefix + ": " + errMsg
-			} else if b.MyType != "" {
-				errMsg = b.MyType + ": " + errMsg
+			} else if t.MyType != "" {
+				errMsg = t.MyType + ": " + errMsg
 			}
-			b.Err = errors.New(errMsg)
+			t.Err = errors.New(errMsg)
 			pass = false
 		}
 	}

@@ -1,2 +1,3 @@
-test/submodule_test_1
 .gitmodules
+go-work*
+test/submodule_test_1

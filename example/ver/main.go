@@ -22,31 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package array
+package main
 
-type Array[T any] []T
+import (
+	"fmt"
 
-// Return true if ErrsType array is empty
-func (t *Array[T]) Empty() bool {
-	return len(*t) == 0
-}
+	"github.com/J-Siu/go-helper/v2/ver"
+)
 
-func (t *Array[T]) Len() int {
-	return len(*t)
-}
+func main() {
+	v1 := ver.Major(1).Minor(2).Patch(3).String()
+	v2 := ver.M(0).N(0).P(1).Prefix("").String() // Using shorthand and no prefix
 
-// Return true if ErrsType array is not empty
-func (t *Array[T]) NotEmpty() bool {
-	return len(*t) > 0
-}
-
-// Clear the ErrsType array
-func (t *Array[T]) Clear() *Array[T] {
-	*t = nil
-	return t
-}
-
-func (t *Array[T]) Add(i T) *Array[T] {
-	*t = append(*t, i)
-	return t
+	fmt.Println(v1)
+	fmt.Println(v2)
 }

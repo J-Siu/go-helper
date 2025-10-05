@@ -1,0 +1,64 @@
+# Ver
+
+Both package and struct level functions for constructing version string.
+
+## Installation
+
+```sh
+go get github.com/J-Siu/go-helper/v2
+```
+
+## Usage
+
+```go
+import "github.com/J-Siu/go-helper/v2/ver"
+```
+
+## Types and Functions
+
+### Structure
+
+```go
+type Version struct {
+  major  int
+  minor  int
+  patch  int
+  prefix string
+}
+
+func (t *Version) New() *Version
+func (t *Version) Prefix(v string) *Version
+func (t *Version) String() string
+func (t *Version) Major(v int) *Version
+func (t *Version) Minor(v int) *Version
+func (t *Version) Patch(v int) *Version
+func (t *Version) M(v int) *Version
+func (t *Version) N(v int) *Version
+func (t *Version) P(v int) *Version
+```
+
+### Package Functions
+
+```go
+func New() *Version
+func Prefix(v string) *Version
+func String() string
+func Major(v int) *Version
+func Minor(v int) *Version
+func Patch(v int) *Version
+func M(v int) *Version
+func N(v int) *Version
+func P(v int) *Version
+```
+
+## License
+
+The MIT License (MIT)
+
+Copyright © 2025 John, Sing Dao, Siu <john.sd.siu@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

@@ -48,64 +48,64 @@ type Cmd struct {
 
 // Setup and return cmd pointer.
 //   - If <workPathP> is empty/nil, current directory is used.
-func (c *Cmd) New(cmdName string, argsP *[]string, workPathP *string) *Cmd {
-	c.ArgsP = argsP
-	c.CmdName = cmdName
-	c.ExitCode = 0
-	c.WorkDir = *file.FullPath(workPathP)
-	return c
+func (t *Cmd) New(cmdName string, argsP *[]string, workPathP *string) *Cmd {
+	t.ArgsP = argsP
+	t.CmdName = cmdName
+	t.ExitCode = 0
+	t.WorkDir = *file.FullPath(workPathP)
+	return t
 }
 
 // A exec.Cmd.Run() wrapper.
-func (c *Cmd) Run() *Cmd {
-	execCmd := exec.Command(c.CmdName, *c.ArgsP...)
-	execCmd.Stdout = &c.Stdout
-	execCmd.Stderr = &c.Stderr
-	execCmd.Dir = c.WorkDir
-	c.CmdLn = execCmd.String()
-	c.Err = execCmd.Run()
-	c.Ran = true
+func (t *Cmd) Run() *Cmd {
+	execCmd := exec.Command(t.CmdName, *t.ArgsP...)
+	execCmd.Stdout = &t.Stdout
+	execCmd.Stderr = &t.Stderr
+	execCmd.Dir = t.WorkDir
+	t.CmdLn = execCmd.String()
+	t.Err = execCmd.Run()
+	t.Ran = true
 
-	if exitErr, ok := c.Err.(*exec.ExitError); ok {
+	if exitErr, ok := t.Err.(*exec.ExitError); ok {
 		// fmt.Println("*** self.Err ok, get cmd exit code ***")
-		c.ExitCode = exitErr.ExitCode()
-	} else if c.Err != nil {
+		t.ExitCode = exitErr.ExitCode()
+	} else if t.Err != nil {
 		// For simplicity, force exit code to 1
 		// fmt.Println("*** self.Err != nil ***")
 	}
 
 	prefix := "cmd.Run"
-	ezlog.Debug().Name(prefix).Msg(&c).Out()
-	if c.Stdout.Len() > 0 {
-		ezlog.Debug().Name(prefix).Name("Stdout").Msg(c.Stdout).Out()
+	ezlog.Debug().Name(prefix).Msg(&t).Out()
+	if t.Stdout.Len() > 0 {
+		ezlog.Debug().Name(prefix).Name("Stdout").Msg(t.Stdout).Out()
 	}
-	if c.Stderr.Len() > 0 {
-		ezlog.Debug().Name(prefix).Name("Stderr").Msg(c.Stderr).Out()
+	if t.Stderr.Len() > 0 {
+		ezlog.Debug().Name(prefix).Name("Stderr").Msg(t.Stderr).Out()
 	}
-	ezlog.Debug().Name(prefix).Name("Err").Msg(c.Err).Out()
-	return c
+	ezlog.Debug().Name(prefix).Name("Err").Msg(t.Err).Out()
+	return t
 }
 
 // run func wrapper with sync.WaitGroup support.
 //   - If <workPathP> is empty/nil, current directory is used.
 //   - Print if <output> is true
-func (c *Cmd) RunWg(title *string, wgP *sync.WaitGroup, output bool) *Cmd {
+func (t *Cmd) RunWg(title *string, wgP *sync.WaitGroup, output bool) *Cmd {
 	if wgP != nil {
 		defer wgP.Done()
 	}
-	c.Run()
+	t.Run()
 	if output {
-		if c.Stdout.Len() > 0 {
-			ezlog.Log().Name(title).Name("Stdout").Msg(c.Stdout).Out()
+		if t.Stdout.Len() > 0 {
+			ezlog.Log().Name(title).Name("Stdout").Msg(t.Stdout).Out()
 		}
-		if c.Stderr.Len() > 0 {
-			ezlog.Log().Name(title).Name("Stderr").Msg(c.Stderr).Out()
+		if t.Stderr.Len() > 0 {
+			ezlog.Log().Name(title).Name("Stderr").Msg(t.Stderr).Out()
 		}
 	}
-	return c
+	return t
 }
 
-func (c *Cmd) Error() error { return c.Err }
+func (t *Cmd) Error() error { return t.Err }
 
 // Setup and return MyCmd pointer.
 //   - If <workPathP> is empty/nil, current directory is used.
