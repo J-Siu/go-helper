@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// Both package and struct level functions for constructing version string
 package ver
 
 import "fmt"
@@ -86,34 +85,3 @@ func (t *Version) P(v int) *Version {
 	t.patch = v
 	return t
 }
-
-// Package level
-
-var ver *Version = New()
-
-// Return new Version object, prefix default to "v"
-func New() *Version { return new(Version).New() }
-
-// Set Prefix of version string
-func Prefix(v string) *Version { return ver.Prefix(v) }
-
-// Return version in string form
-func String() string { return ver.String() }
-
-// Set Major
-func Major(v int) *Version { return ver.Major(v) }
-
-// Set Minor
-func Minor(v int) *Version { return ver.Minor(v) }
-
-// Set Patch
-func Patch(v int) *Version { return ver.Patch(v) }
-
-// shorthand for setting Major
-func M(v int) *Version { return ver.M(v) }
-
-// shorthand for setting Minor
-func N(v int) *Version { return ver.N(v) }
-
-// shorthand for setting Patch
-func P(v int) *Version { return ver.P(v) }

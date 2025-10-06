@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// exec.Cmd wrapper
 package cmd
 
 import (
@@ -35,15 +34,15 @@ import (
 )
 
 type Cmd struct {
-	ArgsP    *[]string    `json:"ArgsP"`    // In : Command args
-	CmdLn    string       `json:"CmdLn"`    // Out: Command line
-	CmdName  string       `json:"CmdName"`  // In : Command name
-	Err      error        `json:"Err"`      // Out: run error
-	ExitCode int          `json:"ExitCode"` // Out: Exit Code
-	Ran      bool         `json:"Ran"`      // Out: Set to true by Run()
-	Stderr   bytes.Buffer `json:"Stderr"`   // Out: Stderr
-	Stdout   bytes.Buffer `json:"Stdout"`   // Out: Stdout
-	WorkDir  string       `json:"WorkDir"`  // In : Command working dir
+	ArgsP    *[]string    `json:"ArgsP,omitempty"`    // In : Command args
+	CmdLn    string       `json:"CmdLn,omitempty"`    // Out: Command line
+	CmdName  string       `json:"CmdName,omitempty"`  // In : Command name
+	Err      error        `json:"Err,omitempty"`      // Out: run error
+	ExitCode int          `json:"ExitCode,omitempty"` // Out: Exit Code
+	Ran      bool         `json:"Ran,omitempty"`      // Out: Set to true by Run()
+	Stderr   bytes.Buffer `json:"Stderr,omitempty"`   // Out: Stderr
+	Stdout   bytes.Buffer `json:"Stdout,omitempty"`   // Out: Stdout
+	WorkDir  string       `json:"WorkDir,omitempty"`  // In : Command working dir
 }
 
 // Setup and return cmd pointer.
@@ -106,22 +105,3 @@ func (t *Cmd) RunWg(title *string, wgP *sync.WaitGroup, output bool) *Cmd {
 }
 
 func (t *Cmd) Error() error { return t.Err }
-
-// Setup and return MyCmd pointer.
-//   - If <workPathP> is empty/nil, current directory is used.
-func New(cmdName string, argsP *[]string, workPathP *string) *Cmd {
-	return new(Cmd).New(cmdName, argsP, workPathP)
-}
-
-// MyCmd run func wrapper.
-//   - If <workPathP> is empty/nil, current directory is used.
-func Run(cmdName string, argsP *[]string, workPathP *string) *Cmd {
-	return RunWg(cmdName, argsP, workPathP, nil, nil, false)
-}
-
-// MyCmd run func wrapper with sync.WaitGroup support.
-//   - If <workPathP> is empty/nil, current directory is used.
-//   - Print if <output> is true
-func RunWg(cmdName string, argsP *[]string, workPathP *string, title *string, wgP *sync.WaitGroup, output bool) *Cmd {
-	return New(cmdName, argsP, workPathP).RunWg(title, wgP, output)
-}

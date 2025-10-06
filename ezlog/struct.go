@@ -20,19 +20,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// ezlog - A simple log mapping module
-//
-//	-2. Log
-//	-1. Disable
-//	0. Emerg
-//	1. Alert
-//	2. Crit
-//	3. Err
-//	4. Warning
-//	5. Notice
-//	6. Info
-//	7. Debug
-//	8. Trace
 package ezlog
 
 import (
@@ -41,23 +28,6 @@ import (
 	"unicode/utf8"
 
 	"github.com/J-Siu/go-helper/v2/strany"
-)
-
-type Level int8
-
-// log level
-const (
-	LogLevel Level = iota - 2 // `LogLevel` is not exactly a log level. It is for logging regardless of log level
-	Disabled
-	EMERG
-	ALERT
-	CRIT
-	ERR
-	WARNING
-	NOTICE
-	INFO
-	DEBUG
-	TRACE
 )
 
 type OutFunc func(msg *string)
@@ -328,66 +298,3 @@ func (t *EzLog) Trace() *EzLog {
 	}
 	return t
 }
-
-// ---
-
-var logger = New()
-
-func New() *EzLog { return new(EzLog).New() }
-
-// Get log level
-func GetLogLevel() Level { return logger.GetLogLevel() }
-
-// Get log level prefix enable or not
-func GetLogLevelPrefix() bool { return logger.GetLogLevelPrefix() }
-
-// Set log level
-func SetLogLevel(level Level) *EzLog { return logger.SetLogLevel(level) }
-
-// Enable/Disable log level prefix
-func SetLogLevelPrefix(enable bool) *EzLog { return logger.SetLogLevelPrefix(enable) }
-
-// Set all log func to use fmt.Print()
-func SetOutPrint() *EzLog { return logger.SetOutPrint() }
-
-// Set all log func to use fmt.Println()
-func SetOutPrintLn() *EzLog { return logger.SetOutPrintLn() }
-
-// Enable/Disable trim on message
-func SetTrim(enable bool) *EzLog { return logger.SetTrim(enable) }
-
-func String() string   { return logger.String() }
-func StringP() *string { return logger.StringP() }
-
-// Log message as level
-func LogL(level Level) *EzLog { return logger.LogL(level) }
-
-// Log message without log level
-func Log() *EzLog { return logger.Log() }
-
-// Log message as `EMERG`
-func Emerg() *EzLog { return logger.Emerg() }
-
-// Log message as `ALERT`
-func Alert() *EzLog { return logger.Alert() }
-
-// Log message as `CRIT`
-func Crit() *EzLog { return logger.Crit() }
-
-// Log message as `ERR`
-func Err() *EzLog { return logger.Err() }
-
-// Log message as `WARNING`
-func Warning() *EzLog { return logger.Warning() }
-
-// Log message as `NOTICE`
-func Notice() *EzLog { return logger.Notice() }
-
-// Log message as `INFO`
-func Info() *EzLog { return logger.Info() }
-
-// Log message as `DEBUG`
-func Debug() *EzLog { return logger.Debug() }
-
-// Log message as `TRACE`
-func Trace() *EzLog { return logger.Trace() }
