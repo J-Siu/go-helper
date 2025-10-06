@@ -26,18 +26,9 @@ package array
 
 type Array[T any] []T
 
-// Return true if ErrsType array is empty
-func (t *Array[T]) Empty() bool {
-	return len(*t) == 0
-}
-
-func (t *Array[T]) Len() int {
-	return len(*t)
-}
-
-// Return true if ErrsType array is not empty
-func (t *Array[T]) NotEmpty() bool {
-	return len(*t) > 0
+func (t *Array[T]) Add(i T) *Array[T] {
+	*t = append(*t, i)
+	return t
 }
 
 // Clear the ErrsType array
@@ -46,7 +37,10 @@ func (t *Array[T]) Clear() *Array[T] {
 	return t
 }
 
-func (t *Array[T]) Add(i T) *Array[T] {
-	*t = append(*t, i)
-	return t
-}
+func (t *Array[T]) Len() int { return len(*t) }
+
+// Return true if ErrsType array is empty/nil
+func (t *Array[T]) IsEmpty() bool { return t.Len() == 0 }
+
+// Return true if ErrsType array is not empty/nil
+func (t *Array[T]) NotEmpty() bool { return t.Len() > 0 }
