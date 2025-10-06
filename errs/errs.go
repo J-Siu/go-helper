@@ -25,14 +25,19 @@ THE SOFTWARE.
 // A simple array to stash errors
 package errs
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/J-Siu/go-helper/v2/array"
+)
 
 // error list
-var Errs []error
+var Errs array.Array[error]
 
-func Clear()        { Errs = nil }
-func IsEmpty() bool { return len(Errs) == 0 }
-func Len() int      { return len(Errs) }
+func Clear()         { Errs = nil }
+func IsEmpty() bool  { return Errs.IsEmpty() }
+func NotEmpty() bool { return Errs.NotEmpty() }
+func Len() int       { return Errs.Len() }
 
 // If `err` != nil, add `err` to helper Errs array
 func Queue(prefix string, e error) {
