@@ -20,17 +20,17 @@ Collections of Golang helper modules.
 
 ### Features
 
-Module|Description|Readme|Example
----|---|---|---
-array|simple array template|[README.md](array/README.md)|
-basestruct|a simple struct with 5 common fields to be embedded by other structs|[README.md](basestruct/README.md)|[example/basestruct](/example/basestruct/)
-cmd|`exec.Command` shell wrapper|[README.md](cmd/README.md)|
-errs|simple error array for stacking error messages with prefix|[README.md](errs/README.md)|
-ezlog|log functions auto detect and apply json marshal indent|[README.md](ezlog/README.md)|[example/ezlog/](/example/ezlog/)
-file|file/directory functions|[README.md](file/README.md)|
-strany|convert any to *string|[README.md](strany/README.md)|[example/strany/](/example/strany/)
-str|string/array functions|[README.md](str/README.md)|
-ver|Both package and struct level functions for constructing version string|[README.md](ver/README.md)|[example/ver](/example/ver/)
+|Module|Description|Readme|Example|
+|---|---|---|---|
+|array|simple array template|[README.md](array/README.md)||
+|basestruct|a simple struct with 5 common fields to be embedded by other structs|[README.md](basestruct/README.md)|[example/basestruct](/example/basestruct/)|
+|cmd|`exec.Command` shell wrapper|[README.md](cmd/README.md)||
+|errs|simple error array for stacking error messages with prefix|[README.md](errs/README.md)||
+|ezlog|log functions auto detect and apply json marshal indent|[README.md](ezlog/README.md)|[example/ezlog/](/example/ezlog/)|
+|file|file/directory functions|[README.md](file/README.md)||
+|strany|convert any to *string|[README.md](strany/README.md)|[example/strany/](/example/strany/)|
+|str|string/array functions|[README.md](str/README.md)||
+|ver|Both package and struct level functions for constructing version string|[README.md](ver/README.md)|[example/ver](/example/ver/)|
 
 ### Doc
 
@@ -206,6 +206,13 @@ go test file_test.go
   - v2.4.3
     - add ver
     - add README for all packages
+  - v2.5.0
+    - add version const
+    - split most packages into pkg, struct files
+    - err use array.Array
+    - strany
+      - add debug output support for `Any`
+      - fix output for `array.Array[any]`, `array.Array[error]`
 
 ### License
 
