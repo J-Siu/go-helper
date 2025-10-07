@@ -213,6 +213,9 @@ go test file_test.go
     - strany
       - add debug output support for `Any`
       - fix output for `array.Array[any]`, `array.Array[error]`
+  - v2.5.1
+    - ezlog
+      - add OK(), Success(), YesNo() shorthand
 
 ### License
 

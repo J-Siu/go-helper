@@ -192,6 +192,8 @@ func (t *EzLog) Sp(ch rune) *EzLog {
 	return t
 }
 
+// -- Other shorthand
+
 // Add tab to message. (shorthand for Tab())
 func (t *EzLog) T() *EzLog { return t.Tab() }
 
@@ -203,6 +205,33 @@ func (t *EzLog) TxtEnd() *EzLog { return t.Msg("End") }
 
 // Add "Start" to message. (shorthand for Msg("Start"))
 func (t *EzLog) TxtStart() *EzLog { return t.Msg("Start") }
+
+// Add "OK"/"Fail" to message.
+func (t *EzLog) Ok(data bool) *EzLog {
+	if data {
+		return t.Msg("OK")
+	} else {
+		return t.Msg("Fail")
+	}
+}
+
+// Add "Success"/"Fail" to message.
+func (t *EzLog) Success(data bool) *EzLog {
+	if data {
+		return t.Msg("Success")
+	} else {
+		return t.Msg("Fail")
+	}
+}
+
+// Add "Yes"/"No" to message.
+func (t *EzLog) YesNo(data bool) *EzLog {
+	if data {
+		return t.Msg("Yes")
+	} else {
+		return t.Msg("No")
+	}
+}
 
 // -- Set log message level
 
