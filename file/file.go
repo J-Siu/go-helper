@@ -188,17 +188,20 @@ func TildeEnvExpand(strIn string) (strOut string) {
 // Read file into []string.
 //
 // Lines are split by "\n".
-func ArrayRead(filePath string) (strArray []string, err error) {
-	var byteRead []byte
-	byteRead, err = os.ReadFile(filePath)
-	if err == nil {
+func ArrayRead(filePath string) (*[]string, error) {
+	var (
+		byteRead []byte
+		strArray []string
+		e        error
+	)
+	byteRead, e = os.ReadFile(filePath)
+	if e == nil {
 		strArray = strings.Split(string(byteRead), "\n")
 	}
-	return strArray, err
+	return &strArray, e
 }
 
 // Write []string into file
-func ArrayWrite(filePath string, strArray []string, perm os.FileMode) (err error) {
-	err = os.WriteFile(filePath, []byte(strings.Join(strArray, "\n")), perm)
-	return err
+func ArrayWrite(filePath string, strArray *[]string, perm os.FileMode) error {
+	return os.WriteFile(filePath, []byte(strings.Join(*strArray, "\n")), perm)
 }
