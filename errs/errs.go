@@ -42,10 +42,19 @@ func Len() int       { return Errs.Len() }
 // If `err` != nil, add `err` to helper Errs array
 func Queue(prefix string, e error) {
 	if e != nil {
-		tmp := e
-		if prefix != "" {
-			tmp = errors.New(prefix + ":" + e.Error())
-		}
-		Errs = append(Errs, tmp)
+		Errs = append(Errs, New(prefix, e.Error()))
+	}
+}
+
+// shorthand for creating error with prefix
+//
+// if `prefix“ is not empty, returning error string will be prefixed by `<prefix>: `
+//
+// This does not add to the Errs queue
+func New(prefix string, strErr string) error {
+	if len(prefix) == 0 {
+		return errors.New(strErr)
+	} else {
+		return errors.New(prefix + ": " + strErr)
 	}
 }
