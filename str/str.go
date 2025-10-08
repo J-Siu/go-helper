@@ -34,9 +34,9 @@ import (
 )
 
 // Check if string array contain a string.
-func ArrayContains(arrIn *[]string, strIn *string) bool {
+func ArrayContains(arrIn *[]string, strIn *string, caseSensitive bool) bool {
 	for _, s := range *arrIn {
-		if s == *strIn {
+		if caseSensitive && s == *strIn || strcase.Compare(s, *strIn) == 0 {
 			return true
 		}
 	}
@@ -44,9 +44,9 @@ func ArrayContains(arrIn *[]string, strIn *string) bool {
 }
 
 // Check if string array contains a substring
-func ArrayContainsSubString(arrIn *[]string, strIn string) bool {
+func ArrayContainsSubString(arrIn *[]string, strIn string, caseSensitive bool) bool {
 	for _, s := range *arrIn {
-		if strings.Contains(strIn, s) {
+		if caseSensitive && strings.Contains(strIn, s) || strcase.Contains(s, strIn) {
 			return true
 		}
 	}
@@ -85,12 +85,10 @@ func ArraySPrintln(arrIn *[]string) *string {
 //   - result (bool)
 //   - if result is true, `resultVal` == matching substring
 //   - if result is false, `resultVal` == ""
-//
-// This is a case insensitive compare.
-func ContainsAnySubStrings(strIn *string, subStrings *[]string) (result bool, resultVal string) {
+func ContainsAnySubStrings(strIn *string, subStrings *[]string, caseSensitive bool) (result bool, resultVal string) {
 	// prefix := "matchList"
 	for _, subStr := range *subStrings {
-		if strcase.Contains(*strIn, subStr) {
+		if caseSensitive && strcase.Contains(*strIn, subStr) || strcase.Contains(*strIn, subStr) {
 			result = true
 			resultVal = subStr
 			break
@@ -100,8 +98,8 @@ func ContainsAnySubStrings(strIn *string, subStrings *[]string) (result bool, re
 }
 
 // Return only bool from [ContainsAnySubStrings]
-func ContainsAnySubStringsBool(strIn *string, subStrings *[]string) (result bool) {
-	result, _ = ContainsAnySubStrings(strIn, subStrings)
+func ContainsAnySubStringsBool(strIn *string, subStrings *[]string, caseSensitive bool) (result bool) {
+	result, _ = ContainsAnySubStrings(strIn, subStrings, caseSensitive)
 	return result
 }
 
