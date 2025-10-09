@@ -102,8 +102,8 @@ func main() {
 		Name("&f32").MsgLn(&f32).
 		Name("&f64").MsgLn(&f64).
 		MsgLn(uint64(199999999999)).
-		Name("N").Ln().MsgLn(N).
-		Name("&N").Ln().Msg(&N).
+		Name("N").L().MsgLn(N).
+		Name("&N").L().Msg(&N).
 		Out()
 
 	str = log.String()

@@ -33,13 +33,18 @@ import (
 type OutFunc func(msg *string)
 
 type EzLog struct {
-	StrAny         *strany.StrAny `json:"str_any,omitempty"`
-	logLevel       Level
+	StrAny         *strany.StrAny `json:"StrAny"`
+	logLevel       EzLogLevel
 	logLevelPrefix bool
-	msgLogLevel    Level
 	outFunc        OutFunc
+	skipEmpty      bool
 	strBuf         []string
 	trim           bool
+	// msg level
+	msgLogLevel       EzLogLevel
+	msgNotEmpty       bool
+	msgSkipEmpty      bool
+	msgLogLevelPrefix bool
 }
 
 func (t *EzLog) New() *EzLog {
@@ -48,20 +53,36 @@ func (t *EzLog) New() *EzLog {
 	t.SetOutPrintLn()
 	t.SetTrim(true)
 	t.StrAny = new(strany.StrAny).New()
+	t.msgNotEmpty = false
+	t.msgSkipEmpty = false
+	t.strBuf = nil
 	return t
 }
 
 // Clear message
 func (t *EzLog) Clear() *EzLog {
+	t.msgNotEmpty = false
 	t.strBuf = nil
 	return t
 }
 
 // Get log level
-func (t *EzLog) GetLogLevel() Level { return t.logLevel }
+func (t *EzLog) GetLogLevel() EzLogLevel { return t.logLevel }
 
 // Get log level prefix enable or not
 func (t *EzLog) GetLogLevelPrefix() bool { return t.logLevelPrefix }
+
+// Set log level
+func (t *EzLog) SetLogLevel(level EzLogLevel) *EzLog {
+	t.logLevel = level
+	return t
+}
+
+// Set log level prefix true/false
+func (t *EzLog) SetLogLevelPrefix(enable bool) *EzLog {
+	t.logLevelPrefix = enable
+	return t
+}
 
 // Set out function
 func (t *EzLog) SetOutFunc(f OutFunc) *EzLog {
@@ -81,29 +102,113 @@ func (t *EzLog) SetOutPrintLn() *EzLog {
 	return t
 }
 
-// Set log level
-func (t *EzLog) SetLogLevel(level Level) *EzLog {
-	t.logLevel = level
-	return t
-}
-
-// Set log level prefix true/false
-func (t *EzLog) SetLogLevelPrefix(enable bool) *EzLog {
-	t.logLevelPrefix = enable
-	return t
-}
-
 // Enable/Disable trim on `data`
 func (t *EzLog) SetTrim(enable bool) *EzLog {
 	t.trim = enable
 	return t
 }
 
+// Enable/Disable trim on `data`
+func (t *EzLog) SetSkipEmpty(enable bool) *EzLog {
+	t.skipEmpty = enable
+	return t
+}
+
+// -- Set log message level
+
+// Log message as `level`
+func (t *EzLog) LogL(level EzLogLevel) *EzLog {
+	t.msgLogLevel = level
+	return t
+}
+
+// Log message without level (no level prefix)
+func (t *EzLog) Log() *EzLog {
+	t.msgLogLevel = LOG
+	return t.Clear().Lp(false)
+}
+
+// Log message as `EMERG`
+func (t *EzLog) Emerg() *EzLog {
+	t.msgLogLevel = EMERG
+	return t.Clear().Lp(t.logLevelPrefix)
+}
+
+// Log message as `ALERT`
+func (t *EzLog) Alert() *EzLog {
+	t.msgLogLevel = ALERT
+	return t.Clear().Lp(t.logLevelPrefix)
+}
+
+// Log message as `CRIT`
+func (t *EzLog) Crit() *EzLog {
+	t.msgLogLevel = CRIT
+	return t.Clear().Lp(t.logLevelPrefix)
+}
+
+// Log message as `ERR`
+func (t *EzLog) Err() *EzLog {
+	t.msgLogLevel = ERR
+	return t.Clear().Lp(t.logLevelPrefix)
+}
+
+// Log message as `WARN`
+func (t *EzLog) Warning() *EzLog {
+	t.msgLogLevel = WARNING
+	return t.Clear().Lp(t.logLevelPrefix)
+}
+
+// Log message as `NOTICE`
+func (t *EzLog) Notice() *EzLog {
+	t.msgLogLevel = NOTICE
+	return t.Clear().Lp(t.logLevelPrefix)
+}
+
+// Log message as `INFO`
+func (t *EzLog) Info() *EzLog {
+	t.msgLogLevel = INFO
+	return t.Clear().Lp(t.logLevelPrefix)
+}
+
+// Log message as `DEBUG`
+func (t *EzLog) Debug() *EzLog {
+	t.msgLogLevel = DEBUG
+	return t.Clear().Lp(t.logLevelPrefix)
+}
+
+// Log message as `TRACE`
+func (t *EzLog) Trace() *EzLog {
+	t.msgLogLevel = TRACE
+	return t.Clear().Lp(t.logLevelPrefix)
+}
+
 // --- Output
+
+func (t *EzLog) Dump() *EzLog {
+	new(EzLog).New().Log().
+		Nn("EzLog.Dump").M(t).
+		N("logLevel").Mn(t.logLevel).
+		N("logLevelPrefix").Mn(t.logLevelPrefix).
+		N("skipEmpty").Mn(t.skipEmpty).
+		N("trim").Mn(t.trim).
+		N("msgLogLevel").Mn(t.msgLogLevel).
+		N("msgNotEmpty").Mn(t.msgNotEmpty).
+		N("msgSkipEmpty").Mn(t.msgSkipEmpty).
+		N("t.msgLogLevel > DISABLED").Mn(t.msgLogLevel > DISABLED).
+		Out()
+	return t
+}
 
 func (t *EzLog) Out() *EzLog {
 	if t.msgLogLevel <= t.logLevel {
-		t.outFunc(t.StringP())
+		// Skip empty?
+		if !((t.skipEmpty || t.msgSkipEmpty) && !t.msgNotEmpty) {
+			// Log level prefix
+			if t.msgLogLevelPrefix && (t.msgLogLevel != DISABLED) {
+				t.strBuf = append([]string{t.msgLogLevel.String() + ":"}, t.strBuf...)
+			}
+			t.outFunc(t.StringP())
+		}
 	}
 	return t
 }
@@ -129,58 +234,42 @@ func (t *EzLog) StringP() *string {
 
 // --- Build log message
 
-// Add newline to message. (shorthand for Ln())
-func (t *EzLog) L() *EzLog { return t.Ln() }
-
-// Add newline to message
-func (t *EzLog) Ln() *EzLog { return t.Sp('\n') }
-
 // Add msg to log
-func (t *EzLog) M(date any) *EzLog { return t.Msg(date) }
-
-// Add new line to message (shorthand for MsgLn())
-func (t *EzLog) Mn(date any) *EzLog { return t.MsgLn(date) }
-
-// Add new line to message (shorthand for MsgLn())
-func (t *EzLog) MLn(date any) *EzLog { return t.MsgLn(date) }
-
-// Add msg to log
-func (t *EzLog) Msg(data any) *EzLog {
+func (t *EzLog) build(data any, isMsg bool) *EzLog {
 	if t.msgLogLevel <= t.logLevel {
 		tmp := *t.StrAny.Any(data)
 		if t.trim {
 			tmp = strings.Trim(tmp, "\n")
 			tmp = strings.TrimSpace(tmp)
-		} else {
+		}
+		if isMsg {
+			t.msgNotEmpty = t.msgNotEmpty || len(tmp) > 0
 		}
 		t.strBuf = append(t.strBuf, tmp)
 	}
 	return t
 }
 
-// Add new line to message (shorthand for Msg().Ln())
-func (t *EzLog) MsgLn(data any) *EzLog { return t.Msg(data).Ln() }
+// enable/disable message log level prefix.
+func (t *EzLog) Lp(enable bool) *EzLog {
+	t.msgLogLevelPrefix = enable
+	return t
+}
 
-// Add : after data (shorthand for Name())
-func (t *EzLog) N(data any) *EzLog { return t.Name(data) }
+// enable/disable message log level prefix. (Alias for Lp())
+func (t *EzLog) LogPrefix(enable bool) *EzLog { return t.Lp(enable) }
 
-// Add : and newline after data (shorthand for NameLn))
-func (t *EzLog) Nn(data any) *EzLog { return t.NameLn(data) }
+// Skip current message if `Msg` is empty. Current msg only.
+func (t *EzLog) Se() *EzLog {
+	t.msgSkipEmpty = true
+	return t
+}
 
-// Add : and newline after data (shorthand for NameLn))
-func (t *EzLog) NLn(data any) *EzLog { return t.NameLn(data) }
-
-// Add : after data (shorthand for Msg().Sp(':'))
-func (t *EzLog) Name(data any) *EzLog { return t.Msg(data).Sp(':') }
-
-// Add : and newline after data (shorthand for Msg().Sp(':').Ln())
-func (t *EzLog) NameLn(data any) *EzLog { return t.Name(data).Ln() }
+// Skip current message if `Msg` is empty. Current msg only. (alias of Se())
+func (t *EzLog) SkipEmpty() *EzLog { return t.Se() }
 
 // Append character/rune to message (shorthand for Sp())
-func (t *EzLog) S(ch rune) *EzLog { return t.Sp(ch) }
-
-// Append character/rune to message
-func (t *EzLog) Sp(ch rune) *EzLog {
+func (t *EzLog) C(ch rune) *EzLog {
 	if t.msgLogLevel <= t.logLevel {
 		count := len(t.strBuf)
 		if count == 0 {
@@ -192,138 +281,67 @@ func (t *EzLog) Sp(ch rune) *EzLog {
 	return t
 }
 
+// Add newline to message.
+func (t *EzLog) L() *EzLog { return t.C('\n') }
+
+// Add msg to log
+func (t *EzLog) M(data any) *EzLog { return t.build(data, true) }
+
+// Add new line to message (shorthand for M().L())
+func (t *EzLog) Mn(data any) *EzLog { return t.M(data).L() }
+
+// Add msg to log (alias for M())
+func (t *EzLog) Msg(data any) *EzLog { return t.M(data) }
+
+// Add new line to message (alias for Mn())
+func (t *EzLog) MsgLn(data any) *EzLog { return t.Mn(data) }
+
+// Add : after data
+func (t *EzLog) N(data any) *EzLog { return t.build(data, false).C(':') }
+
+// Add : and newline after data (shorthand for N().L())
+func (t *EzLog) Nn(data any) *EzLog { return t.N(data).L() }
+
+// Add : after data (alias of N())
+func (t *EzLog) Name(data any) *EzLog { return t.N(data) }
+
+// Add : and newline after data ()
+func (t *EzLog) NameLn(data any) *EzLog { return t.Nn(data) }
+
 // -- Other shorthand
 
-// Add tab to message. (shorthand for Tab())
-func (t *EzLog) T() *EzLog { return t.Tab() }
+// Add tab to message.
+func (t *EzLog) T() *EzLog { return t.C('\t') }
 
-// Add tab to message
-func (t *EzLog) Tab() *EzLog { return t.Sp('\t') }
+// Add tab to message. (alias for T())
+func (t *EzLog) Tab() *EzLog { return t.T() }
 
-// Add "End" to message. (shorthand for Msg("End"))
-func (t *EzLog) TxtEnd() *EzLog { return t.Msg("End") }
+// Add "End" to message. (shorthand for M("End"))
+func (t *EzLog) TxtEnd() *EzLog { return t.M("End") }
 
-// Add "Start" to message. (shorthand for Msg("Start"))
-func (t *EzLog) TxtStart() *EzLog { return t.Msg("Start") }
+// Add "Start" to message. (shorthand for M("Start"))
+func (t *EzLog) TxtStart() *EzLog { return t.M("Start") }
 
 // Add "OK"/"Fail" to message.
 func (t *EzLog) Ok(data bool) *EzLog {
 	if data {
-		return t.Msg("OK")
-	} else {
-		return t.Msg("Fail")
+		return t.M("OK")
 	}
+	return t.M("Fail")
 }
 
 // Add "Success"/"Fail" to message.
 func (t *EzLog) Success(data bool) *EzLog {
 	if data {
-		return t.Msg("Success")
-	} else {
-		return t.Msg("Fail")
+		return t.M("Success")
 	}
+	return t.M("Fail")
 }
 
 // Add "Yes"/"No" to message.
 func (t *EzLog) YesNo(data bool) *EzLog {
 	if data {
-		return t.Msg("Yes")
-	} else {
-		return t.Msg("No")
+		return t.M("Yes")
 	}
-}
-
-// -- Set log message level
-
-// Log message as `level`
-func (t *EzLog) LogL(level Level) *EzLog {
-	t.Clear().msgLogLevel = level
-	return t
-}
-
-// Log message without level (no level prefix)
-func (t *EzLog) Log() *EzLog {
-	t.Clear().msgLogLevel = LogLevel
-	return t
-}
-
-// Log message as `EMERG`
-func (t *EzLog) Emerg() *EzLog {
-	t.Clear().msgLogLevel = EMERG
-	if t.logLevelPrefix {
-		t.Name(t.msgLogLevel.String())
-	}
-	return t
-}
-
-// Log message as `ALERT`
-func (t *EzLog) Alert() *EzLog {
-	t.Clear().msgLogLevel = ALERT
-	if t.logLevelPrefix {
-		t.Name(t.msgLogLevel.String())
-	}
-	return t
-}
-
-// Log message as `CRIT`
-func (t *EzLog) Crit() *EzLog {
-	t.Clear().msgLogLevel = CRIT
-	if t.logLevelPrefix {
-		t.Name(t.msgLogLevel.String())
-	}
-	return t
-}
-
-// Log message as `ERR`
-func (t *EzLog) Err() *EzLog {
-	t.Clear().msgLogLevel = ERR
-	if t.logLevelPrefix {
-		t.Name(t.msgLogLevel.String())
-	}
-	return t
-}
-
-// Log message as `WARN`
-func (t *EzLog) Warning() *EzLog {
-	t.Clear().msgLogLevel = WARNING
-	if t.logLevelPrefix {
-		t.Name(t.msgLogLevel.String())
-	}
-	return t
-}
-
-// Log message as `NOTICE`
-func (t *EzLog) Notice() *EzLog {
-	t.Clear().msgLogLevel = NOTICE
-	if t.logLevelPrefix {
-		t.Name(t.msgLogLevel.String())
-	}
-	return t
-}
-
-// Log message as `INFO`
-func (t *EzLog) Info() *EzLog {
-	t.Clear().msgLogLevel = INFO
-	if t.logLevelPrefix {
-		t.Name(t.msgLogLevel.String())
-	}
-	return t
-}
-
-// Log message as `DEBUG`
-func (t *EzLog) Debug() *EzLog {
-	t.Clear().msgLogLevel = DEBUG
-	if t.logLevelPrefix {
-		t.Name(t.msgLogLevel.String())
-	}
-	return t
-}
-
-// Log message as `TRACE`
-func (t *EzLog) Trace() *EzLog {
-	t.Clear().msgLogLevel = TRACE
-	if t.logLevelPrefix {
-		t.Name(t.msgLogLevel.String())
-	}
-	return t
+	return t.M("No")
 }

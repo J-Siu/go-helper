@@ -22,12 +22,12 @@ THE SOFTWARE.
 
 package ezlog
 
-type Level int8
+type EzLogLevel int8
 
 // log level
 const (
-	LogLevel Level = iota - 2 // `LogLevel` is not exactly a log level. It is for logging regardless of log level
-	Disabled
+	LOG EzLogLevel = iota - 2 // `LogLevel` is not exactly a log level. It is for logging regardless of log level
+	DISABLED
 	EMERG
 	ALERT
 	CRIT
