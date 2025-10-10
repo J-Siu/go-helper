@@ -34,20 +34,28 @@ import (
 )
 
 // Check if string array contain a string.
+//
+// Return false if either arrIn or strIn is nil
 func ArrayContains(arrIn *[]string, strIn *string, caseSensitive bool) bool {
-	for _, s := range *arrIn {
-		if caseSensitive && s == *strIn || strcase.Compare(s, *strIn) == 0 {
-			return true
+	if arrIn != nil && strIn != nil {
+		for _, s := range *arrIn {
+			if caseSensitive && s == *strIn || strcase.Compare(s, *strIn) == 0 {
+				return true
+			}
 		}
 	}
 	return false
 }
 
 // Check if string array contains a substring
+//
+// Return false if arrIn is nil
 func ArrayContainsSubString(arrIn *[]string, strIn string, caseSensitive bool) bool {
-	for _, s := range *arrIn {
-		if caseSensitive && strings.Contains(strIn, s) || strcase.Contains(s, strIn) {
-			return true
+	if arrIn != nil {
+		for _, s := range *arrIn {
+			if caseSensitive && strings.Contains(strIn, s) || strcase.Contains(s, strIn) {
+				return true
+			}
 		}
 	}
 	return false
@@ -57,26 +65,23 @@ func ArrayContainsSubString(arrIn *[]string, strIn string, caseSensitive bool) b
 //   - Original []string not modified.
 func ArrayPtrRemoveEmpty(arrIn *[]string) *[]string {
 	var arrOut []string
-	for _, s := range *arrIn {
-		if s != "" {
-			arrOut = append(arrOut, s)
+	if arrIn != nil {
+		for _, s := range *arrIn {
+			if s != "" {
+				arrOut = append(arrOut, s)
+			}
 		}
 	}
 	return &arrOut
 }
 
-// *[]string output, each element followed by "\n"
-func ArrayPrintln(arrIn *[]string) {
-	for _, s := range *arrIn {
-		println(s)
-	}
-}
-
 // *[]string to *string, each element followed by "\n"
 func ArraySPrintln(arrIn *[]string) *string {
 	var strOut string
-	for _, s := range *arrIn {
-		strOut += s + "\n"
+	if arrIn != nil {
+		for _, s := range *arrIn {
+			strOut += s + "\n"
+		}
 	}
 	return &strOut
 }
@@ -87,11 +92,13 @@ func ArraySPrintln(arrIn *[]string) *string {
 //   - if result is false, `resultVal` == ""
 func ContainsAnySubStrings(strIn *string, subStrings *[]string, caseSensitive bool) (result bool, resultVal string) {
 	// prefix := "matchList"
-	for _, subStr := range *subStrings {
-		if caseSensitive && strcase.Contains(*strIn, subStr) || strcase.Contains(*strIn, subStr) {
-			result = true
-			resultVal = subStr
-			break
+	if strIn != nil && subStrings != nil {
+		for _, subStr := range *subStrings {
+			if caseSensitive && strcase.Contains(*strIn, subStr) || strcase.Contains(*strIn, subStr) {
+				result = true
+				resultVal = subStr
+				break
+			}
 		}
 	}
 	return result, resultVal
@@ -105,7 +112,10 @@ func ContainsAnySubStringsBool(strIn *string, subStrings *[]string, caseSensitiv
 
 // *string to *[]string, split by "\n"
 func LnSplit(strIn *string) *[]string {
-	var strOut []string = strings.Split(*strIn, "\n")
+	var strOut []string
+	if strIn != nil {
+		strOut = strings.Split(*strIn, "\n")
+	}
 	return &strOut
 }
 
