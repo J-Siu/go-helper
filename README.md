@@ -216,6 +216,23 @@ go test file_test.go
   - v2.5.1
     - ezlog
       - add OK(), Success(), YesNo() shorthand
+  - v2.5.2
+    - errs
+      - add `New`
+    - ezlog
+      - add `SetSkipEmpty`, `Se`/`SkipEmpty`, `Dump`, `LogPrefix`
+      - add all struct functions to package level
+      - remove `NLn`, `MLn`, `Ln`
+      - rename
+        - `Disabled` -> `DISABLED`
+        - `Level` -> `ExLogLevel`
+        - `Sp` -> `C`
+    - file
+      - `ArrayRead`, `ArrayWrite` use `*[]string` instead of `[]string`
+    - str
+      - add case sensitive support for `ArrayContains`, `ArrayContainsSubString`, `ContainsAnySubStrings`, `ContainsAnySubStringsBool`
+      - add nil check
+      - remove `ArrayPrintLn`
 
 ### License
 

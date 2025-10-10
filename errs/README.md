@@ -23,8 +23,10 @@ var Errs []error
 
 func Clear()
 func IsEmpty() bool
+func NotEmpty() bool
 func Len() int
 func Queue(prefix string, e error)
+func New(prefix string, strErr string) error
 ```
 
 ## License

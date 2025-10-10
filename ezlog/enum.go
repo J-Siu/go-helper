@@ -26,7 +26,7 @@ type EzLogLevel int8
 
 // log level
 const (
-	LOG EzLogLevel = iota - 2 // `LogLevel` is not exactly a log level. It is for logging regardless of log level
+	LOG EzLogLevel = iota - 2 // `LOG` is not exactly a log level. It is for logging regardless of log level
 	DISABLED
 	EMERG
 	ALERT

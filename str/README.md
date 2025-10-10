@@ -20,13 +20,12 @@ import "github.com/J-Siu/go-helper/v2/str"
 
 ```go
 // collection of string related helper functions
-func ArrayContains(arrIn *[]string, strIn *string) bool
-func ArrayContainsSubString(arrIn *[]string, strIn string) bool
+func ArrayContains(arrIn *[]string, strIn *string, caseSensitive bool) bool
+func ArrayContainsSubString(arrIn *[]string, strIn string, caseSensitive bool) bool
 func ArrayPtrRemoveEmpty(arrIn *[]string) *[]string
-func ArrayPrintln(arrIn *[]string)
 func ArraySPrintln(arrIn *[]string) *string
-func ContainsAnySubStrings(strIn *string, subStrings *[]string) (result bool, resultVal string)
-func ContainsAnySubStringsBool(strIn *string, subStrings *[]string) (result bool)
+func ContainsAnySubStrings(strIn *string, subStrings *[]string, caseSensitive bool) (result bool, resultVal string)
+func ContainsAnySubStringsBool(strIn *string, subStrings *[]string, caseSensitive bool) (result bool)
 func LnSplit(strIn *string) *[]string
 func JsonIndent(strIn *string) *string
 func ByteJsonIndent(baP *[]byte) *string

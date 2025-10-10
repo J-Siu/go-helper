@@ -2,17 +2,17 @@
 
 A simple log module with Linux log level:
 
-- (-2) LogLevel // Not exactly a log level. It is for logging regardless of log level
-- (-1) Disabled
-0. Emerg
-1. Alert
-2. Crit
-3. Err
-4. Warning
-5. Notice
-6. Info
-7. Debug
-8. Trace
+- -2 LOG EzLogLevel = iota - 2 // `LOG` is not exactly a log level. It is for logging regardless of log level
+- -1 DISABLED
+0. EMERG
+1. ALERT
+2. CRIT
+3. ERR
+4. WARNING
+5. NOTICE
+6. INFO
+7. DEBUG
+8. TRACE
 
 ## Installation
 
@@ -35,8 +35,8 @@ type Level int8
 
 // log level
 const (
-  LogLevel Level = iota - 2 // `LogLevel` is not exactly a log level. It is for logging regardless of log level
-  Disabled
+  LOG EzLogLevel = iota - 2 // `LOG` is not exactly a log level. It is for logging regardless of log level
+  DISABLED
   EMERG
   ALERT
   CRIT
@@ -52,64 +52,89 @@ const (
 ### EzLog Functions
 
 ```go
-func (ez *EzLog) New() *EzLog
-func (ez *EzLog) Clear() *EzLog
-func (ez *EzLog) GetLogLevel() Level
-func (ez *EzLog) GetLogLevelPrefix() bool
-func (ez *EzLog) SetOutFunc(f OutFunc) *EzLog
-func (ez *EzLog) SetOutPrint() *EzLog
-func (ez *EzLog) SetOutPrintLn() *EzLog
-func (ez *EzLog) SetLogLevel(level Level) *EzLog
-func (ez *EzLog) SetLogLevelPrefix(enable bool) *EzLog
-func (ez *EzLog) SetTrim(enable bool) *EzLog
-func (ez *EzLog) Out() *EzLog
-func (ez *EzLog) String() string
-func (ez *EzLog) StringP() *string
-func (ez *EzLog) L() *EzLog
-func (ez *EzLog) Ln() *EzLog
-func (ez *EzLog) M(date any) *EzLog
-func (ez *EzLog) Mn(date any) *EzLog
-func (ez *EzLog) MLn(date any) *EzLog
-func (ez *EzLog) Msg(data any) *EzLog
-func (ez *EzLog) MsgLn(data any) *EzLog
-func (ez *EzLog) N(data any) *EzLog
-func (ez *EzLog) Nn(data any) *EzLog
-func (ez *EzLog) NLn(data any) *EzLog
-func (ez *EzLog) Name(data any) *EzLog
-func (ez *EzLog) NameLn(data any) *EzLog
-func (ez *EzLog) S(ch rune) *EzLog
-func (ez *EzLog) Sp(ch rune) *EzLog
-func (ez *EzLog) T() *EzLog
-func (ez *EzLog) Tab() *EzLog
-func (ez *EzLog) TxtEnd() *EzLog
-func (ez *EzLog) TxtStart() *EzLog
-func (ez *EzLog) LogL(level Level) *EzLog
-func (ez *EzLog) Log() *EzLog
-func (ez *EzLog) Emerg() *EzLog
-func (ez *EzLog) Alert() *EzLog
-func (ez *EzLog) Crit() *EzLog
-func (ez *EzLog) Err() *EzLog
-func (ez *EzLog) Warning() *EzLog
-func (ez *EzLog) Notice() *EzLog
-func (ez *EzLog) Info() *EzLog
-func (ez *EzLog) Debug() *EzLog
-func (ez *EzLog) Trace() *EzLog
+type OutFunc func(msg *string)
+
+type EzLog struct {
+  StrAny         *strany.StrAny `json:"StrAny"`
+  logLevel       EzLogLevel
+  logLevelPrefix bool
+  outFunc        OutFunc
+  skipEmpty      bool
+  strBuf         []string
+  trim           bool
+  // msg level
+  msgLogLevel       EzLogLevel
+  msgNotEmpty       bool
+  msgSkipEmpty      bool
+  msgLogLevelPrefix bool
+}
+
+func (t *EzLog) New() *EzLog
+func (t *EzLog) Clear() *EzLog
+func (t *EzLog) GetLogLevel() EzLogLevel
+func (t *EzLog) GetLogLevelPrefix() bool
+func (t *EzLog) SetLogLevel(level EzLogLevel) *EzLog
+func (t *EzLog) SetLogLevelPrefix(enable bool) *EzLog
+func (t *EzLog) SetOutFunc(f OutFunc) *EzLog
+func (t *EzLog) SetOutPrint() *EzLog
+func (t *EzLog) SetOutPrintLn() *EzLog
+func (t *EzLog) SetTrim(enable bool) *EzLog
+func (t *EzLog) SetSkipEmpty(enable bool) *EzLog
+func (t *EzLog) LogL(level EzLogLevel) *EzLog
+func (t *EzLog) Log() *EzLog
+func (t *EzLog) Emerg() *EzLog
+func (t *EzLog) Alert() *EzLog
+func (t *EzLog) Crit() *EzLog
+func (t *EzLog) Err() *EzLog
+func (t *EzLog) Warning() *EzLog
+func (t *EzLog) Notice() *EzLog
+func (t *EzLog) Info() *EzLog
+func (t *EzLog) Debug() *EzLog
+func (t *EzLog) Trace() *EzLog
+func (t *EzLog) Dump() *EzLog
+func (t *EzLog) Out() *EzLog
+func (t *EzLog) String() string
+func (t *EzLog) StringP() *string
+func (t *EzLog) build(data any, isMsg bool) *EzLog
+func (t *EzLog) Lp(enable bool) *EzLog
+func (t *EzLog) LogPrefix(enable bool) *EzLog
+func (t *EzLog) Se() *EzLog
+func (t *EzLog) SkipEmpty() *EzLog
+func (t *EzLog) C(ch rune) *EzLog
+func (t *EzLog) L() *EzLog
+func (t *EzLog) M(data any) *EzLog
+func (t *EzLog) Mn(data any) *EzLog
+func (t *EzLog) Msg(data any) *EzLog
+func (t *EzLog) MsgLn(data any) *EzLog
+func (t *EzLog) N(data any) *EzLog
+func (t *EzLog) Nn(data any) *EzLog
+func (t *EzLog) Name(data any) *EzLog
+func (t *EzLog) NameLn(data any) *EzLog
+func (t *EzLog) T() *EzLog
+func (t *EzLog) Tab() *EzLog
+func (t *EzLog) TxtEnd() *EzLog
+func (t *EzLog) TxtStart() *EzLog
+func (t *EzLog) Ok(data bool) *EzLog
+func (t *EzLog) Success(data bool) *EzLog
+func (t *EzLog) YesNo(data bool) *EzLog
 ```
 
 ### Package Functions
 
 ```go
 func New() *EzLog
-func GetLogLevel() Level
+func Clear() *EzLog
+func Dump() *EzLog
+func GetLogLevel() EzLogLevel
 func GetLogLevelPrefix() bool
-func SetLogLevel(level Level) *EzLog
+func SetLogLevel(level EzLogLevel) *EzLog
 func SetLogLevelPrefix(enable bool) *EzLog
+func SetOutFunc(f OutFunc) *EzLog
 func SetOutPrint() *EzLog
 func SetOutPrintLn() *EzLog
 func SetTrim(enable bool) *EzLog
-func String() string
-func StringP() *string
-func LogL(level Level) *EzLog
+func SetSkipEmpty(enable bool) *EzLog
+func LogL(level EzLogLevel) *EzLog
 func Log() *EzLog
 func Emerg() *EzLog
 func Alert() *EzLog
@@ -120,6 +145,30 @@ func Notice() *EzLog
 func Info() *EzLog
 func Debug() *EzLog
 func Trace() *EzLog
+func Out() *EzLog
+func String() string
+func StringP() *string
+func Lp(enable bool) *EzLog
+func LogPrefix(enable bool) *EzLog
+func Se() *EzLog
+func SkipEmpty() *EzLog
+func C(ch rune) *EzLog
+func L() *EzLog
+func M(date any) *EzLog
+func Mn(date any) *EzLog
+func Msg(data any) *EzLog
+func MsgLn(data any) *EzLog
+func N(data any) *EzLog
+func Nn(data any) *EzLog
+func Name(data any) *EzLog
+func NameLn(data any) *EzLog
+func T() *EzLog
+func Tab() *EzLog
+func TxtEnd() *EzLog
+func TxtStart() *EzLog
+func Ok(data bool) *EzLog
+func Success(data bool) *EzLog
+func YesNo(data bool) *EzLog
 ```
 
 ## Example

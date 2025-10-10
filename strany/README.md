@@ -20,26 +20,22 @@ import "github.com/J-Siu/go-helper/v2/strany"
 
 ```go
 type StrAny struct {
-  err          error
+  *basestruct.Base
   indent       string // `indent` of json.MarshalIndent(v any, prefix, indent string)
   indentEnable bool   // If `true`, true, use `json.MarshalIndent` for struct, else `json.Marshal`
   indentPrefix string // `prefix` of json.MarshalIndent(v any, prefix, indent string)
   unquote      bool
+  debug        bool
 }
 
 func (t *StrAny) New() *StrAny
-func (t *StrAny) Err() error
+func (t *StrAny) Any(data any) *string
+func (t *StrAny) String(data any) *string
+func (t *StrAny) DebugEnable(enable bool) *StrAny
 func (t *StrAny) Indent(indent string) *StrAny
 func (t *StrAny) IndentEnable(enable bool) *StrAny
 func (t *StrAny) IndentPrefix(prefix string) *StrAny
 func (t *StrAny) UnquoteEnable(enable bool) *StrAny
-func (t *StrAny) processUnquote(sP *string) *string
-func (t *StrAny) processStr(sP *string) *string
-func (t *StrAny) processStrArray(saP *[]string) *string
-func (t *StrAny) processByteArray(baP *[]byte) *string
-func (t *StrAny) processErrArray(eaP *[]error) *string
-func (t *StrAny) String(data any) *string
-func (t *StrAny) Any(data any) *string
 ```
 
 ### Package Functions
@@ -47,6 +43,9 @@ func (t *StrAny) Any(data any) *string
 ```go
 func New() *StrAny
 func Any(data any) *string
+func String(data any) *string
+func DebugEnable(enable bool) *StrAny
+func ToPtr[T any](v T) *T
 ```
 
 ## Example
