@@ -27,6 +27,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
+	"github.com/J-Siu/go-helper/v2/str"
 	"github.com/J-Siu/go-helper/v2/strany"
 )
 
@@ -324,24 +325,15 @@ func (t *EzLog) TxtStart() *EzLog { return t.M("Start") }
 
 // Add "OK"/"Fail" to message.
 func (t *EzLog) Ok(data bool) *EzLog {
-	if data {
-		return t.M("OK")
-	}
-	return t.M("Fail")
+	return t.M(str.Ok(data))
 }
 
 // Add "Success"/"Fail" to message.
 func (t *EzLog) Success(data bool) *EzLog {
-	if data {
-		return t.M("Success")
-	}
-	return t.M("Fail")
+	return t.M(str.Success(data))
 }
 
 // Add "Yes"/"No" to message.
 func (t *EzLog) YesNo(data bool) *EzLog {
-	if data {
-		return t.M("Yes")
-	}
-	return t.M("No")
+	return t.M(str.YesNo(data))
 }

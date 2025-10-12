@@ -146,3 +146,29 @@ func ByteJsonIndent(baP *[]byte) *string {
 	}
 	return &strOut
 }
+
+// --- bool
+
+// Return "OK"/"Fail"
+func Ok(b bool) string {
+	if b {
+		return "OK"
+	}
+	return "Fail"
+}
+
+// Return "Success"/"Fail"
+func Success(b bool) string {
+	if b {
+		return "Success"
+	}
+	return "Fail"
+}
+
+// Return "Yes"/"No"
+func YesNo(b bool) string {
+	if b {
+		return "Yes"
+	}
+	return "No"
+}

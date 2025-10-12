@@ -29,6 +29,10 @@ func ContainsAnySubStringsBool(strIn *string, subStrings *[]string, caseSensitiv
 func LnSplit(strIn *string) *[]string
 func JsonIndent(strIn *string) *string
 func ByteJsonIndent(baP *[]byte) *string
+// --- bool
+func Ok(b bool) string
+func Success(b bool) string
+func YesNo(b bool) string
 ```
 
 ## License

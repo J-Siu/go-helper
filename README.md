@@ -231,8 +231,11 @@ go test file_test.go
       - `ArrayRead`, `ArrayWrite` use `*[]string` instead of `[]string`
     - str
       - add case sensitive support for `ArrayContains`, `ArrayContainsSubString`, `ContainsAnySubStrings`, `ContainsAnySubStringsBool`
-      - add nil check
+      - add `nil` check
       - remove `ArrayPrintLn`
+  - v2.5.3
+    - str
+      - add `Ok`, `Success` and `YesNo`
 
 ### License
 
