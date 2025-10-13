@@ -26,6 +26,7 @@ THE SOFTWARE.
 package file
 
 import (
+	"errors"
 	"os"
 	"path"
 	"regexp"
@@ -216,4 +217,50 @@ func WriteStr(filePath string, str *string, perm os.FileMode) error {
 // Write *[]byte into file
 func WriteByte(filePath string, bP *[]byte, perm os.FileMode) error {
 	return os.WriteFile(filePath, *bP, perm)
+}
+
+// Append `str` to `filePath`, file must exist
+//
+// *DO NOT USE* for multiple appends to the same file and performance is important.
+// This function include whole cycle of stat -> open -> write -> close
+func AppendStr(filePath string, str *string) (err error) {
+	tmp := []byte(*str)
+	return AppendByte(filePath, &tmp)
+}
+
+// Append `bP` to `filePath`, file must exist
+//
+// *DO NOT USE* for multiple appends to the same file and performance is important.
+// This function include whole cycle of stat -> open -> write -> close
+func AppendByte(filePath string, bP *[]byte) (err error) {
+	var (
+		f          *os.File
+		info       os.FileInfo
+		openMode   = os.O_WRONLY | os.O_APPEND
+		permission os.FileMode
+	)
+
+	if IsRegularFile(filePath) {
+		info, err = os.Stat(filePath)
+	} else {
+		err = errors.New("not a file or not exist")
+	}
+
+	if err == nil {
+		permission = info.Mode()
+	}
+
+	if err == nil {
+		f, err = os.OpenFile(filePath, openMode, permission)
+	}
+
+	if err == nil {
+		_, err = f.Write(*bP)
+	}
+
+	if err == nil {
+		err = f.Close()
+	}
+
+	return err
 }

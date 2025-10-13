@@ -33,12 +33,14 @@ import (
 	"github.com/J-Siu/go-helper/v2/ezlog"
 )
 
-// A very simple text file struct supporting read, write
+// A very simple text file struct supporting read, write, append
+//
+// `Content` and `FilePath` can be changed anytime
 type TxtFile struct {
 	*basestruct.Base
 
 	Content  string `json:"Content"`
-	FilePath string `json:"FilePath"` //README path
+	FilePath string `json:"FilePath"`
 }
 
 func (t *TxtFile) New(filePath string) *TxtFile {
@@ -90,6 +92,16 @@ func (t *TxtFile) Write(permission os.FileMode) *TxtFile {
 		}
 		t.Err = WriteStr(t.FilePath, &t.Content, perm)
 	}
+	errs.Queue(prefix, t.Err)
+	return t
+}
+
+func (t *TxtFile) Append() *TxtFile {
+	prefix := t.MyType + ".Append"
+	if !t.CheckErrInit(prefix) {
+		return t
+	}
+	t.Err = AppendStr(t.FilePath, &t.Content)
 	errs.Queue(prefix, t.Err)
 	return t
 }
