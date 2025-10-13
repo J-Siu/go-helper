@@ -32,6 +32,9 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/charlievieth/strcase"
+	"github.com/edwardrf/symwalk"
 )
 
 // Get full path of current directory.
@@ -145,6 +148,43 @@ func IsDir(path string) (result bool) {
 // Check two paths have same parent directory
 func SameDir(path1, path2 string) bool {
 	return path.Dir(path1) == path.Dir(path2)
+}
+
+// Get list of directory and list of file
+func GetDirFile(dir string) (*[]string, *[]string) {
+	var (
+		dirs  []string
+		files []string
+	)
+	symwalk.Walk(dir, func(p string, info os.FileInfo, err error) error {
+		if info.IsDir() {
+			dirs = append(dirs, p)
+		} else {
+			files = append(files, p)
+		}
+		return nil
+	})
+	return &dirs, &files
+}
+
+func FindFile(dir, filename string, caseSensitive bool) string {
+	var (
+		files    *[]string
+		filePath string
+	)
+	_, files = GetDirFile(dir)
+	for _, file := range *files {
+		if caseSensitive {
+			if strings.HasSuffix(file, filename) {
+				filePath = file
+			}
+		} else {
+			if strcase.HasSuffix(file, filename) {
+				filePath = file
+			}
+		}
+	}
+	return filePath
 }
 
 // --- Extension

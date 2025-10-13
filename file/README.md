@@ -47,6 +47,8 @@ func FileSame(file1 string, file2 string) (same bool)
 func InDir(dir, filename string) (result string)
 func IsDir(path string) (result bool)
 func SameDir(path1, path2 string) bool
+func GetDirFile(dir string) (*[]string, *[]string)
+func FindFile(dir, filename string, caseSensitive bool) string
 func ExtHas(name, ext string) bool
 func ExtRemove(filename string) string
 func SimplifyName(filename string) string
