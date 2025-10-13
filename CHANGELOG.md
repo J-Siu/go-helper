@@ -165,3 +165,5 @@
   - str - add `Ok`, `Success` and `YesNo`
 - v2.5.4
   - file - Add and standardize read, write, append functions name for byte, str and strArray
+- v2.5.5
+  - file - add `GetDirFile`, `FileFile`
