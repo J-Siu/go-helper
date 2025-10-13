@@ -184,49 +184,7 @@ func TildeEnvExpand(strIn string) (strOut string) {
 	return os.ExpandEnv(strOut)
 }
 
-// --- Array
-
-// Read file into []string.
-//
-// Lines are split by "\n".
-func ArrayRead(filePath string) (*[]string, error) {
-	var (
-		byteRead []byte
-		strArray []string
-		e        error
-	)
-	byteRead, e = os.ReadFile(filePath)
-	if e == nil {
-		strArray = strings.Split(string(byteRead), "\n")
-	}
-	return &strArray, e
-}
-
-// Write *[]string into file
-func ArrayWrite(filePath string, strArray *[]string, perm os.FileMode) error {
-	tmp := []byte(strings.Join(*strArray, "\n"))
-	return WriteByte(filePath, &tmp, perm)
-}
-
-// Write *string into file
-func WriteStr(filePath string, str *string, perm os.FileMode) error {
-	tmp := []byte(*str)
-	return WriteByte(filePath, &tmp, perm)
-}
-
-// Write *[]byte into file
-func WriteByte(filePath string, bP *[]byte, perm os.FileMode) error {
-	return os.WriteFile(filePath, *bP, perm)
-}
-
-// Append `str` to `filePath`, file must exist
-//
-// *DO NOT USE* for multiple appends to the same file and performance is important.
-// This function include whole cycle of stat -> open -> write -> close
-func AppendStr(filePath string, str *string) (err error) {
-	tmp := []byte(*str)
-	return AppendByte(filePath, &tmp)
-}
+// --- Read, Write, Append
 
 // Append `bP` to `filePath`, file must exist
 //
@@ -263,4 +221,77 @@ func AppendByte(filePath string, bP *[]byte) (err error) {
 	}
 
 	return err
+}
+
+// Append `str` to `filePath`, file must exist
+//
+// *DO NOT USE* for multiple appends to the same file and performance is important.
+// This function include whole cycle of stat -> open -> write -> close
+func AppendStr(filePath string, str *string) (err error) {
+	tmp := []byte(*str)
+	return AppendByte(filePath, &tmp)
+}
+
+// Append `str` to `filePath`, file must exist
+//
+// *DO NOT USE* for multiple appends to the same file and performance is important.
+// This function include whole cycle of stat -> open -> write -> close
+func AppendStrArray(filePath string, strArray *[]string) (err error) {
+	tmp := []byte(strings.Join(*strArray, "\n"))
+	return AppendByte(filePath, &tmp)
+}
+
+func ReadByte(filePath string) (*[]byte, error) {
+	var (
+		byteRead []byte
+		e        error
+	)
+	byteRead, e = os.ReadFile(filePath)
+	return &byteRead, e
+}
+
+func ReadStr(filePath string) (*string, error) {
+	var (
+		byteRead []byte
+		e        error
+		str      string
+	)
+	byteRead, e = os.ReadFile(filePath)
+	if e == nil {
+		str = string(byteRead)
+	}
+	return &str, e
+}
+
+// Read file into []string.
+//
+// Lines are split by "\n".
+func ReadStrArray(filePath string) (*[]string, error) {
+	var (
+		str      *string
+		strArray []string
+		e        error
+	)
+	str, e = ReadStr(filePath)
+	if e == nil {
+		strArray = strings.Split(*str, "\n")
+	}
+	return &strArray, e
+}
+
+// Write *[]byte into file
+func WriteByte(filePath string, bP *[]byte, perm os.FileMode) error {
+	return os.WriteFile(filePath, *bP, perm)
+}
+
+// Write *string into file
+func WriteStr(filePath string, str *string, perm os.FileMode) error {
+	tmp := []byte(*str)
+	return WriteByte(filePath, &tmp, perm)
+}
+
+// Write *[]string into file
+func WriteStrArray(filePath string, strArray *[]string, perm os.FileMode) error {
+	tmp := []byte(strings.Join(*strArray, "\n"))
+	return WriteByte(filePath, &tmp, perm)
 }

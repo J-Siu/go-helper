@@ -51,10 +51,15 @@ func ExtHas(name, ext string) bool
 func ExtRemove(filename string) string
 func SimplifyName(filename string) string
 func TildeEnvExpand(strIn string) (strOut string)
-func ArrayRead(filePath string) (*[]string, error)
-func ArrayWrite(filePath string, strArray *[]string, perm os.FileMode) error
-func WriteStr(filePath string, str *string, perm os.FileMode) error
+func AppendByte(filePath string, bP *[]byte) (err error)
+func AppendStr(filePath string, str *string) (err error)
+func AppendStrArray(filePath string, strArray *[]string) (err error)
+func ReadByte(filePath string) (*[]byte, error)
+func ReadStr(filePath string) (*string, error)
+func ReadStrArray(filePath string) (*[]string, error)
 func WriteByte(filePath string, bP *[]byte, perm os.FileMode) error
+func WriteStr(filePath string, str *string, perm os.FileMode) error
+func WriteStrArray(filePath string, strArray *[]string, perm os.FileMode) error
 ```
 
 ## License
