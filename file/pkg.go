@@ -201,7 +201,19 @@ func ArrayRead(filePath string) (*[]string, error) {
 	return &strArray, e
 }
 
-// Write []string into file
+// Write *[]string into file
 func ArrayWrite(filePath string, strArray *[]string, perm os.FileMode) error {
-	return os.WriteFile(filePath, []byte(strings.Join(*strArray, "\n")), perm)
+	tmp := []byte(strings.Join(*strArray, "\n"))
+	return WriteByte(filePath, &tmp, perm)
+}
+
+// Write *string into file
+func WriteStr(filePath string, str *string, perm os.FileMode) error {
+	tmp := []byte(*str)
+	return WriteByte(filePath, &tmp, perm)
+}
+
+// Write *[]byte into file
+func WriteByte(filePath string, bP *[]byte, perm os.FileMode) error {
+	return os.WriteFile(filePath, *bP, perm)
 }

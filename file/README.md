@@ -16,6 +16,25 @@ import "github.com/J-Siu/go-helper/v2/file"
 
 ## Types and Functions
 
+### TxtFile
+
+A very simple text file struct supporting read, write.
+
+```go
+type TxtFile struct {
+  *basestruct.Base
+
+  Content  string `json:"Content"`
+  FilePath string `json:"FilePath"` //README path
+}
+```
+
+```go
+func (t *TxtFile) New(filePath string) *TxtFile
+func (t *TxtFile) Read() *TxtFile
+func (t *TxtFile) Write(permission os.FileMode) *TxtFile
+```
+
 ### Package Functions
 
 ```go
@@ -32,8 +51,10 @@ func ExtHas(name, ext string) bool
 func ExtRemove(filename string) string
 func SimplifyName(filename string) string
 func TildeEnvExpand(strIn string) (strOut string)
-func ArrayRead(filePath string) (strArray []string, err error)
-func ArrayWrite(filePath string, strArray []string, perm os.FileMode) (err error)
+func ArrayRead(filePath string) (*[]string, error)
+func ArrayWrite(filePath string, strArray *[]string, perm os.FileMode) error
+func WriteStr(filePath string, str *string, perm os.FileMode) error
+func WriteByte(filePath string, bP *[]byte, perm os.FileMode) error
 ```
 
 ## License
