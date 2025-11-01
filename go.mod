@@ -7,4 +7,4 @@ require (
 	github.com/edwardrf/symwalk v0.1.0
 )
 
-require golang.org/x/sys v0.36.0 // indirect
+require golang.org/x/sys v0.37.0 // indirect

@@ -87,7 +87,7 @@ func (N *NUM) New() *NUM {
 
 func main() {
 	var (
-		log         = ezlog.New().SetLogLevel(ezlog.DEBUG)
+		// log         = ezlog.New().SetLogLevel(ezlog.DEBUG)
 		N           = new(NUM).New()
 		f32 float32 = 100.000001
 		f64 float64 = 100.000001
@@ -95,19 +95,19 @@ func main() {
 	)
 
 	fmt.Println("--- ezlog")
-	log.Log().
-		MsgLn(true).
-		MsgLn(int16(-9910)).
-		Name("0.008").MsgLn(float32(0.008)).
-		Name("&f32").MsgLn(&f32).
-		Name("&f64").MsgLn(&f64).
-		MsgLn(uint64(199999999999)).
-		Name("N").L().MsgLn(N).
+	ezlog.SetLogLevel(ezlog.DEBUG)
+	ezlog.Log().
+		MsgNewLine(true).
+		MsgNewLine(int16(-9910)).
+		Name("0.008").MsgNewLine(float32(0.008)).
+		Name("&f32").MsgNewLine(&f32).
+		Name("&f64").MsgNewLine(&f64).
+		Name("uint64").MsgNewLine(uint64(199999999999)).
+		Name("N").L().MsgNewLine(N).
 		Name("&N").L().Msg(&N).
 		Out()
 
-	str = log.String()
-
 	fmt.Println("--- println")
+	str = ezlog.String()
 	fmt.Println(str)
 }

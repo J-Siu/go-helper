@@ -74,14 +74,9 @@ func (t *Cmd) Run() *Cmd {
 	}
 
 	prefix := "cmd.Run"
-	ezlog.Debug().Name(prefix).Msg(&t).Out()
-	if t.Stdout.Len() > 0 {
-		ezlog.Debug().Name(prefix).Name("Stdout").Msg(t.Stdout).Out()
-	}
-	if t.Stderr.Len() > 0 {
-		ezlog.Debug().Name(prefix).Name("Stderr").Msg(t.Stderr).Out()
-	}
-	ezlog.Debug().Name(prefix).Name("Err").Msg(t.Err).Out()
+	ezlog.Debug().N(prefix).M(&t).Out()
+	t.Log(prefix)
+	ezlog.Debug().N(prefix).N("Err").M(t.Err).Out()
 	return t
 }
 
@@ -94,14 +89,19 @@ func (t *Cmd) RunWg(title *string, wgP *sync.WaitGroup, output bool) *Cmd {
 	}
 	t.Run()
 	if output {
-		if t.Stdout.Len() > 0 {
-			ezlog.Log().Name(title).Name("Stdout").Msg(t.Stdout).Out()
-		}
-		if t.Stderr.Len() > 0 {
-			ezlog.Log().Name(title).Name("Stderr").Msg(t.Stderr).Out()
-		}
+		t.Log(*title)
 	}
 	return t
 }
 
 func (t *Cmd) Error() error { return t.Err }
+
+func (t *Cmd) Log(title string) *Cmd {
+	if t.Stdout.Len() > 0 {
+		ezlog.Log().N(title).N("Stdout").M(t.Stdout).Out()
+	}
+	if t.Stderr.Len() > 0 {
+		ezlog.Log().N(title).N("Stderr").M(t.Stderr).Out()
+	}
+	return t
+}

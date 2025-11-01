@@ -50,7 +50,7 @@ func (t *TxtFile) New(filePath string) *TxtFile {
 
 	t.FilePath = filePath
 
-	ezlog.Debug().Nn(prefix).M(t).Out()
+	ezlog.Debug().N(prefix).Lm(t).Out()
 	if !IsRegularFile(t.FilePath) {
 		t.Err = errors.New("TypeReadme.Init: " + t.FilePath + " not found")
 		errs.Queue(prefix, t.Err)

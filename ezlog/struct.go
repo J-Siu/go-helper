@@ -40,29 +40,31 @@ type EzLog struct {
 	outFunc        OutFunc
 	skipEmpty      bool
 	strBuf         []string
-	trim           bool
+	trim           bool // persistent trim
 	// msg level
 	msgLogLevel       EzLogLevel
+	msgLogLevelPrefix bool
 	msgNotEmpty       bool
 	msgSkipEmpty      bool
-	msgLogLevelPrefix bool
+	msgTrim           bool
 }
 
 func (t *EzLog) New() *EzLog {
+	t.Clear()
 	t.SetLogLevel(ERR)
 	t.SetLogLevelPrefix(true)
 	t.SetOutPrintLn()
 	t.SetTrim(true)
 	t.StrAny = new(strany.StrAny).New()
-	t.msgNotEmpty = false
-	t.msgSkipEmpty = false
-	t.strBuf = nil
 	return t
 }
 
 // Clear message
 func (t *EzLog) Clear() *EzLog {
+	t.msgLogLevelPrefix = false
 	t.msgNotEmpty = false
+	t.msgSkipEmpty = false
+	t.msgTrim = false
 	t.strBuf = nil
 	return t
 }
@@ -187,15 +189,15 @@ func (t *EzLog) Trace() *EzLog {
 
 func (t *EzLog) Dump() *EzLog {
 	new(EzLog).New().Log().
-		Nn("EzLog.Dump").M(t).
-		N("logLevel").Mn(t.logLevel).
-		N("logLevelPrefix").Mn(t.logLevelPrefix).
-		N("skipEmpty").Mn(t.skipEmpty).
-		N("trim").Mn(t.trim).
-		N("msgLogLevel").Mn(t.msgLogLevel).
-		N("msgNotEmpty").Mn(t.msgNotEmpty).
-		N("msgSkipEmpty").Mn(t.msgSkipEmpty).
-		N("t.msgLogLevel > DISABLED").Mn(t.msgLogLevel > DISABLED).
+		N("EzLog.Dump").Lm(t).
+		Ln("logLevel").M(t.logLevel).
+		Ln("logLevelPrefix").M(t.logLevelPrefix).
+		Ln("skipEmpty").M(t.skipEmpty).
+		Ln("trim").M(t.trim).
+		Ln("msgLogLevel").M(t.msgLogLevel).
+		Ln("msgNotEmpty").M(t.msgNotEmpty).
+		Ln("msgSkipEmpty").M(t.msgSkipEmpty).
+		Ln("t.msgLogLevel > DISABLED").M(t.msgLogLevel > DISABLED).
 		Out()
 	return t
 }
@@ -211,6 +213,7 @@ func (t *EzLog) Out() *EzLog {
 			t.outFunc(t.StringP())
 		}
 	}
+	t.msgTrim = false
 	return t
 }
 
@@ -239,7 +242,7 @@ func (t *EzLog) StringP() *string {
 func (t *EzLog) build(data any, isMsg bool) *EzLog {
 	if t.msgLogLevel <= t.logLevel {
 		tmp := *t.StrAny.Any(data)
-		if t.trim {
+		if t.trim || t.msgTrim {
 			tmp = strings.Trim(tmp, "\n")
 			tmp = strings.TrimSpace(tmp)
 		}
@@ -251,23 +254,36 @@ func (t *EzLog) build(data any, isMsg bool) *EzLog {
 	return t
 }
 
+// --- Msg control
+
 // enable/disable message log level prefix.
 func (t *EzLog) Lp(enable bool) *EzLog {
 	t.msgLogLevelPrefix = enable
 	return t
 }
 
-// enable/disable message log level prefix. (Alias for Lp())
-func (t *EzLog) LogPrefix(enable bool) *EzLog { return t.Lp(enable) }
-
-// Skip current message if `Msg` is empty. Current msg only.
+// skip current message if `Msg` is empty. Current msg only.
 func (t *EzLog) Se() *EzLog {
 	t.msgSkipEmpty = true
 	return t
 }
 
-// Skip current message if `Msg` is empty. Current msg only. (alias of Se())
+// enable/disable trim data. Default to false. Reset each time Out() is called
+func (t *EzLog) Tr(enable bool) *EzLog {
+	t.msgTrim = enable
+	return t
+}
+
+// enable/disable message log level prefix. (Alias for Lp())
+func (t *EzLog) LogPrefix(enable bool) *EzLog { return t.Lp(enable) }
+
+// skip current message if `Msg` is empty. Current msg only. (alias of Se())
 func (t *EzLog) SkipEmpty() *EzLog { return t.Se() }
+
+// enable/disable trim data. Default to false. Reset each time Out() is called. (alias of Trim())
+func (t *EzLog) TrimData(enable bool) *EzLog { return t.Tr(enable) }
+
+// --- base logging functions
 
 // Append character/rune to message (shorthand for Sp())
 func (t *EzLog) C(ch rune) *EzLog {
@@ -288,28 +304,49 @@ func (t *EzLog) L() *EzLog { return t.C('\n') }
 // Add msg to log
 func (t *EzLog) M(data any) *EzLog { return t.build(data, true) }
 
-// Add new line to message (shorthand for M().L())
-func (t *EzLog) Mn(data any) *EzLog { return t.M(data).L() }
-
-// Add msg to log (alias for M())
-func (t *EzLog) Msg(data any) *EzLog { return t.M(data) }
-
-// Add new line to message (alias for Mn())
-func (t *EzLog) MsgLn(data any) *EzLog { return t.Mn(data) }
-
 // Add : after data
 func (t *EzLog) N(data any) *EzLog { return t.build(data, false).C(':') }
 
-// Add : and newline after data (shorthand for N().L())
-func (t *EzLog) Nn(data any) *EzLog { return t.N(data).L() }
+// --- Shorthand
+
+// Add new line before data (shorthand for L().M())
+func (t *EzLog) Lm(data any) *EzLog { return t.L().M(data) }
+
+// Add new line after data (shorthand for M().L())
+func (t *EzLog) Ml(data any) *EzLog { return t.M(data).L() }
+
+// Add new line before data and : after (shorthand for L().N())
+func (t *EzLog) Ln(data any) *EzLog { return t.L().N(data) }
+
+// Add : and new line after data (shorthand for N().L())
+func (t *EzLog) Nl(data any) *EzLog { return t.N(data).L() }
+
+// --- Expressive func name
+
+// Add new line to log (alias of L())
+func (t *EzLog) NewLine() *EzLog { return t.L() }
+
+// Add msg to log (alias of M())
+func (t *EzLog) Msg(data any) *EzLog { return t.M(data) }
 
 // Add : after data (alias of N())
 func (t *EzLog) Name(data any) *EzLog { return t.N(data) }
 
-// Add : and newline after data ()
-func (t *EzLog) NameLn(data any) *EzLog { return t.Nn(data) }
+// --- Expressive alias
 
-// -- Other shorthand
+// Add new line before data (alias of L().M())
+func (t *EzLog) NewLineMsg(data any) *EzLog { return t.Lm(data) }
+
+// Add new line after data (alias of M().L())
+func (t *EzLog) MsgNewLine(data any) *EzLog { return t.Ml(data) }
+
+// Add new line before data and : after (alias of L().N())
+func (t *EzLog) NewLineName(data any) *EzLog { return t.Ln(data) }
+
+// Add : and new line after data (alias of N().L())
+func (t *EzLog) NameNewLine(data any) *EzLog { return t.Nl(data) }
+
+// --- Other shorthand
 
 // Add tab to message.
 func (t *EzLog) T() *EzLog { return t.C('\t') }

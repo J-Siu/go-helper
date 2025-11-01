@@ -123,6 +123,8 @@ func Se() *EzLog { return logger.Se() }
 // Skip current message if `Msg` is empty. Current msg only.
 func SkipEmpty() *EzLog { return logger.Se() }
 
+// --- base logging functions
+
 // Append character/rune to message
 func C(ch rune) *EzLog { return logger.C(ch) }
 
@@ -132,26 +134,47 @@ func L() *EzLog { return logger.L() }
 // Add msg to log
 func M(date any) *EzLog { return logger.M(date) }
 
-// Add new line with message
-func Mn(date any) *EzLog { return logger.Mn(date) }
+// Add : after data
+func N(data any) *EzLog { return logger.N(data) }
+
+// --- Shorthand
+
+// Add new line before data (shorthand for L().M())
+func Lm(data any) *EzLog { return logger.L().M(data) }
+
+// Add new line after data (shorthand for M().L())
+func Ml(data any) *EzLog { return logger.M(data).L() }
+
+// Add new line before data and : after (shorthand for L().N())
+func Ln(data any) *EzLog { return logger.L().N(data) }
+
+// Add : and new line after data (shorthand for N().L())
+func Nl(data any) *EzLog { return logger.N(data).L() }
+
+// --- Expressive func name
+
+// Add new line to log (alias of L())
+func NewLine() *EzLog { return logger.L() }
 
 // Add msg to log (alias of M())
 func Msg(data any) *EzLog { return logger.M(data) }
 
-// Add new line with message (alias of M().L())
-func MsgLn(data any) *EzLog { return logger.Mn(data) }
-
-// Add : after data
-func N(data any) *EzLog { return logger.N(data) }
-
-// Add : and newline after data
-func Nn(data any) *EzLog { return logger.Nn(data) }
-
 // Add : after data (alias of N())
 func Name(data any) *EzLog { return logger.N(data) }
 
-// Add : and newline after data (alias of Nn())
-func NameLn(data any) *EzLog { return logger.Nn(data) }
+// --- Expressive alias
+
+// Add new line before data (alias of L().M())
+func NewLineMsg(data any) *EzLog { return logger.Lm(data) }
+
+// Add new line after data (alias of M().L())
+func MsgNewLine(data any) *EzLog { return logger.Ml(data) }
+
+// Add new line before data and : after (alias of L().N())
+func NewLineName(data any) *EzLog { return logger.Ln(data) }
+
+// Add : and new line after data (alias of N().L())
+func NameNewLine(data any) *EzLog { return logger.Nl(data) }
 
 // -- Other shorthand
 

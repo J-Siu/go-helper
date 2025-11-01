@@ -38,7 +38,8 @@ func (t *Cmd) Run() *Cmd
 // run func wrapper with sync.WaitGroup support.
 func (t *Cmd) RunWg(title *string, wgP *sync.WaitGroup, output bool) *Cmd
 func (t *Cmd) Error() error
- ```
+func (t *Cmd) Log(title string) *Cmd
+```
 
 ### Package Functions
 

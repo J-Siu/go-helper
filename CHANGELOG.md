@@ -167,3 +167,10 @@
   - file - Add and standardize read, write, append functions name for byte, str and strArray
 - v2.5.5
   - file - add `GetDirFile`, `FileFile`
+- v2.6.0
+  - cmd
+    - add Log()
+  - ezlog
+    - breaking
+      - remove Mn(), Nn()
+    - add Lm(), Ml(), Ln(), Nl(), Trim()
