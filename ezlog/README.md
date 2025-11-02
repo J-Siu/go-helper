@@ -14,6 +14,10 @@ A simple log module with Linux log level:
 7. DEBUG
 8. TRACE
 
+## Design
+
+A simple log building library with only 4 base building functions. `Name` and `Message` part accept `any` as parameter. The design goal is ease of use.
+
 ## Installation
 
 ```sh
@@ -28,17 +32,21 @@ import "github.com/J-Siu/go-helper/v2/ezlog"
 
 ### Building a log message
 
+A log message start with `ezlog` or an `Ezlog` instance. Follow by log message level, then building functions. Finally `Out()`.
+
 ```go
 # use package level
-# ezlog.<log level>.<building func>.Out
+# ezlog.<log level>.<building functions ...>.Out
 ezlog.Debug.N("Key").M(value).Out()
+```
 
+```go
 # use an ezlog instance
 log := ezlog.New()
 log.Debug.N("Key").M(value).Out()
 ```
 
-### Log Control Level
+### Log Control
 
 Global|Per Message|Package level equivalent|Description
 --|--|--|--
@@ -47,7 +55,9 @@ SetLogLevelPrefix(bool)|Lp(bool)/LogPrefix(bool)|yes|enable/disable printing log
 SetTrim(bool)|Tr(bool)/Trim(bool)|yes|Enable/disable trimming of name and message (default: true)
 SetSkipEmpty|Se(bool)/SkipEmpty(bool)|yes|Do not log if message part is empty (default: false)
 
-### Log Message Level
+Per message settings should be used between message level setter and `Out()`.
+
+### Log Message Level Setter
 
 This needed to be set per log message and should be the first call in the call chain.
 
@@ -67,7 +77,7 @@ Trace()|TRACE|8
 
 ### Log Building Functions
 
-`ezlog` design around 4 base log building functions. Shorthands functions are built on top of the above 4 functions.
+`ezlog` design around 4 base log building functions. Shorthands functions are built on top of the above 4 functions. Each `M()` and `N()` are automatically separated by single space.
 
 Function|Descriptive Alias|Count as message|Description
 --|--|--|--
