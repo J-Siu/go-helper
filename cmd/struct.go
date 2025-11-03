@@ -97,11 +97,7 @@ func (t *Cmd) RunWg(title *string, wgP *sync.WaitGroup, output bool) *Cmd {
 func (t *Cmd) Error() error { return t.Err }
 
 func (t *Cmd) Log(title string) *Cmd {
-	if t.Stdout.Len() > 0 {
-		ezlog.Log().N(title).N("Stdout").M(t.Stdout).Out()
-	}
-	if t.Stderr.Len() > 0 {
-		ezlog.Log().N(title).N("Stderr").M(t.Stderr).Out()
-	}
+	ezlog.Log().Se().N(title).N("Stdout").M(t.Stdout).Out()
+	ezlog.Log().Se().N(title).N("Stderr").M(t.Stderr).Out()
 	return t
 }
