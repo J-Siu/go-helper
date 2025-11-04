@@ -397,16 +397,15 @@ func (t *StrAny) processStrArray(saP *[]string) *string {
 }
 
 func (t *StrAny) processByteArray(baP *[]byte) *string {
-	var out *string
+	out := ""
 	if baP != nil && len(*baP) > 0 {
 		if t.indentEnable {
-			out = str.ByteJsonIndent(baP)
+			out = *str.ByteJsonIndent(baP)
 		} else {
-			o := string(*baP)
-			out = &o
+			out = string(*baP)
 		}
 	}
-	return out
+	return &out
 }
 
 func (t *StrAny) processErrArray(eaP *[]error) *string {
