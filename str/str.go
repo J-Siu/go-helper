@@ -119,7 +119,7 @@ func LnSplit(strIn *string) *[]string {
 	return &strOut
 }
 
-// Return original *string if strP is nil failed
+// Return *string of "" if failed
 func JsonIndent(strIn *string) *string {
 	var strOut string
 	if strIn != nil {
@@ -127,14 +127,24 @@ func JsonIndent(strIn *string) *string {
 		p := ByteJsonIndent(&byteA)
 		if *p != "" {
 			strOut = string(*p)
-		} else {
-			return strIn
 		}
 	}
 	return &strOut
 }
 
-// Return "" if json.Indent failed
+// Return *string of "" if json.Marshal failed
+func JsonMarshal(strIn *string) *string {
+	var strOut string
+	if strIn != nil {
+		p, e := json.Marshal(strIn)
+		if e == nil {
+			strOut = string(p)
+		}
+	}
+	return &strOut
+}
+
+// Return *string of "" if json.Indent failed
 func ByteJsonIndent(baP *[]byte) *string {
 	var strOut string
 	if baP != nil {
