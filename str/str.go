@@ -127,6 +127,8 @@ func JsonIndent(strIn *string) *string {
 		p := ByteJsonIndent(&byteA)
 		if *p != "" {
 			strOut = string(*p)
+		} else {
+			return strIn
 		}
 	}
 	return &strOut
