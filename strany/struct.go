@@ -328,23 +328,27 @@ func (t *StrAny) Indent(indent string) *StrAny {
 	t.indent = indent
 	return t
 }
+func (t *StrAny) GetIndent() string { return t.indent }
 
 // `enable` = `true“, use `json.MarshalIndent` for struct, else `json.Marshal`
 func (t *StrAny) IndentEnable(enable bool) *StrAny {
 	t.indentEnable = enable
 	return t
 }
+func (t *StrAny) GetIndentEnable() bool { return t.indentEnable }
 
 // `prefix` of json.MarshalIndent(v any, prefix, indent string)
 func (t *StrAny) IndentPrefix(prefix string) *StrAny {
 	t.indentPrefix = prefix
 	return t
 }
+func (t *StrAny) GetIndentPrefix() string { return t.indentPrefix }
 
 func (t *StrAny) UnquoteEnable(enable bool) *StrAny {
 	t.unquote = enable
 	return t
 }
+func (t *StrAny) GetUnquoteEnable() bool { return t.unquote }
 
 // Unescape utf8 string
 func (t *StrAny) processUnquote(sP *string) *string {
@@ -363,13 +367,15 @@ func (t *StrAny) processUnquote(sP *string) *string {
 
 // Indent processing
 func (t *StrAny) processStrIndent(sP *string) *string {
-	out := ""
+	var out *string
 	if sP != nil {
 		if t.indentEnable {
-			out = *str.JsonIndent(sP)
+			out = str.JsonIndent(sP)
+		} else {
+			out = sP
 		}
 	}
-	return &out
+	return out
 }
 
 func (t *StrAny) processStrArray(saP *[]string) *string {
@@ -391,15 +397,16 @@ func (t *StrAny) processStrArray(saP *[]string) *string {
 }
 
 func (t *StrAny) processByteArray(baP *[]byte) *string {
-	out := ""
+	var out *string
 	if baP != nil && len(*baP) > 0 {
 		if t.indentEnable {
-			out = *str.ByteJsonIndent(baP)
+			out = str.ByteJsonIndent(baP)
 		} else {
-			out = string(*baP)
+			o := string(*baP)
+			out = &o
 		}
 	}
-	return &out
+	return out
 }
 
 func (t *StrAny) processErrArray(eaP *[]error) *string {
