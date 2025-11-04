@@ -187,18 +187,36 @@ func (t *EzLog) Trace() *EzLog {
 
 // --- Output
 
-func (t *EzLog) Dump() *EzLog {
-	new(EzLog).New().Log().
-		N("EzLog.Dump").Lm(t).
-		Ln("logLevel").M(t.logLevel).
-		Ln("logLevelPrefix").M(t.logLevelPrefix).
-		Ln("skipEmpty").M(t.skipEmpty).
-		Ln("trim").M(t.trim).
-		Ln("msgLogLevel").M(t.msgLogLevel).
-		Ln("msgNotEmpty").M(t.msgNotEmpty).
-		Ln("msgSkipEmpty").M(t.msgSkipEmpty).
-		Ln("t.msgLogLevel > DISABLED").M(t.msgLogLevel > DISABLED).
-		Out()
+// Dump all control fields/variables. Use before Out().
+func (t *EzLog) Dump(singleLine bool) *EzLog {
+	indent := t.StrAny.GetIndentEnable()
+	if singleLine {
+		t.StrAny.IndentEnable(false)
+		t.
+			N("EzLog.Dump").Lm(t).
+			N("logLevel").M(t.logLevel).
+			N("logLevelPrefix").M(t.logLevelPrefix).
+			N("skipEmpty").M(t.skipEmpty).
+			N("trim").M(t.trim).
+			N("msgLogLevel").M(t.msgLogLevel).
+			N("msgNotEmpty").M(t.msgNotEmpty).
+			N("msgSkipEmpty").M(t.msgSkipEmpty).
+			N("msgTrim").M(t.msgTrim).
+			N("t.msgLogLevel > DISABLED").M(t.msgLogLevel > DISABLED)
+	} else {
+		t.
+			N("EzLog.Dump").Lm(t).
+			Ln("logLevel").M(t.logLevel).
+			Ln("logLevelPrefix").M(t.logLevelPrefix).
+			Ln("skipEmpty").M(t.skipEmpty).
+			Ln("trim").M(t.trim).
+			Ln("msgLogLevel").M(t.msgLogLevel).
+			Ln("msgNotEmpty").M(t.msgNotEmpty).
+			Ln("msgSkipEmpty").M(t.msgSkipEmpty).
+			Ln("msgTrim").M(t.msgTrim).
+			Ln("t.msgLogLevel > DISABLED").M(t.msgLogLevel > DISABLED)
+	}
+	t.StrAny.IndentEnable(indent)
 	return t
 }
 
