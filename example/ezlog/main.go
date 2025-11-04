@@ -95,10 +95,12 @@ func main() {
 	)
 
 	fmt.Println("--- ezlog")
-	ezlog.SetLogLevel(ezlog.DEBUG).StrAny.IndentEnable(false)
+	ezlog.SetLogLevel(ezlog.DEBUG)
+	// ezlog.SetLogLevel(ezlog.DEBUG).StrAny.IndentEnable(false)
 	ezlog.Log().
 		MsgNewLine(true).
 		MsgNewLine(int16(-9910)).
+		N("test").Ml("test").
 		Name("0.008").MsgNewLine(float32(0.008)).
 		Name("&f32").MsgNewLine(&f32).
 		Name("&f64").MsgNewLine(&f64).
