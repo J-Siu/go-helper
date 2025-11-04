@@ -36,10 +36,10 @@ THE SOFTWARE.
 package ezlog
 
 var logger = New()
+var StrAny = logger.StrAny
 
 func New() *EzLog   { return new(EzLog).New() }
 func Clear() *EzLog { return logger.Clear() }
-func Dump() *EzLog  { return logger.Dump() }
 
 // Get log level
 func GetLogLevel() EzLogLevel { return logger.GetLogLevel() }
