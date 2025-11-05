@@ -41,6 +41,15 @@ var StrAny = logger.StrAny
 func New() *EzLog   { return new(EzLog).New() }
 func Clear() *EzLog { return logger.Clear() }
 
+// Enable/Disable trim on `data`
+func EnableSkipEmpty(enable bool) *EzLog { return logger.EnableSkipEmpty(enable) }
+
+// Enable/Disable trim on `data`
+func EnableTime(enable bool) *EzLog { return logger.EnableTime(enable) }
+
+// Enable/Disable trim on message
+func EnableTrim(enable bool) *EzLog { return logger.EnableTrim(enable) }
+
 // Get log level
 func GetLogLevel() EzLogLevel { return logger.GetLogLevel() }
 
@@ -54,19 +63,16 @@ func SetLogLevel(level EzLogLevel) *EzLog { return logger.SetLogLevel(level) }
 func SetLogLevelPrefix(enable bool) *EzLog { return logger.SetLogLevelPrefix(enable) }
 
 // Set out function
-func SetOutFunc(f OutFunc) *EzLog { return logger.SetOutFunc(f) }
-
-// Set all log func to use fmt.Print()
-func SetOutPrint() *EzLog { return logger.SetOutPrint() }
+func SetOutFunc(f FuncOut) *EzLog { return logger.SetOutFunc(f) }
 
 // Set all log func to use fmt.Println()
-func SetOutPrintLn() *EzLog { return logger.SetOutPrintLn() }
+func SetDefaultOutFun() *EzLog { return logger.SetDefaultOutFun() }
 
-// Enable/Disable trim on message
-func SetTrim(enable bool) *EzLog { return logger.SetTrim(enable) }
+// Set DateTime function
+func SetDateTimeFunc(f FuncDateTime) *EzLog { return logger.SetDateTimeFunc(f) }
 
-// Enable/Disable trim on `data`
-func SetSkipEmpty(enable bool) *EzLog { return logger.SetSkipEmpty(enable) }
+// Set default DateTime function
+func SetDefaultDateTimeFunc() *EzLog { return logger.SetDefaultDateTimeFunc() }
 
 // -- Set log message level
 

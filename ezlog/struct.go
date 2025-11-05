@@ -25,21 +25,25 @@ package ezlog
 import (
 	"fmt"
 	"strings"
+	"time"
 	"unicode/utf8"
 
 	"github.com/J-Siu/go-helper/v2/str"
 	"github.com/J-Siu/go-helper/v2/strany"
 )
 
-type OutFunc func(msg *string)
+type FuncOut func(msg *string)
+type FuncDateTime func() string
 
 type EzLog struct {
 	StrAny         *strany.StrAny `json:"StrAny"`
+	funcDateTime   FuncDateTime
+	funcOut        FuncOut
 	logLevel       EzLogLevel
 	logLevelPrefix bool
-	outFunc        OutFunc
 	skipEmpty      bool
 	strBuf         []string
+	time           bool
 	trim           bool // persistent trim
 	// msg level
 	msgLogLevel       EzLogLevel
@@ -50,13 +54,15 @@ type EzLog struct {
 }
 
 func (t *EzLog) New() *EzLog {
-	t.Clear()
-	t.SetLogLevel(ERR)
-	t.SetLogLevelPrefix(true)
-	t.SetOutPrintLn()
-	t.SetTrim(true)
 	t.StrAny = new(strany.StrAny).New()
-	return t
+	return t.
+		Clear().
+		EnableTime(false).
+		EnableTrim(true).
+		SetDefaultDateTimeFunc().
+		SetDefaultOutFun().
+		SetLogLevel(ERR).
+		SetLogLevelPrefix(true)
 }
 
 // Clear message
@@ -66,6 +72,59 @@ func (t *EzLog) Clear() *EzLog {
 	t.msgSkipEmpty = false
 	t.msgTrim = false
 	t.strBuf = nil
+	return t
+}
+
+// Dump all control fields/variables. Use before Out().
+func (t *EzLog) Dump(singleLine bool) *EzLog {
+	indent := t.StrAny.GetIndentEnable()
+	if singleLine {
+		t.StrAny.IndentEnable(false)
+		t.
+			N("EzLog.Dump").Lm(t).
+			N("logLevel").M(t.logLevel).
+			N("logLevelPrefix").M(t.logLevelPrefix).
+			N("skipEmpty").M(t.skipEmpty).
+			N("time").M(t.time).
+			N("trim").M(t.trim).
+			N("msgLogLevel").M(t.msgLogLevel).
+			N("msgNotEmpty").M(t.msgNotEmpty).
+			N("msgSkipEmpty").M(t.msgSkipEmpty).
+			N("msgTrim").M(t.msgTrim).
+			N("t.msgLogLevel > DISABLED").M(t.msgLogLevel > DISABLED)
+	} else {
+		t.
+			N("EzLog.Dump").Lm(t).
+			Ln("logLevel").M(t.logLevel).
+			Ln("logLevelPrefix").M(t.logLevelPrefix).
+			Ln("skipEmpty").M(t.skipEmpty).
+			Ln("time").M(t.time).
+			Ln("trim").M(t.trim).
+			Ln("msgLogLevel").M(t.msgLogLevel).
+			Ln("msgNotEmpty").M(t.msgNotEmpty).
+			Ln("msgSkipEmpty").M(t.msgSkipEmpty).
+			Ln("msgTrim").M(t.msgTrim).
+			Ln("t.msgLogLevel > DISABLED").M(t.msgLogLevel > DISABLED)
+	}
+	t.StrAny.IndentEnable(indent)
+	return t
+}
+
+// Enable/Disable trim on `data`
+func (t *EzLog) EnableSkipEmpty(enable bool) *EzLog {
+	t.skipEmpty = enable
+	return t
+}
+
+// Enable/Disable trim on `data`
+func (t *EzLog) EnableTime(enable bool) *EzLog {
+	t.time = enable
+	return t
+}
+
+// Enable/Disable trim on `data`
+func (t *EzLog) EnableTrim(enable bool) *EzLog {
+	t.trim = enable
 	return t
 }
 
@@ -88,32 +147,26 @@ func (t *EzLog) SetLogLevelPrefix(enable bool) *EzLog {
 }
 
 // Set out function
-func (t *EzLog) SetOutFunc(f OutFunc) *EzLog {
-	t.outFunc = f
-	return t
-}
-
-// Set out function to fmt.Print()
-func (t *EzLog) SetOutPrint() *EzLog {
-	t.SetOutFunc(func(str *string) { fmt.Print(*str) })
+func (t *EzLog) SetOutFunc(f FuncOut) *EzLog {
+	t.funcOut = f
 	return t
 }
 
 // Set out function to fmt.Println()
-func (t *EzLog) SetOutPrintLn() *EzLog {
+func (t *EzLog) SetDefaultOutFun() *EzLog {
 	t.SetOutFunc(func(str *string) { fmt.Println(*str) })
 	return t
 }
 
-// Enable/Disable trim on `data`
-func (t *EzLog) SetTrim(enable bool) *EzLog {
-	t.trim = enable
+// Set DateTime function
+func (t *EzLog) SetDateTimeFunc(f FuncDateTime) *EzLog {
+	t.funcDateTime = f
 	return t
 }
 
-// Enable/Disable trim on `data`
-func (t *EzLog) SetSkipEmpty(enable bool) *EzLog {
-	t.skipEmpty = enable
+// Set default DateTime function
+func (t *EzLog) SetDefaultDateTimeFunc() *EzLog {
+	t.SetDateTimeFunc(func() string { return time.Now().Format("2006-01-02 15:04:05") })
 	return t
 }
 
@@ -187,48 +240,19 @@ func (t *EzLog) Trace() *EzLog {
 
 // --- Output
 
-// Dump all control fields/variables. Use before Out().
-func (t *EzLog) Dump(singleLine bool) *EzLog {
-	indent := t.StrAny.GetIndentEnable()
-	if singleLine {
-		t.StrAny.IndentEnable(false)
-		t.
-			N("EzLog.Dump").Lm(t).
-			N("logLevel").M(t.logLevel).
-			N("logLevelPrefix").M(t.logLevelPrefix).
-			N("skipEmpty").M(t.skipEmpty).
-			N("trim").M(t.trim).
-			N("msgLogLevel").M(t.msgLogLevel).
-			N("msgNotEmpty").M(t.msgNotEmpty).
-			N("msgSkipEmpty").M(t.msgSkipEmpty).
-			N("msgTrim").M(t.msgTrim).
-			N("t.msgLogLevel > DISABLED").M(t.msgLogLevel > DISABLED)
-	} else {
-		t.
-			N("EzLog.Dump").Lm(t).
-			Ln("logLevel").M(t.logLevel).
-			Ln("logLevelPrefix").M(t.logLevelPrefix).
-			Ln("skipEmpty").M(t.skipEmpty).
-			Ln("trim").M(t.trim).
-			Ln("msgLogLevel").M(t.msgLogLevel).
-			Ln("msgNotEmpty").M(t.msgNotEmpty).
-			Ln("msgSkipEmpty").M(t.msgSkipEmpty).
-			Ln("msgTrim").M(t.msgTrim).
-			Ln("t.msgLogLevel > DISABLED").M(t.msgLogLevel > DISABLED)
-	}
-	t.StrAny.IndentEnable(indent)
-	return t
-}
-
 func (t *EzLog) Out() *EzLog {
 	if t.msgLogLevel <= t.logLevel {
 		// Skip empty?
 		if !((t.skipEmpty || t.msgSkipEmpty) && !t.msgNotEmpty) {
+			// DateTime
+			if t.time {
+				t.strBuf = append([]string{t.funcDateTime() + ":"}, t.strBuf...)
+			}
 			// Log level prefix
 			if t.msgLogLevelPrefix && (t.msgLogLevel != DISABLED) {
 				t.strBuf = append([]string{t.msgLogLevel.String() + ":"}, t.strBuf...)
 			}
-			t.outFunc(t.StringP())
+			t.funcOut(t.StringP())
 		}
 	}
 	t.msgTrim = false

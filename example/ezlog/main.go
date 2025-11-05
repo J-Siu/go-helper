@@ -95,7 +95,7 @@ func main() {
 	)
 
 	fmt.Println("--- ezlog")
-	ezlog.SetLogLevel(ezlog.DEBUG)
+	ezlog.SetLogLevel(ezlog.DEBUG).EnableTime(true)
 	// ezlog.SetLogLevel(ezlog.DEBUG).StrAny.IndentEnable(false)
 	ezlog.Log().
 		MsgNewLine(true).
