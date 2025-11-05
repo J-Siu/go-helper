@@ -174,3 +174,10 @@
     - breaking
       - remove Mn(), Nn()
     - add Lm(), Ml(), Ln(), Nl(), Trim()
+- v2.6.1
+  - ezlog
+    - add EnableTime()
+    - update Dump()
+    - package expose logger.StrAny
+  - str: fix processByteArray(), JsonIndent()
+  - strAny: add Get*()
