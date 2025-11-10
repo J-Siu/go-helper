@@ -75,38 +75,42 @@ func (t *EzLog) Clear() *EzLog {
 	return t
 }
 
-// Dump all control fields/variables. Use before Out().
+// Dump all control fields/variables.
 func (t *EzLog) Dump(singleLine bool) *EzLog {
-	indent := t.StrAny.GetIndentEnable()
+	dump := new(EzLog).New().N("EzLog.Dump")
 	if singleLine {
-		t.StrAny.IndentEnable(false)
-		t.
-			N("EzLog.Dump").Lm(t).
+		dump.StrAny.IndentEnable(false)
+		dump.
+			M(t).
 			N("logLevel").M(t.logLevel).
 			N("logLevelPrefix").M(t.logLevelPrefix).
 			N("skipEmpty").M(t.skipEmpty).
 			N("time").M(t.time).
 			N("trim").M(t.trim).
+			N("msgLogLevel > DISABLED").M(t.msgLogLevel > DISABLED).
 			N("msgLogLevel").M(t.msgLogLevel).
 			N("msgNotEmpty").M(t.msgNotEmpty).
 			N("msgSkipEmpty").M(t.msgSkipEmpty).
 			N("msgTrim").M(t.msgTrim).
-			N("t.msgLogLevel > DISABLED").M(t.msgLogLevel > DISABLED)
+			N("strBuf count").M(len(t.strBuf)).
+			N("strBuf").M(t.strBuf)
 	} else {
-		t.
-			N("EzLog.Dump").Lm(t).
+		dump.
+			Lm(t).
 			Ln("logLevel").M(t.logLevel).
 			Ln("logLevelPrefix").M(t.logLevelPrefix).
 			Ln("skipEmpty").M(t.skipEmpty).
 			Ln("time").M(t.time).
 			Ln("trim").M(t.trim).
+			Ln("msgLogLevel > DISABLED").M(t.msgLogLevel > DISABLED).
 			Ln("msgLogLevel").M(t.msgLogLevel).
 			Ln("msgNotEmpty").M(t.msgNotEmpty).
 			Ln("msgSkipEmpty").M(t.msgSkipEmpty).
 			Ln("msgTrim").M(t.msgTrim).
-			Ln("t.msgLogLevel > DISABLED").M(t.msgLogLevel > DISABLED)
+			Ln("strBuf count").M(len(t.strBuf)).
+			Ln("strBuf").M(t.strBuf)
 	}
-	t.StrAny.IndentEnable(indent)
+	dump.Out()
 	return t
 }
 
@@ -265,7 +269,6 @@ func (t *EzLog) StringP() *string {
 	var strOut string
 	if t.msgLogLevel <= t.logLevel {
 		if t.strBuf != nil {
-			// str = strings.Join(l.strBuf, " ")
 			for _, s := range t.strBuf {
 				_, size := utf8.DecodeLastRuneInString(strOut)
 				if size > 0 && strOut[len(strOut)-size] != '\n' {
@@ -289,7 +292,7 @@ func (t *EzLog) build(data any, isMsg bool) *EzLog {
 			tmp = strings.TrimSpace(tmp)
 		}
 		if isMsg {
-			t.msgNotEmpty = t.msgNotEmpty || len(tmp) > 0
+			t.msgNotEmpty = t.msgNotEmpty || len(tmp) > 0 && !strings.EqualFold(tmp, "null")
 		}
 		t.strBuf = append(t.strBuf, tmp)
 	}
