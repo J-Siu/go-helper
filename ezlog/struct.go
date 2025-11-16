@@ -114,8 +114,13 @@ func (t *EzLog) Dump(singleLine bool) *EzLog {
 	return t
 }
 
-// Enable/Disable trim on `data`
-func (t *EzLog) EnableSkipEmpty(enable bool) *EzLog {
+// Get skipEmpty
+func (t *EzLog) GetSkipEmpty() bool {
+	return t.skipEmpty
+}
+
+// Enable/Disable skipEmpty
+func (t *EzLog) SetSkipEmpty(enable bool) *EzLog {
 	t.skipEmpty = enable
 	return t
 }

@@ -42,9 +42,6 @@ func New() *EzLog   { return new(EzLog).New() }
 func Clear() *EzLog { return logger.Clear() }
 
 // Enable/Disable trim on `data`
-func EnableSkipEmpty(enable bool) *EzLog { return logger.EnableSkipEmpty(enable) }
-
-// Enable/Disable trim on `data`
 func EnableTime(enable bool) *EzLog { return logger.EnableTime(enable) }
 
 // Enable/Disable trim on message
@@ -56,14 +53,8 @@ func GetLogLevel() EzLogLevel { return logger.GetLogLevel() }
 // Get log level prefix enable or not
 func GetLogLevelPrefix() bool { return logger.GetLogLevelPrefix() }
 
-// Set log level
-func SetLogLevel(level EzLogLevel) *EzLog { return logger.SetLogLevel(level) }
-
-// Enable/Disable log level prefix
-func SetLogLevelPrefix(enable bool) *EzLog { return logger.SetLogLevelPrefix(enable) }
-
-// Set out function
-func SetOutFunc(f FuncOut) *EzLog { return logger.SetOutFunc(f) }
+// Enable/Disable skip empty
+func GetSkipEmpty() bool { return logger.GetSkipEmpty() }
 
 // Set all log func to use fmt.Println()
 func SetDefaultOutFun() *EzLog { return logger.SetDefaultOutFun() }
@@ -73,6 +64,18 @@ func SetDateTimeFunc(f FuncDateTime) *EzLog { return logger.SetDateTimeFunc(f) }
 
 // Set default DateTime function
 func SetDefaultDateTimeFunc() *EzLog { return logger.SetDefaultDateTimeFunc() }
+
+// Set log level
+func SetLogLevel(level EzLogLevel) *EzLog { return logger.SetLogLevel(level) }
+
+// Enable/Disable log level prefix
+func SetLogLevelPrefix(enable bool) *EzLog { return logger.SetLogLevelPrefix(enable) }
+
+// Set out function
+func SetOutFunc(f FuncOut) *EzLog { return logger.SetOutFunc(f) }
+
+// Enable/Disable skip empty
+func SetSkipEmpty(enable bool) *EzLog { return logger.SetSkipEmpty(enable) }
 
 // -- Set log message level
 
