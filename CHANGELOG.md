@@ -181,3 +181,7 @@
     - package expose logger.StrAny
   - str: fix processByteArray(), JsonIndent()
   - strAny: add Get*()
+- v2.6.2
+  - ezlog
+    - fix: Dump() use its own ezlog instance
+    - msg part: "null" is treated as empty
