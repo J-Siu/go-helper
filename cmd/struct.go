@@ -75,7 +75,6 @@ func (t *Cmd) Run() *Cmd {
 
 	prefix := "cmd.Run"
 	ezlog.Debug().N(prefix).M(&t).Out()
-	t.Log(prefix)
 	ezlog.Debug().N(prefix).N("Err").M(t.Err).Out()
 	return t
 }
@@ -97,7 +96,7 @@ func (t *Cmd) RunWg(title *string, wgP *sync.WaitGroup, output bool) *Cmd {
 func (t *Cmd) Error() error { return t.Err }
 
 func (t *Cmd) Log(title string) *Cmd {
-	ezlog.Log().Se().N(title).N("Stdout").M(t.Stdout).Out()
-	ezlog.Log().Se().N(title).N("Stderr").M(t.Stderr).Out()
+	ezlog.Log().Se().N(title).N("Stdout").M(t.Stdout.String()).Out()
+	ezlog.Log().Se().N(title).N("Stderr").M(t.Stderr.String()).Out()
 	return t
 }
