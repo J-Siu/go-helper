@@ -185,3 +185,9 @@
   - ezlog
     - fix: Dump() use its own ezlog instance
     - msg part: "null" is treated as empty
+- v2.6.3
+  - cmd
+    - Run(): remove default output
+    - Log(): Stdout, Stderr to string
+  - ezlog
+    - Get/Set SkipEmpty
