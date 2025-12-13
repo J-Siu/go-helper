@@ -191,3 +191,10 @@
     - Log(): Stdout, Stderr to string
   - ezlog
     - Get/Set SkipEmpty
+- v2.6.4
+  - ezlog
+    - add Dump() to package level
+    - add StrAny json indent wrapper
+    - add name postfix customization
+    - cleanup functions
+    - update Dump()

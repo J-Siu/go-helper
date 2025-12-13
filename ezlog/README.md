@@ -50,11 +50,17 @@ log.Debug.N("Key").M(value).Out()
 
 Global|Per Message|Package level equivalent|Description
 --|--|--|--
-EnableSkipEmpty|Se(bool)/SkipEmpty(bool)|yes|Do not log if message part is empty (default: false)
+EnableJsonIndent(bool)|n/a|yes|Enable/Disable json indent on `data` (default: true)
 EnableTime(bool)|n/a|yes|Enable/disable time stamp (default: false)
 EnableTrim(bool)|Tr(bool)/Trim(bool)|yes|Enable/disable trimming of name and message (default: true)
-GetLogLevel/SetLogLevel(level)|n/a|yes|Set and get maximum log level a message will be printed (default: ERR)
+GetLogLevel/SetLogLevel(level)|n/a|yes|Set and get maximum log level a message will be printed (default: `ERR`)
+GetSkipEmpty|n/a|yes|Get skip empty value
+SetDateTimeFunc(func)|n/a|yes|Set DateTime function (default: `func() string { return time.Now().Format(TimeFormat) }`)
+SetLogLevel(LogLevel)|LogL()|yes|Set log level
 SetLogLevelPrefix(bool)|Lp(bool)/LogPrefix(bool)|yes|enable/disable printing log level at beginning of log (default: true)
+SetNamePostfixChar(rune)|n/a|yes|Set name postfix (default: `:`)
+SetOutFunc(func)|n/a|yes|Set output function (default: `func(str *string) { fmt.Println(*str) }`)
+SetSkipEmpty|Se(bool)/SkipEmpty(bool)|yes|Do not log if message part is empty (default: false)
 
 Per message settings should be used between message level setter and `Out()`.
 
