@@ -35,8 +35,11 @@ THE SOFTWARE.
 //	8. Trace
 package ezlog
 
-var logger = New()
-var StrAny = logger.StrAny
+var (
+	StrAny     = logger.StrAny
+	TimeFormat = "2006-01-02 15:04:05"
+	logger     = New()
+)
 
 func New() *EzLog   { return new(EzLog).New() }
 func Clear() *EzLog { return logger.Clear() }

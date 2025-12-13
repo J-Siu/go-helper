@@ -175,7 +175,7 @@ func (t *EzLog) SetDateTimeFunc(f FuncDateTime) *EzLog {
 
 // Set default DateTime function
 func (t *EzLog) SetDefaultDateTimeFunc() *EzLog {
-	t.SetDateTimeFunc(func() string { return time.Now().Format("2006-01-02 15:04:05") })
+	t.SetDateTimeFunc(func() string { return time.Now().Format(TimeFormat) })
 	return t
 }
 
