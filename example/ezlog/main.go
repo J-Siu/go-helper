@@ -89,15 +89,16 @@ func main() {
 	var (
 		// log         = ezlog.New().SetLogLevel(ezlog.DEBUG)
 		N           = new(NUM).New()
-		f32 float32 = 100.000001
-		f64 float64 = 100.000001
-		str string
+		f32 float32 = 100.000032
+		f64 float64 = 100.000064
 	)
 
-	fmt.Println("--- ezlog")
-	ezlog.SetLogLevel(ezlog.DEBUG).EnableTime(true)
-	// ezlog.SetLogLevel(ezlog.DEBUG).StrAny.IndentEnable(false)
-	ezlog.Log().
+	fmt.Println("--- ezlog - START")
+	ezlog.
+		EnableJsonIndent(false).
+		EnableTime(true).
+		SetLogLevel(ezlog.DEBUG).
+		Log().
 		MsgNewLine(true).
 		MsgNewLine(int16(-9910)).
 		N("test").Ml("test").
@@ -107,10 +108,12 @@ func main() {
 		Name("uint64").MsgNewLine(uint64(199999999999)).
 		Name("N").L().MsgNewLine(N).
 		Name("&N").L().MsgNewLine(&N).
-		Dump(true).
 		Out()
+	fmt.Println("--- ezlog - END")
+	fmt.Println("--- ezlog.Dump - START")
+	ezlog.Dump(false)
+	fmt.Println("--- ezlog.Dump - END")
 
-	fmt.Println("--- println")
-	str = ezlog.String()
-	fmt.Println(str)
+	fmt.Println("--- println ---")
+	fmt.Println(ezlog.String())
 }
