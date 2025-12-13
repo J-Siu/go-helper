@@ -41,8 +41,9 @@ var (
 	logger     = New()
 )
 
-func New() *EzLog   { return new(EzLog).New() }
-func Clear() *EzLog { return logger.Clear() }
+func New() *EzLog                 { return new(EzLog).New() }
+func Clear() *EzLog               { return logger.Clear() }
+func Dump(singleLine bool) *EzLog { return logger.Dump(singleLine) }
 
 // Enable/Disable json indent on `data`
 func EnableJsonIndent(enable bool) *EzLog { return logger.EnableJsonIndent(enable) }
