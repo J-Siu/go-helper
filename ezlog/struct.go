@@ -56,7 +56,7 @@ type EzLog struct {
 }
 
 func (t *EzLog) New() *EzLog {
-	t.StrAny = new(strany.StrAny).New()
+	t.StrAny = strany.New()
 	return t.
 		Clear().
 		EnableJsonIndent(true).
@@ -82,40 +82,50 @@ func (t *EzLog) Clear() *EzLog {
 
 // Dump all control fields/variables.
 func (t *EzLog) Dump(singleLine bool) *EzLog {
-	dump := new(EzLog).New().N("EzLog.Dump")
-	if singleLine {
-		dump.StrAny.IndentEnable(false)
-		dump.
-			M(t).
-			N("logLevel").M(t.logLevel).
-			N("logLevelPrefix").M(t.logLevelPrefix).
-			N("skipEmpty").M(t.skipEmpty).
-			N("time").M(t.time).
-			N("trim").M(t.trim).
-			N("msgLogLevel > DISABLED").M(t.msgLogLevel > DISABLED).
-			N("msgLogLevel").M(t.msgLogLevel).
-			N("msgNotEmpty").M(t.msgNotEmpty).
-			N("msgSkipEmpty").M(t.msgSkipEmpty).
-			N("msgTrim").M(t.msgTrim).
-			N("strBuf count").M(len(t.strBuf)).
-			N("strBuf").M(t.strBuf)
-	} else {
-		dump.
-			Lm(t).
-			Ln("logLevel").M(t.logLevel).
-			Ln("logLevelPrefix").M(t.logLevelPrefix).
-			Ln("skipEmpty").M(t.skipEmpty).
-			Ln("time").M(t.time).
-			Ln("trim").M(t.trim).
-			Ln("msgLogLevel > DISABLED").M(t.msgLogLevel > DISABLED).
-			Ln("msgLogLevel").M(t.msgLogLevel).
-			Ln("msgNotEmpty").M(t.msgNotEmpty).
-			Ln("msgSkipEmpty").M(t.msgSkipEmpty).
-			Ln("msgTrim").M(t.msgTrim).
-			Ln("strBuf count").M(len(t.strBuf)).
-			Ln("strBuf").M(t.strBuf)
+	type typeDumpStruct struct {
+		StrAny          *strany.StrAny `json:"StrAny"`
+		LogLevel        string         `json:"logLevel"`
+		LogLevelPrefix  bool           `json:"logLevelPrefix"`
+		NamePostfix     bool           `json:"namePostfix"`
+		NamePostfixChar string         `json:"namePostfixChar"`
+		SkipEmpty       bool           `json:"skipEmpty"`
+		Time            bool           `json:"time"`
+		Trim            bool           `json:"trim"` // persistent trim
+		// msg level
+		MsgLogLevel       string `json:"msgLogLevel"`
+		MsgLogLevelPrefix bool   `json:"msgLogLevelPrefix"`
+		MsgNotEmpty       bool   `json:"msgNotEmpty"`
+		MsgSkipEmpty      bool   `json:"msgSkipEmpty"`
+		MsgTrim           bool   `json:"msgTrim"`
+		// string buffer
+		StrBufCount int      `json:"strBuf Count"`
+		StrBuf      []string `json:"strBuf"`
 	}
-	dump.Out()
+	dumpStruct := typeDumpStruct{
+		StrAny:          t.StrAny,
+		LogLevel:        t.logLevel.String(),
+		LogLevelPrefix:  t.logLevelPrefix,
+		NamePostfix:     t.namePostfix,
+		NamePostfixChar: string(t.namePostfixChar),
+		SkipEmpty:       t.skipEmpty,
+		Time:            t.time,
+		Trim:            t.trim,
+		// msg level
+		MsgLogLevel:       t.msgLogLevel.String(),
+		MsgLogLevelPrefix: t.msgLogLevelPrefix,
+		MsgNotEmpty:       t.msgNotEmpty,
+		MsgSkipEmpty:      t.msgSkipEmpty,
+		MsgTrim:           t.trim,
+		// string buffer
+		StrBufCount: len(t.strBuf),
+		StrBuf:      t.strBuf,
+	}
+	new(EzLog).
+		New().
+		EnableJsonIndent(!singleLine).
+		N("EzLog.Dump").
+		M(dumpStruct).
+		Out()
 	return t
 }
 
