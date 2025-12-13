@@ -36,15 +36,17 @@ type FuncOut func(msg *string)
 type FuncDateTime func() string
 
 type EzLog struct {
-	StrAny         *strany.StrAny `json:"StrAny"`
-	funcDateTime   FuncDateTime
-	funcOut        FuncOut
-	logLevel       EzLogLevel
-	logLevelPrefix bool
-	skipEmpty      bool
-	strBuf         []string
-	time           bool
-	trim           bool // persistent trim
+	StrAny          *strany.StrAny `json:"StrAny"`
+	funcDateTime    FuncDateTime
+	funcOut         FuncOut
+	logLevel        EzLogLevel
+	logLevelPrefix  bool
+	namePostfix     bool
+	namePostfixChar rune
+	skipEmpty       bool
+	strBuf          []string
+	time            bool
+	trim            bool // persistent trim
 	// msg level
 	msgLogLevel       EzLogLevel
 	msgLogLevelPrefix bool
@@ -57,12 +59,14 @@ func (t *EzLog) New() *EzLog {
 	t.StrAny = new(strany.StrAny).New()
 	return t.
 		Clear().
+		EnableNamePostfix(true).
 		EnableTime(false).
 		EnableTrim(true).
 		SetDefaultDateTimeFunc().
 		SetDefaultOutFun().
 		SetLogLevel(ERR).
-		SetLogLevelPrefix(true)
+		SetLogLevelPrefix(true).
+		SetNamePostfixCharDefault()
 }
 
 // Clear message
@@ -126,6 +130,12 @@ func (t *EzLog) SetSkipEmpty(enable bool) *EzLog {
 }
 
 // Enable/Disable trim on `data`
+func (t *EzLog) EnableNamePostfix(enable bool) *EzLog {
+	t.namePostfix = enable
+	return t
+}
+
+// Enable/Disable trim on `data`
 func (t *EzLog) EnableTime(enable bool) *EzLog {
 	t.time = enable
 	return t
@@ -152,6 +162,18 @@ func (t *EzLog) SetLogLevel(level EzLogLevel) *EzLog {
 // Set log level prefix true/false
 func (t *EzLog) SetLogLevelPrefix(enable bool) *EzLog {
 	t.logLevelPrefix = enable
+	return t
+}
+
+// Set Name Postfix
+func (t *EzLog) SetNamePostfixChar(char rune) *EzLog {
+	t.namePostfixChar = char
+	return t
+}
+
+// Set Name Postfix to default (':')
+func (t *EzLog) SetNamePostfixCharDefault() *EzLog {
+	t.namePostfixChar = ':'
 	return t
 }
 
@@ -355,7 +377,13 @@ func (t *EzLog) L() *EzLog { return t.C('\n') }
 func (t *EzLog) M(data any) *EzLog { return t.build(data, true) }
 
 // Add : after data
-func (t *EzLog) N(data any) *EzLog { return t.build(data, false).C(':') }
+func (t *EzLog) N(data any) *EzLog {
+	t.build(data, false)
+	if t.namePostfix {
+		t.C(t.namePostfixChar)
+	}
+	return t
+}
 
 // --- Shorthand
 

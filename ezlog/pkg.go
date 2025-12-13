@@ -74,6 +74,12 @@ func SetLogLevel(level EzLogLevel) *EzLog { return logger.SetLogLevel(level) }
 // Enable/Disable log level prefix
 func SetLogLevelPrefix(enable bool) *EzLog { return logger.SetLogLevelPrefix(enable) }
 
+// Set Name Postfix
+func SetNamePostfixChar(char rune) *EzLog { return logger.SetNamePostfixChar(char) }
+
+// Set Name Postfix to default (':')
+func SetNamePostfixCharDefault() *EzLog { return logger.SetNamePostfixCharDefault() }
+
 // Set out function
 func SetOutFunc(f FuncOut) *EzLog { return logger.SetOutFunc(f) }
 
