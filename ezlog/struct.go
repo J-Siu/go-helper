@@ -59,6 +59,7 @@ func (t *EzLog) New() *EzLog {
 	t.StrAny = new(strany.StrAny).New()
 	return t.
 		Clear().
+		EnableJsonIndent(true).
 		EnableNamePostfix(true).
 		EnableTime(false).
 		EnableTrim(true).
@@ -132,6 +133,12 @@ func (t *EzLog) SetSkipEmpty(enable bool) *EzLog {
 // Enable/Disable trim on `data`
 func (t *EzLog) EnableNamePostfix(enable bool) *EzLog {
 	t.namePostfix = enable
+	return t
+}
+
+// Enable/Disable json indent on `data`
+func (t *EzLog) EnableJsonIndent(enable bool) *EzLog {
+	t.StrAny.IndentEnable(enable)
 	return t
 }
 

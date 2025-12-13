@@ -44,6 +44,9 @@ var (
 func New() *EzLog   { return new(EzLog).New() }
 func Clear() *EzLog { return logger.Clear() }
 
+// Enable/Disable json indent on `data`
+func EnableJsonIndent(enable bool) *EzLog { return logger.EnableJsonIndent(enable) }
+
 // Enable/Disable trim on `data`
 func EnableTime(enable bool) *EzLog { return logger.EnableTime(enable) }
 
