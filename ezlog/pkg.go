@@ -35,11 +35,27 @@ THE SOFTWARE.
 //	8. Trace
 package ezlog
 
-var (
-	StrAny     = logger.StrAny
-	TimeFormat = "2006-01-02 15:04:05"
-	logger     = New()
+import (
+	"fmt"
+	"time"
 )
+
+var (
+	logger = New()
+	StrAny = logger.StrAny
+)
+
+// Defaults
+
+const (
+	defaultNamePostfix rune = ':'
+	defaultTimeFormat       = "2006-01-02 15:04:05"
+)
+
+func defaultDateTimeFunc() string { return time.Now().Format(defaultTimeFormat) }
+func defaultOutFunc(str *string)  { fmt.Println(*str) }
+
+// ---
 
 func New() *EzLog                 { return new(EzLog).New() }
 func Clear() *EzLog               { return logger.Clear() }
@@ -48,7 +64,10 @@ func Dump(singleLine bool) *EzLog { return logger.Dump(singleLine) }
 // Enable/Disable json indent on `data`
 func EnableJsonIndent(enable bool) *EzLog { return logger.EnableJsonIndent(enable) }
 
-// Enable/Disable trim on `data`
+// Enable/Disable name postfix rim on `data`
+func EnableNamePostfix(enable bool) *EzLog { return logger.EnableNamePostfix(enable) }
+
+// Enable/Disable time on `data`
 func EnableTime(enable bool) *EzLog { return logger.EnableTime(enable) }
 
 // Enable/Disable trim on message
@@ -63,14 +82,8 @@ func GetLogLevelPrefix() bool { return logger.GetLogLevelPrefix() }
 // Enable/Disable skip empty
 func GetSkipEmpty() bool { return logger.GetSkipEmpty() }
 
-// Set all log func to use fmt.Println()
-func SetDefaultOutFun() *EzLog { return logger.SetDefaultOutFun() }
-
 // Set DateTime function
 func SetDateTimeFunc(f FuncDateTime) *EzLog { return logger.SetDateTimeFunc(f) }
-
-// Set default DateTime function
-func SetDefaultDateTimeFunc() *EzLog { return logger.SetDefaultDateTimeFunc() }
 
 // Set log level
 func SetLogLevel(level EzLogLevel) *EzLog { return logger.SetLogLevel(level) }
@@ -80,9 +93,6 @@ func SetLogLevelPrefix(enable bool) *EzLog { return logger.SetLogLevelPrefix(ena
 
 // Set Name Postfix
 func SetNamePostfixChar(char rune) *EzLog { return logger.SetNamePostfixChar(char) }
-
-// Set Name Postfix to default (':')
-func SetNamePostfixCharDefault() *EzLog { return logger.SetNamePostfixCharDefault() }
 
 // Set out function
 func SetOutFunc(f FuncOut) *EzLog { return logger.SetOutFunc(f) }

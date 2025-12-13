@@ -23,9 +23,7 @@ THE SOFTWARE.
 package ezlog
 
 import (
-	"fmt"
 	"strings"
-	"time"
 	"unicode/utf8"
 
 	"github.com/J-Siu/go-helper/v2/str"
@@ -63,11 +61,11 @@ func (t *EzLog) New() *EzLog {
 		EnableNamePostfix(true).
 		EnableTime(false).
 		EnableTrim(true).
-		SetDefaultDateTimeFunc().
-		SetDefaultOutFun().
+		SetDateTimeFunc(defaultDateTimeFunc).
 		SetLogLevel(ERR).
 		SetLogLevelPrefix(true).
-		SetNamePostfixCharDefault()
+		SetNamePostfixChar(defaultNamePostfix).
+		SetOutFunc(defaultOutFunc)
 }
 
 // Clear message
@@ -129,30 +127,19 @@ func (t *EzLog) Dump(singleLine bool) *EzLog {
 	return t
 }
 
-// Get skipEmpty
-func (t *EzLog) GetSkipEmpty() bool {
-	return t.skipEmpty
-}
-
-// Enable/Disable skipEmpty
-func (t *EzLog) SetSkipEmpty(enable bool) *EzLog {
-	t.skipEmpty = enable
-	return t
-}
-
-// Enable/Disable trim on `data`
-func (t *EzLog) EnableNamePostfix(enable bool) *EzLog {
-	t.namePostfix = enable
-	return t
-}
-
 // Enable/Disable json indent on `data`
 func (t *EzLog) EnableJsonIndent(enable bool) *EzLog {
 	t.StrAny.IndentEnable(enable)
 	return t
 }
 
-// Enable/Disable trim on `data`
+// Enable/Disable name postfix rim on `data`
+func (t *EzLog) EnableNamePostfix(enable bool) *EzLog {
+	t.namePostfix = enable
+	return t
+}
+
+// Enable/Disable time on `data`
 func (t *EzLog) EnableTime(enable bool) *EzLog {
 	t.time = enable
 	return t
@@ -169,6 +156,17 @@ func (t *EzLog) GetLogLevel() EzLogLevel { return t.logLevel }
 
 // Get log level prefix enable or not
 func (t *EzLog) GetLogLevelPrefix() bool { return t.logLevelPrefix }
+
+// Get skipEmpty
+func (t *EzLog) GetSkipEmpty() bool {
+	return t.skipEmpty
+}
+
+// Set DateTime function
+func (t *EzLog) SetDateTimeFunc(f FuncDateTime) *EzLog {
+	t.funcDateTime = f
+	return t
+}
 
 // Set log level
 func (t *EzLog) SetLogLevel(level EzLogLevel) *EzLog {
@@ -188,33 +186,15 @@ func (t *EzLog) SetNamePostfixChar(char rune) *EzLog {
 	return t
 }
 
-// Set Name Postfix to default (':')
-func (t *EzLog) SetNamePostfixCharDefault() *EzLog {
-	t.namePostfixChar = ':'
-	return t
-}
-
 // Set out function
 func (t *EzLog) SetOutFunc(f FuncOut) *EzLog {
 	t.funcOut = f
 	return t
 }
 
-// Set out function to fmt.Println()
-func (t *EzLog) SetDefaultOutFun() *EzLog {
-	t.SetOutFunc(func(str *string) { fmt.Println(*str) })
-	return t
-}
-
-// Set DateTime function
-func (t *EzLog) SetDateTimeFunc(f FuncDateTime) *EzLog {
-	t.funcDateTime = f
-	return t
-}
-
-// Set default DateTime function
-func (t *EzLog) SetDefaultDateTimeFunc() *EzLog {
-	t.SetDateTimeFunc(func() string { return time.Now().Format(TimeFormat) })
+// Enable/Disable skipEmpty
+func (t *EzLog) SetSkipEmpty(enable bool) *EzLog {
+	t.skipEmpty = enable
 	return t
 }
 
