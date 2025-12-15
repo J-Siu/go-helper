@@ -16,6 +16,17 @@ import "github.com/J-Siu/go-helper/v2/errs"
 
 ## Types and Functions
 
+### Structure
+
+```go
+type TypeErrs struct {
+  array.Array[error]
+}
+
+func (t *TypeErrs) Errs() *array.Array[error]
+func (t *TypeErrs) Queue(prefix string, e error)
+```
+
 ### Package Functions
 
 ```go

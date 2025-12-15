@@ -198,3 +198,5 @@
     - add name postfix customization
     - cleanup functions
     - update Dump()
+- v2.6.5
+  - errs: add TypeErrs

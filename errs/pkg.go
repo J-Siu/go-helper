@@ -1,4 +1,6 @@
 /*
+The MIT License
+
 Copyright © 2025 John, Sing Dao, Siu <john.sd.siu@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,8 +22,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-package helper
+// A simple array to stash errors
+package errs
 
-const (
-	Version = "v2.6.5"
+import (
+	"errors"
+
+	"github.com/J-Siu/go-helper/v2/array"
 )
+
+// error list
+var es TypeErrs
+
+func Clear()                    { es.Clear() }
+func Errs() *array.Array[error] { return es.Errs() }
+func IsEmpty() bool             { return es.IsEmpty() }
+func Len() int                  { return es.Len() }
+func NotEmpty() bool            { return es.NotEmpty() }
+
+// If `err` != nil, add `err` to helper Errs array
+func Queue(prefix string, e error) { es.Queue(prefix, e) }
+
+// shorthand for creating error with prefix
+//
+// if `prefix“ is not empty, returning error string will be prefixed by `<prefix>: `
+//
+// This does not add to the Errs queue
+func New(prefix string, strErr string) error {
+	if len(prefix) == 0 {
+		return errors.New(strErr)
+	} else {
+		return errors.New(prefix + ": " + strErr)
+	}
+}
