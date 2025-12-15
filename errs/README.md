@@ -33,6 +33,7 @@ func (t *TypeErrs) Queue(prefix string, e error)
 var Errs []error
 
 func Clear()
+func Errs() *array.Array[error]
 func IsEmpty() bool
 func NotEmpty() bool
 func Len() int
