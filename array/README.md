@@ -27,7 +27,7 @@ type Array[T any] []T
 ```go
 func (t *Array[T]) Add(i T) *Array[T]
 func (t *Array[T]) Clear() *Array[T]
-func (t *Array[T]) Empty() bool
+func (t *Array[T]) IsEmpty() bool
 func (t *Array[T]) Len() int
 func (t *Array[T]) NotEmpty() bool
 ```

@@ -33,7 +33,7 @@ func (t *Array[T]) Add(i T) *Array[T] {
 
 // Clear the ErrsType array
 func (t *Array[T]) Clear() *Array[T] {
-	*t = nil
+	*t = Array[T]{}
 	return t
 }
 
