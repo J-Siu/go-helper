@@ -31,7 +31,7 @@ func (t *Array[T]) Add(i T) *Array[T] {
 	return t
 }
 
-// Clear the ErrsType array
+// Clear the array
 func (t *Array[T]) Clear() *Array[T] {
 	*t = Array[T]{}
 	return t
@@ -39,8 +39,8 @@ func (t *Array[T]) Clear() *Array[T] {
 
 func (t *Array[T]) Len() int { return len(*t) }
 
-// Return true if ErrsType array is empty/nil
+// Return true if array is empty/nil
 func (t *Array[T]) IsEmpty() bool { return t.Len() == 0 }
 
-// Return true if ErrsType array is not empty/nil
+// Return true if array is not empty/nil
 func (t *Array[T]) NotEmpty() bool { return t.Len() > 0 }
