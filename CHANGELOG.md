@@ -200,3 +200,5 @@
     - update Dump()
 - v2.6.5
   - errs: add TypeErrs
+- v2.6.6
+  - ezlog: global, msg level indent and unquote control
