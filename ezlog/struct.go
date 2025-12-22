@@ -151,6 +151,12 @@ func (t *EzLog) EnableTrim(enable bool) *EzLog {
 	return t
 }
 
+// Enable/Disable StrAny unquote
+func (t *EzLog) EnableUnquote(enable bool) *EzLog {
+	t.StrAny.UnquoteEnable(enable)
+	return t
+}
+
 // Get log level
 func (t *EzLog) GetLogLevel() EzLogLevel { return t.logLevel }
 
