@@ -95,7 +95,7 @@ func main() {
 
 	fmt.Println("--- ezlog - START")
 	ezlog.
-		EnableJsonIndent(false).
+		EnableIndent(false).
 		EnableTime(true).
 		SetLogLevel(ezlog.DEBUG).
 		Log().

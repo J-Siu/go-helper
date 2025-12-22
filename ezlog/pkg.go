@@ -62,7 +62,7 @@ func Clear() *EzLog               { return logger.Clear() }
 func Dump(singleLine bool) *EzLog { return logger.Dump(singleLine) }
 
 // Enable/Disable json indent on `data`
-func EnableJsonIndent(enable bool) *EzLog { return logger.EnableJsonIndent(enable) }
+func EnableIndent(enable bool) *EzLog { return logger.EnableIndent(enable) }
 
 // Enable/Disable name postfix rim on `data`
 func EnableNamePostfix(enable bool) *EzLog { return logger.EnableNamePostfix(enable) }
