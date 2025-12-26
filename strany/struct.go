@@ -297,6 +297,9 @@ func (t *StrAny) Any(data any) *string {
 			fmt.Println(prefix, "default")
 		}
 		var b []byte
+		if t.debug {
+			fmt.Println(prefix, "indentEnable:", t.indentEnable)
+		}
 		if t.indentEnable {
 			b, t.Err = json.MarshalIndent(v, t.indentPrefix, t.indent)
 		} else {
@@ -306,10 +309,10 @@ func (t *StrAny) Any(data any) *string {
 			out = string(b)
 		}
 	}
+	if t.debug {
+		fmt.Println(prefix, "unquote:", t.unquote)
+	}
 	if t.unquote {
-		if t.debug {
-			fmt.Println(prefix, "unquote")
-		}
 		out = *t.processUnquote(&out)
 	}
 	return &out
@@ -396,16 +399,16 @@ func (t *StrAny) processStrArray(saP *[]string) *string {
 	return &out
 }
 
-func (t *StrAny) processByteArray(baP *[]byte) *string {
-	out := ""
+func (t *StrAny) processByteArray(baP *[]byte) (out *string) {
 	if baP != nil && len(*baP) > 0 {
 		if t.indentEnable {
-			out = *str.ByteJsonIndent(baP)
+			out = str.ByteJsonIndent(baP)
 		} else {
-			out = string(*baP)
+			tmp := string(*baP)
+			out = &tmp
 		}
 	}
-	return &out
+	return out
 }
 
 func (t *StrAny) processErrArray(eaP *[]error) *string {
