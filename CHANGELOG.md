@@ -202,3 +202,6 @@
   - errs: add TypeErrs
 - v2.6.6
   - ezlog: global, msg level indent and unquote control
+- v2.6.7
+  - ezlog: msg default true for indent, unquote
+  - strany: add indent, unquote debug message

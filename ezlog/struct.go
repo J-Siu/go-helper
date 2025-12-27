@@ -76,10 +76,12 @@ func (t *EzLog) New() *EzLog {
 
 // Clear message
 func (t *EzLog) Clear() *EzLog {
+	t.msgIndent = true
 	t.msgLogLevelPrefix = false
 	t.msgNotEmpty = false
 	t.msgSkipEmpty = false
 	t.msgTrim = false
+	t.msgUnquote = true
 	t.strBuf = nil
 	return t
 }
@@ -92,15 +94,20 @@ func (t *EzLog) Dump(singleLine bool) *EzLog {
 		LogLevelPrefix  bool           `json:"logLevelPrefix"`
 		NamePostfix     bool           `json:"namePostfix"`
 		NamePostfixChar string         `json:"namePostfixChar"`
-		SkipEmpty       bool           `json:"skipEmpty"`
-		Time            bool           `json:"time"`
-		Trim            bool           `json:"trim"` // persistent trim
+		// struct level
+		Indent    bool `json:"indent"`
+		SkipEmpty bool `json:"skipEmpty"`
+		Time      bool `json:"time"`
+		Trim      bool `json:"trim"` // persistent trim
+		Unquote   bool `json:"unquote"`
 		// msg level
+		MsgIndent         bool   `json:"msgIndent"`
 		MsgLogLevel       string `json:"msgLogLevel"`
 		MsgLogLevelPrefix bool   `json:"msgLogLevelPrefix"`
 		MsgNotEmpty       bool   `json:"msgNotEmpty"`
 		MsgSkipEmpty      bool   `json:"msgSkipEmpty"`
 		MsgTrim           bool   `json:"msgTrim"`
+		MsgUnquote        bool   `json:"msgUnquote"`
 		// string buffer
 		StrBufCount int      `json:"strBuf Count"`
 		StrBuf      []string `json:"strBuf"`
@@ -124,8 +131,9 @@ func (t *EzLog) Dump(singleLine bool) *EzLog {
 		StrBufCount: len(t.strBuf),
 		StrBuf:      t.strBuf,
 	}
-	new(EzLog).
-		New().
+	dumpLogger := new(EzLog).New()
+	dumpLogger.StrAny.DebugEnable(true)
+	dumpLogger.
 		EnableIndent(!singleLine).
 		N("EzLog.Dump").
 		M(dumpStruct).
