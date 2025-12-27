@@ -295,11 +295,9 @@ func (t *StrAny) Any(data any) *string {
 	default:
 		if t.debug {
 			fmt.Println(prefix, "default")
-		}
-		var b []byte
-		if t.debug {
 			fmt.Println(prefix, "indentEnable:", t.indentEnable)
 		}
+		var b []byte
 		if t.indentEnable {
 			b, t.Err = json.MarshalIndent(v, t.indentPrefix, t.indent)
 		} else {
