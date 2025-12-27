@@ -205,3 +205,7 @@
 - v2.6.7
   - ezlog: msg default true for indent, unquote
   - strany: add indent, unquote debug message
+- v2.6.8
+  - fix Dump() missing Log()
+  - fix and consolidate log level Clear() logic
+  - fix msgEmpty logic
