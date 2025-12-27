@@ -209,3 +209,5 @@
   - fix Dump() missing Log()
   - fix and consolidate log level Clear() logic
   - fix msgEmpty logic
+- v2.6.9
+  - fix msgEmpty check

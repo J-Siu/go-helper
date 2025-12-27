@@ -104,7 +104,7 @@ func (t *EzLog) Dump(singleLine bool) *EzLog {
 		MsgIndent         bool   `json:"msgIndent"`
 		MsgLogLevel       string `json:"msgLogLevel"`
 		MsgLogLevelPrefix bool   `json:"msgLogLevelPrefix"`
-		MsgEmpty          bool   `json:"msgNotEmpty"`
+		MsgEmpty          bool   `json:"msgEmpty"`
 		MsgSkipEmpty      bool   `json:"msgSkipEmpty"`
 		MsgTrim           bool   `json:"msgTrim"`
 		MsgUnquote        bool   `json:"msgUnquote"`
@@ -333,7 +333,7 @@ func (t *EzLog) build(data any, isMsg bool) *EzLog {
 			tmp = strings.TrimSpace(tmp)
 		}
 		if isMsg {
-			t.msgEmpty = t.msgEmpty || len(tmp) == 0 || strings.EqualFold(tmp, "null")
+			t.msgEmpty = t.msgEmpty && len(tmp) == 0 && strings.EqualFold(tmp, "null")
 		}
 		t.strBuf = append(t.strBuf, tmp)
 	}
