@@ -52,7 +52,7 @@ type EzLog struct {
 	msgIndent         bool
 	msgLogLevel       EzLogLevel
 	msgLogLevelPrefix bool
-	msgNotEmpty       bool
+	msgEmpty          bool
 	msgSkipEmpty      bool
 	msgTrim           bool
 	msgUnquote        bool
@@ -76,12 +76,12 @@ func (t *EzLog) New() *EzLog {
 
 // Clear message
 func (t *EzLog) Clear() *EzLog {
-	t.msgIndent = true
-	t.msgLogLevelPrefix = false
-	t.msgNotEmpty = false
-	t.msgSkipEmpty = false
-	t.msgTrim = false
-	t.msgUnquote = true
+	t.msgIndent = t.indent
+	t.msgLogLevelPrefix = t.logLevelPrefix
+	t.msgEmpty = true
+	t.msgSkipEmpty = t.skipEmpty
+	t.msgTrim = t.trim
+	t.msgUnquote = t.unquote
 	t.strBuf = nil
 	return t
 }
@@ -104,7 +104,7 @@ func (t *EzLog) Dump(singleLine bool) *EzLog {
 		MsgIndent         bool   `json:"msgIndent"`
 		MsgLogLevel       string `json:"msgLogLevel"`
 		MsgLogLevelPrefix bool   `json:"msgLogLevelPrefix"`
-		MsgNotEmpty       bool   `json:"msgNotEmpty"`
+		MsgEmpty          bool   `json:"msgNotEmpty"`
 		MsgSkipEmpty      bool   `json:"msgSkipEmpty"`
 		MsgTrim           bool   `json:"msgTrim"`
 		MsgUnquote        bool   `json:"msgUnquote"`
@@ -124,20 +124,14 @@ func (t *EzLog) Dump(singleLine bool) *EzLog {
 		// msg level
 		MsgLogLevel:       t.msgLogLevel.String(),
 		MsgLogLevelPrefix: t.msgLogLevelPrefix,
-		MsgNotEmpty:       t.msgNotEmpty,
+		MsgEmpty:          t.msgEmpty,
 		MsgSkipEmpty:      t.msgSkipEmpty,
 		MsgTrim:           t.trim,
 		// string buffer
 		StrBufCount: len(t.strBuf),
 		StrBuf:      t.strBuf,
 	}
-	dumpLogger := new(EzLog).New()
-	dumpLogger.StrAny.DebugEnable(true)
-	dumpLogger.
-		EnableIndent(!singleLine).
-		N("EzLog.Dump").
-		M(dumpStruct).
-		Out()
+	new(EzLog).New().EnableIndent(!singleLine).Log().N("EzLog.Dump").Lm(dumpStruct).Out()
 	return t
 }
 
@@ -229,61 +223,61 @@ func (t *EzLog) LogL(level EzLogLevel) *EzLog {
 // Log message without level (no level prefix)
 func (t *EzLog) Log() *EzLog {
 	t.msgLogLevel = LOG
-	return t.Clear().Indent(t.indent).Unquote(t.unquote).Lp(false)
+	return t.Clear().Lp(false)
 }
 
 // Log message as `EMERG`
 func (t *EzLog) Emerg() *EzLog {
 	t.msgLogLevel = EMERG
-	return t.Clear().Indent(t.indent).Unquote(t.unquote).Lp(t.logLevelPrefix)
+	return t.Clear().Lp(t.logLevelPrefix)
 }
 
 // Log message as `ALERT`
 func (t *EzLog) Alert() *EzLog {
 	t.msgLogLevel = ALERT
-	return t.Clear().Indent(t.indent).Unquote(t.unquote).Lp(t.logLevelPrefix)
+	return t.Clear().Lp(t.logLevelPrefix)
 }
 
 // Log message as `CRIT`
 func (t *EzLog) Crit() *EzLog {
 	t.msgLogLevel = CRIT
-	return t.Clear().Indent(t.indent).Unquote(t.unquote).Lp(t.logLevelPrefix)
+	return t.Clear().Lp(t.logLevelPrefix)
 }
 
 // Log message as `ERR`
 func (t *EzLog) Err() *EzLog {
 	t.msgLogLevel = ERR
-	return t.Clear().Indent(t.indent).Unquote(t.unquote).Lp(t.logLevelPrefix)
+	return t.Clear().Lp(t.logLevelPrefix)
 }
 
 // Log message as `WARN`
 func (t *EzLog) Warning() *EzLog {
 	t.msgLogLevel = WARNING
-	return t.Clear().Indent(t.indent).Unquote(t.unquote).Lp(t.logLevelPrefix)
+	return t.Clear().Lp(t.logLevelPrefix)
 }
 
 // Log message as `NOTICE`
 func (t *EzLog) Notice() *EzLog {
 	t.msgLogLevel = NOTICE
-	return t.Clear().Indent(t.indent).Unquote(t.unquote).Lp(t.logLevelPrefix)
+	return t.Clear().Lp(t.logLevelPrefix)
 }
 
 // Log message as `INFO`
 func (t *EzLog) Info() *EzLog {
 	t.msgLogLevel = INFO
-	return t.Clear().Indent(t.indent).Unquote(t.unquote).Lp(t.logLevelPrefix)
+	return t.Clear().Lp(t.logLevelPrefix)
 }
 
 // Log message as `DEBUG`
 func (t *EzLog) Debug() *EzLog {
 	t.msgLogLevel = DEBUG
-	return t.Clear().Indent(t.indent).Unquote(t.unquote).Lp(t.logLevelPrefix)
+	return t.Clear().Lp(t.logLevelPrefix)
 }
 
 // Log message as `TRACE`
 func (t *EzLog) Trace() *EzLog {
 	t.msgLogLevel = TRACE
-	return t.Clear().Indent(t.indent).Unquote(t.unquote).Lp(t.logLevelPrefix)
+	return t.Clear().Lp(t.logLevelPrefix)
 }
 
 // --- Output
@@ -291,7 +285,7 @@ func (t *EzLog) Trace() *EzLog {
 func (t *EzLog) Out() *EzLog {
 	if t.msgLogLevel <= t.logLevel {
 		// Skip empty?
-		if !((t.skipEmpty || t.msgSkipEmpty) && !t.msgNotEmpty) {
+		if !(t.msgSkipEmpty && t.msgEmpty) {
 			// DateTime
 			if t.time {
 				t.strBuf = append([]string{t.funcDateTime() + ":"}, t.strBuf...)
@@ -334,12 +328,12 @@ func (t *EzLog) build(data any, isMsg bool) *EzLog {
 			UnquoteEnable(t.msgUnquote).
 			IndentEnable(t.msgIndent)
 		tmp := *t.StrAny.Any(data)
-		if t.trim || t.msgTrim {
+		if t.msgTrim {
 			tmp = strings.Trim(tmp, "\n")
 			tmp = strings.TrimSpace(tmp)
 		}
 		if isMsg {
-			t.msgNotEmpty = t.msgNotEmpty || len(tmp) > 0 && !strings.EqualFold(tmp, "null")
+			t.msgEmpty = t.msgEmpty || len(tmp) == 0 || strings.EqualFold(tmp, "null")
 		}
 		t.strBuf = append(t.strBuf, tmp)
 	}
