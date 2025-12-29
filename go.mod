@@ -1,6 +1,6 @@
 module github.com/J-Siu/go-helper/v2
 
-go 1.25.1
+go 1.25.5
 
 require (
 	github.com/charlievieth/strcase v0.0.5

@@ -34,32 +34,37 @@ import (
 )
 
 type Cmd struct {
-	ArgsP    *[]string    `json:"ArgsP,omitempty"`    // In : Command args
-	CmdLn    string       `json:"CmdLn,omitempty"`    // Out: Command line
-	CmdName  string       `json:"CmdName,omitempty"`  // In : Command name
-	Err      error        `json:"Err,omitempty"`      // Out: run error
-	ExitCode int          `json:"ExitCode,omitempty"` // Out: Exit Code
-	Ran      bool         `json:"Ran,omitempty"`      // Out: Set to true by Run()
-	Stderr   bytes.Buffer `json:"Stderr,omitempty"`   // Out: Stderr
-	Stdout   bytes.Buffer `json:"Stdout,omitempty"`   // Out: Stdout
-	WorkDir  string       `json:"WorkDir,omitempty"`  // In : Command working dir
+	Args     []string      `json:"ArgsP,omitempty"`    // In : Command args
+	CmdLn    string        `json:"CmdLn,omitempty"`    // Out: Command line
+	CmdName  string        `json:"CmdName,omitempty"`  // In : Command name
+	Err      error         `json:"Err,omitempty"`      // Out: run error
+	ExitCode int           `json:"ExitCode,omitempty"` // Out: Exit Code
+	Ran      bool          `json:"Ran,omitempty"`      // Out: Set to true by Run()
+	Stderr   *bytes.Buffer `json:"Stderr,omitempty"`   // Out: Stderr
+	Stdout   *bytes.Buffer `json:"Stdout,omitempty"`   // Out: Stdout
+	WorkDir  string        `json:"WorkDir,omitempty"`  // In : Command working dir
 }
 
 // Setup and return cmd pointer.
 //   - If <workPathP> is empty/nil, current directory is used.
 func (t *Cmd) New(cmdName string, argsP *[]string, workPathP *string) *Cmd {
-	t.ArgsP = argsP
+	t.Args = *argsP
 	t.CmdName = cmdName
+	t.CmdLn = ""
+	t.Err = nil
 	t.ExitCode = 0
+	t.Ran = false
+	t.Stderr = new(bytes.Buffer)
+	t.Stdout = new(bytes.Buffer)
 	t.WorkDir = *file.FullPath(workPathP)
 	return t
 }
 
 // A exec.Cmd.Run() wrapper.
 func (t *Cmd) Run() *Cmd {
-	execCmd := exec.Command(t.CmdName, *t.ArgsP...)
-	execCmd.Stdout = &t.Stdout
-	execCmd.Stderr = &t.Stderr
+	execCmd := exec.Command(t.CmdName, t.Args...)
+	execCmd.Stdout = t.Stdout
+	execCmd.Stderr = t.Stderr
 	execCmd.Dir = t.WorkDir
 	t.CmdLn = execCmd.String()
 	t.Err = execCmd.Run()

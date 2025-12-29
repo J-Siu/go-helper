@@ -211,3 +211,5 @@
   - fix msgEmpty logic
 - v2.6.9
   - fix msgEmpty check
+- v2.6.10
+  - Cmd.New() improve cleanup
