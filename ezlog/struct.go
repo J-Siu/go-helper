@@ -332,7 +332,7 @@ func (t *EzLog) build(data any, isMsg bool) *EzLog {
 			tmp = strings.TrimSpace(tmp)
 		}
 		if isMsg {
-			t.msgEmpty = t.msgEmpty && len(tmp) == 0 && strings.EqualFold(tmp, "null")
+			t.msgEmpty = t.msgEmpty && len(tmp) == 0
 		}
 		t.strBuf = append(t.strBuf, tmp)
 	}
