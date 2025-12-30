@@ -206,10 +206,14 @@
   - ezlog: msg default true for indent, unquote
   - strany: add indent, unquote debug message
 - v2.6.8
-  - fix Dump() missing Log()
-  - fix and consolidate log level Clear() logic
-  - fix msgEmpty logic
+  - ezlog
+    - fix Dump() missing Log()
+    - fix and consolidate log level Clear() logic
+    - fix msgEmpty logic
 - v2.6.9
   - fix msgEmpty check
 - v2.6.10
   - Cmd.New() improve cleanup
+- v2.6.11
+  - ezlog: fix build() empty message detection
+  - strany: fix processStrIndent nil return
