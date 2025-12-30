@@ -34,6 +34,8 @@ import (
 	"github.com/J-Siu/go-helper/v2/str"
 )
 
+var strEmpty = ""
+
 type StrAny struct {
 	*basestruct.Base
 	indent       string // `indent` of json.MarshalIndent(v any, prefix, indent string)
@@ -369,7 +371,9 @@ func (t *StrAny) processUnquote(sP *string) *string {
 // Indent processing
 func (t *StrAny) processStrIndent(sP *string) *string {
 	var out *string
-	if sP != nil {
+	if sP == nil {
+		out = &strEmpty
+	} else {
 		if t.indentEnable {
 			out = str.JsonIndent(sP)
 		} else {

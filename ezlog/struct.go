@@ -297,7 +297,6 @@ func (t *EzLog) Out() *EzLog {
 			t.funcOut(t.StringP())
 		}
 	}
-	t.msgTrim = false
 	return t
 }
 
