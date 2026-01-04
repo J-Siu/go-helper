@@ -217,3 +217,5 @@
 - v2.6.11
   - ezlog: fix build() empty message detection
   - strany: fix processStrIndent nil return
+- v2.7.0
+  - state: initial commit
