@@ -219,3 +219,6 @@
   - strany: fix processStrIndent nil return
 - v2.7.0
   - state: initial commit
+- v2.7.1
+  - base: Base.LogLevel int -> uint8
+  - state: fix runState() OnErr logic
