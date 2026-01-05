@@ -32,8 +32,8 @@ import (
 // A simple struct to be embedded by other struct
 type Base struct {
 	Err           error  `json:"Err,omitempty"`
-	LogLevel      int    `json:"LogLevel,omitempty"`
 	Initialized   bool   `json:"Initialized,omitempty"`
+	LogLevel      uint8  `json:"LogLevel,omitempty"`
 	MyType        string `json:"MyType,omitempty"` // Store typename. Cheaper way than reflector for logging.
 	OnErrContinue bool   `json:"OnErrContinue,omitempty"`
 }
