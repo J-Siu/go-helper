@@ -28,42 +28,51 @@ import (
 	"github.com/J-Siu/go-helper/v2/ezlog"
 )
 
-type StateFunc[T any] func(state *State[T]) *State[T]
+type StateFunc[T any] func() *State[T]
 
 type State[T any] struct {
 	basestruct.Base
-	Data  T
-	Name  string // State name
-	Next  StateFunc[T]
-	OnErr StateFunc[T]
-	Post  StateFunc[T]
-	Pre   StateFunc[T]
+
+	Data T
+	Name string // State name
+
+	Next StateFunc[T]
+	Post StateFunc[T] // if not nil, always run after Next
+	Pre  StateFunc[T] // if not nil, always run before Next
+
+	OnErr         StateFunc[T]
+	OnErrContinue bool
 }
 
-func (t *State[T]) Run(f StateFunc[T], onErrBreak bool) *State[T] {
+func (t *State[T]) Run(f StateFunc[T]) *State[T] {
 	prefix := t.MyType + ".Loop"
 	ezlog.Debug().N(prefix).TxtStart().Out()
 	// state machine loop
 	t.Next = f
 	for t.Next != nil {
 		t.Err = nil
-		if t.Pre != nil {
-			t.Pre(t)
-		}
-		t.Next(t)
-		if t.Post != nil {
-			t.Post(t)
-		}
-		ezlog.Info().N(t.Name).M("Done").Out()
-		if t.Err != nil {
-			if t.OnErr != nil {
-				t.OnErr(t)
-			}
-			if onErrBreak {
-				break
-			}
+		t.
+			runState(t.Pre).
+			runState(t.Next).
+			runState(t.Post)
+		if t.Err != nil && !t.OnErrContinue {
+			break
 		}
 	}
 	ezlog.Debug().N(prefix).TxtEnd().Out()
+	return t
+}
+
+func (t *State[T]) runState(f StateFunc[T]) *State[T] {
+	if t.Err == nil || t.OnErrContinue {
+		if f != nil {
+			ezlog.Debug().N(t.MyType).N(t.Name).TxtStart().Out()
+			f()
+			ezlog.Debug().N(t.MyType).N(t.Name).TxtEnd().Out()
+		}
+		if t.Err != nil && t.OnErr != nil {
+			t.OnErr()
+		}
+	}
 	return t
 }
