@@ -401,16 +401,16 @@ func (t *StrAny) processStrArray(saP *[]string) *string {
 	return &out
 }
 
-func (t *StrAny) processByteArray(baP *[]byte) (out *string) {
+func (t *StrAny) processByteArray(baP *[]byte) *string {
+	out := ""
 	if baP != nil && len(*baP) > 0 {
 		if t.indentEnable {
-			out = str.ByteJsonIndent(baP)
+			out = *str.ByteJsonIndent(baP)
 		} else {
-			tmp := string(*baP)
-			out = &tmp
+			out = string(*baP)
 		}
 	}
-	return out
+	return &out
 }
 
 func (t *StrAny) processErrArray(eaP *[]error) *string {
