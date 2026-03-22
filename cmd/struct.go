@@ -29,43 +29,45 @@ import (
 	"os/exec"
 	"sync"
 
+	"github.com/J-Siu/go-helper/v2/basestruct"
 	"github.com/J-Siu/go-helper/v2/ezlog"
 	"github.com/J-Siu/go-helper/v2/file"
 )
 
 type Cmd struct {
+	basestruct.Base
 	Args     []string      `json:"ArgsP,omitempty"`    // In : Command args
 	CmdLn    string        `json:"CmdLn,omitempty"`    // Out: Command line
 	CmdName  string        `json:"CmdName,omitempty"`  // In : Command name
-	Err      error         `json:"Err,omitempty"`      // Out: run error
+	Dir      string        `json:"Dir,omitempty"`      // In : Command working dir
 	ExitCode int           `json:"ExitCode,omitempty"` // Out: Exit Code
 	Ran      bool          `json:"Ran,omitempty"`      // Out: Set to true by Run()
 	Stderr   *bytes.Buffer `json:"Stderr,omitempty"`   // Out: Stderr
 	Stdout   *bytes.Buffer `json:"Stdout,omitempty"`   // Out: Stdout
-	WorkDir  string        `json:"WorkDir,omitempty"`  // In : Command working dir
 }
 
 // Setup and return cmd pointer.
 //   - If <workPathP> is empty/nil, current directory is used.
 func (t *Cmd) New(cmdName string, argsP *[]string, workPathP *string) *Cmd {
+	t.MyType = "Cmd"
 	t.Args = *argsP
 	t.CmdName = cmdName
 	t.CmdLn = ""
 	t.Err = nil
 	t.ExitCode = 0
 	t.Ran = false
+	t.Dir = *file.FullPath(workPathP)
 	t.Stderr = new(bytes.Buffer)
 	t.Stdout = new(bytes.Buffer)
-	t.WorkDir = *file.FullPath(workPathP)
 	return t
 }
 
 // A exec.Cmd.Run() wrapper.
 func (t *Cmd) Run() *Cmd {
 	execCmd := exec.Command(t.CmdName, t.Args...)
-	execCmd.Stdout = t.Stdout
+	execCmd.Dir = t.Dir
 	execCmd.Stderr = t.Stderr
-	execCmd.Dir = t.WorkDir
+	execCmd.Stdout = t.Stdout
 	t.CmdLn = execCmd.String()
 	t.Err = execCmd.Run()
 	t.Ran = true
