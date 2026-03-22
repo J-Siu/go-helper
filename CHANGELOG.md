@@ -222,3 +222,6 @@
 - v2.7.1
   - base: Base.LogLevel int -> uint8
   - state: fix runState() OnErr logic
+- v2.7.2
+  - cmd: add basestruct
+  - strany: processByteArray() use local string to prevent returning nil pointer
