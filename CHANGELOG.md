@@ -225,3 +225,5 @@
 - v2.7.2
   - cmd: add basestruct
   - strany: processByteArray() use local string to prevent returning nil pointer
+- v2.7.3
+  - update go version
