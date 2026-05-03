@@ -227,3 +227,5 @@
   - strany: processByteArray() use local string to prevent returning nil pointer
 - v2.7.3
   - update go version
+- v2.8.0
+  - Add strcolor
