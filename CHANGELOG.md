@@ -229,3 +229,5 @@
   - update go version
 - v2.8.0
   - Add strcolor
+- v2.8.1
+  - strcolor: export color string
