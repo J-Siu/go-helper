@@ -38,27 +38,26 @@ const (
 	yellow  = "\033[33m"
 )
 
-func Blue(s string) string {
-	return blue + s + reset
-}
-func Cyan(s string) string {
-	return cyan + s + reset
-}
-func Gray(s string) string {
-	return gray + s + reset
-}
-func Green(s string) string {
-	return green + s + reset
-}
-func Magenta(s string) string {
-	return magenta + s + reset
-}
-func Red(s string) string {
-	return red + s + reset
-}
-func White(s string) string {
-	return white + s + reset
-}
-func Yellow(s string) string {
-	return yellow + s + reset
-}
+//go:fix inline
+func Blue(s string) string { return blue + s + reset }
+
+//go:fix inline
+func Cyan(s string) string { return cyan + s + reset }
+
+//go:fix inline
+func Gray(s string) string { return gray + s + reset }
+
+//go:fix inline
+func Green(s string) string { return green + s + reset }
+
+//go:fix inline
+func Magenta(s string) string { return magenta + s + reset }
+
+//go:fix inline
+func Red(s string) string { return red + s + reset }
+
+//go:fix inline
+func White(s string) string { return white + s + reset }
+
+//go:fix inline
+func Yellow(s string) string { return yellow + s + reset }
