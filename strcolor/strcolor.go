@@ -26,38 +26,23 @@ THE SOFTWARE.
 package strcolor
 
 const (
-	reset = "\033[0m"
+	StrColorReset = "\033[0m"
 
-	blue    = "\033[34m"
-	cyan    = "\033[36m"
-	gray    = "\033[37m"
-	green   = "\033[32m"
-	magenta = "\033[35m"
-	red     = "\033[31m"
-	white   = "\033[97m"
-	yellow  = "\033[33m"
+	StrColorBlue    = "\033[34m"
+	StrColorCyan    = "\033[36m"
+	StrColorGray    = "\033[37m"
+	StrColorGreen   = "\033[32m"
+	StrColorMagenta = "\033[35m"
+	StrColorRed     = "\033[31m"
+	StrColorWhite   = "\033[97m"
+	StrColorYellow  = "\033[33m"
 )
 
-//go:fix inline
-func Blue(s string) string { return blue + s + reset }
-
-//go:fix inline
-func Cyan(s string) string { return cyan + s + reset }
-
-//go:fix inline
-func Gray(s string) string { return gray + s + reset }
-
-//go:fix inline
-func Green(s string) string { return green + s + reset }
-
-//go:fix inline
-func Magenta(s string) string { return magenta + s + reset }
-
-//go:fix inline
-func Red(s string) string { return red + s + reset }
-
-//go:fix inline
-func White(s string) string { return white + s + reset }
-
-//go:fix inline
-func Yellow(s string) string { return yellow + s + reset }
+func Blue(s string) string    { return StrColorBlue + s + StrColorReset }
+func Cyan(s string) string    { return StrColorCyan + s + StrColorReset }
+func Gray(s string) string    { return StrColorGray + s + StrColorReset }
+func Green(s string) string   { return StrColorGreen + s + StrColorReset }
+func Magenta(s string) string { return StrColorMagenta + s + StrColorReset }
+func Red(s string) string     { return StrColorRed + s + StrColorReset }
+func White(s string) string   { return StrColorWhite + s + StrColorReset }
+func Yellow(s string) string  { return StrColorYellow + s + StrColorReset }
