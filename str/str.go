@@ -29,17 +29,18 @@ import (
 	"bytes"
 	"encoding/json"
 	"strings"
+	"unsafe"
 
 	"github.com/charlievieth/strcase"
 )
 
 // Check if string array contain a string.
 //
-// Return false if either arrIn or strIn is nil
-func ArrayContains(arrIn *[]string, strIn *string, caseSensitive bool) bool {
-	if arrIn != nil && strIn != nil {
-		for _, s := range *arrIn {
-			if caseSensitive && s == *strIn || strcase.Compare(s, *strIn) == 0 {
+// Return false if either arrIn is nil
+func ArrayContains(arrP *[]string, str string, caseSensitive bool) bool {
+	if arrP != nil {
+		for _, s := range *arrP {
+			if caseSensitive && s == str || strcase.Compare(s, str) == 0 {
 				return true
 			}
 		}
@@ -50,10 +51,10 @@ func ArrayContains(arrIn *[]string, strIn *string, caseSensitive bool) bool {
 // Check if string array contains a substring
 //
 // Return false if arrIn is nil
-func ArrayContainsSubString(arrIn *[]string, strIn string, caseSensitive bool) bool {
-	if arrIn != nil {
-		for _, s := range *arrIn {
-			if caseSensitive && strings.Contains(strIn, s) || strcase.Contains(s, strIn) {
+func ArrayContainsSubString(arrP *[]string, subStr string, caseSensitive bool) bool {
+	if arrP != nil {
+		for _, s := range *arrP {
+			if caseSensitive && strings.Contains(subStr, s) || strcase.Contains(s, subStr) {
 				return true
 			}
 		}
@@ -61,40 +62,36 @@ func ArrayContainsSubString(arrIn *[]string, strIn string, caseSensitive bool) b
 	return false
 }
 
-// Return a new *[]string with empty lines removed from *[]string.
+// Return a new []string with empty lines removed from *[]string.
 //   - Original []string not modified.
-func ArrayPtrRemoveEmpty(arrIn *[]string) *[]string {
-	var arrOut []string
-	if arrIn != nil {
-		for _, s := range *arrIn {
+func ArrayPtrRemoveEmpty(arrP *[]string) (out []string) {
+	if arrP != nil {
+		for _, s := range *arrP {
 			if s != "" {
-				arrOut = append(arrOut, s)
+				out = append(out, s)
 			}
 		}
 	}
-	return &arrOut
+	return out
 }
 
-// *[]string to *string, each element followed by "\n"
-func ArraySPrintln(arrIn *[]string) *string {
-	var strOut string
-	if arrIn != nil {
-		for _, s := range *arrIn {
-			strOut += s + "\n"
-		}
+// *[]string to string, each element followed by "\n"
+func ArraySPrintln(arrP *[]string) (out string) {
+	if arrP != nil {
+		return strings.Join(*arrP, "\n")
 	}
-	return &strOut
+	return out
 }
 
 // Check if string contains any substring of an array
 //   - result (bool)
 //   - if result is true, `resultVal` == matching substring
 //   - if result is false, `resultVal` == ""
-func ContainsAnySubStrings(strIn *string, subStrings *[]string, caseSensitive bool) (result bool, resultVal string) {
+func ContainsAnySubStrings(str string, subStrArrP *[]string, caseSensitive bool) (result bool, resultVal string) {
 	// prefix := "matchList"
-	if strIn != nil && subStrings != nil {
-		for _, subStr := range *subStrings {
-			if caseSensitive && strcase.Contains(*strIn, subStr) || strcase.Contains(*strIn, subStr) {
+	if subStrArrP != nil {
+		for _, subStr := range *subStrArrP {
+			if caseSensitive && strcase.Contains(str, subStr) || strcase.Contains(str, subStr) {
 				result = true
 				resultVal = subStr
 				break
@@ -105,58 +102,53 @@ func ContainsAnySubStrings(strIn *string, subStrings *[]string, caseSensitive bo
 }
 
 // Return only bool from [ContainsAnySubStrings]
-func ContainsAnySubStringsBool(strIn *string, subStrings *[]string, caseSensitive bool) (result bool) {
-	result, _ = ContainsAnySubStrings(strIn, subStrings, caseSensitive)
+func ContainsAnySubStringsBool(str string, subStrArrP *[]string, caseSensitive bool) (result bool) {
+	result, _ = ContainsAnySubStrings(str, subStrArrP, caseSensitive)
 	return result
 }
 
 // *string to *[]string, split by "\n"
-func LnSplit(strIn *string) *[]string {
+func LnSplit(strP *string) *[]string {
 	var strOut []string
-	if strIn != nil {
-		strOut = strings.Split(*strIn, "\n")
+	if strP != nil {
+		strOut = strings.Split(*strP, "\n")
 	}
 	return &strOut
 }
 
 // Return *string of "" if failed
-func JsonIndent(strIn *string) *string {
-	var strOut string
-	if strIn != nil {
-		var byteA = []byte(*strIn)
-		p := ByteJsonIndent(&byteA)
-		if *p != "" {
-			strOut = string(*p)
-		} else {
-			return strIn
-		}
+func JsonIndent(strP *string) *string {
+	out := ""
+	if strP != nil {
+		var byteA = []byte(*strP)
+		return ByteJsonIndent(&byteA)
 	}
-	return &strOut
+	return &out
 }
 
 // Return *string of "" if json.Marshal failed
-func JsonMarshal(strIn *string) *string {
-	var strOut string
-	if strIn != nil {
-		p, e := json.Marshal(strIn)
-		if e == nil {
-			strOut = string(p)
+func JsonMarshal(strP *string) *string {
+	out := ""
+	if strP != nil {
+		if p, e := json.Marshal(strP); e == nil {
+			out = string(p)
 		}
 	}
-	return &strOut
+	return &out
 }
 
 // Return *string of "" if json.Indent failed
 func ByteJsonIndent(baP *[]byte) *string {
-	var strOut string
+	out := ""
 	if baP != nil {
 		var dst bytes.Buffer
-		err := json.Indent(&dst, *baP, "", "  ")
-		if err == nil {
-			strOut = strings.Trim(dst.String(), "\n")
+		if err := json.Indent(&dst, *baP, "", "  "); err == nil {
+			out = strings.Trim(dst.String(), "\n")
+		} else {
+			return (*string)(unsafe.Pointer(baP))
 		}
 	}
-	return &strOut
+	return &out
 }
 
 // --- bool

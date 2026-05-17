@@ -1,4 +1,4 @@
 .DS_Store
 .gitmodules
-go-work*
+go.work*
 test/submodule_test_1

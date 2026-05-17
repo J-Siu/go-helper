@@ -55,6 +55,8 @@ type NUM struct {
 	PUI64 *uint64
 	PF32  *float32
 	PF64  *float64
+	Str   string
+	StrP  *string
 }
 
 func (N *NUM) New() *NUM {
@@ -82,18 +84,17 @@ func (N *NUM) New() *NUM {
 	N.PUI64 = &N.UI64
 	N.PF32 = &N.F32
 	N.PF64 = &N.F64
+	N.Str = "Hello, World!"
+	N.StrP = &N.Str
 	return N
 }
 
 func main() {
-	var (
-		n           = new(NUM).New()
-		f32 float32 = 100.000001
-		f64 float64 = 100.000001
-	)
-	fmt.Println(*strany.Any(n))
-	fmt.Println(*strany.Any(f32))
-	fmt.Println(*strany.Any(f64))
-	fmt.Println(*strany.Any(&f32))
-	fmt.Println(*strany.Any(&f64))
+	n := new(NUM).New()
+	// strany.DebugEnable(true)
+	fmt.Println(strany.Any(n.F32))
+	fmt.Println(strany.Any(n.F64))
+	fmt.Println(strany.Any(n.Str))
+	fmt.Println(strany.Any(n.StrP))
+	fmt.Println(strany.Any(n))
 }

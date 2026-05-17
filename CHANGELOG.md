@@ -231,3 +231,5 @@
   - Add strcolor
 - v2.8.1
   - strcolor: export color string
+- v2.8.2
+  - cleanup

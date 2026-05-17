@@ -34,15 +34,15 @@ import (
 	"github.com/J-Siu/go-helper/v2/str"
 )
 
-var strEmpty = ""
+// var strEmpty = ""
 
 type StrAny struct {
 	*basestruct.Base
+	debug        bool
 	indent       string // `indent` of json.MarshalIndent(v any, prefix, indent string)
 	indentEnable bool   // If `true`, true, use `json.MarshalIndent` for struct, else `json.Marshal`
 	indentPrefix string // `prefix` of json.MarshalIndent(v any, prefix, indent string)
 	unquote      bool
-	debug        bool
 }
 
 // Initialize
@@ -62,9 +62,8 @@ func (t *StrAny) New() *StrAny {
 // Output `data` as string
 //
 // If `IndentEnable` is true, struct will be converted with `json.MarshalIndent`, else `json.Marshal`
-func (t *StrAny) Any(data any) *string {
+func (t *StrAny) Any(data any) (out string) {
 	prefix := t.MyType + ".Any"
-	out := ""
 	switch v := data.(type) {
 	case string:
 		if t.debug {
@@ -315,11 +314,8 @@ func (t *StrAny) Any(data any) *string {
 	if t.unquote {
 		out = *t.processUnquote(&out)
 	}
-	return &out
+	return out
 }
-
-// Convert any to *string. Alias of Any()
-func (t *StrAny) String(data any) *string { return t.Any(data) }
 
 func (t *StrAny) DebugEnable(enable bool) *StrAny {
 	t.debug = enable
@@ -355,13 +351,13 @@ func (t *StrAny) GetUnquoteEnable() bool { return t.unquote }
 
 // Unescape utf8 string
 func (t *StrAny) processUnquote(sP *string) *string {
-	out := ""
-	if sP != nil {
-		var e error
-		// From Coconut: https://stackoverflow.com/a/51579784/1810391
-		out, e = strconv.Unquote(strings.Replace(strconv.Quote(string(*sP)), `\\u`, `\u`, -1))
-		if e != nil {
-			// if unquote failed, return original string
+	var (
+		e   error
+		out = ""
+	)
+	if sP != nil { // From Coconut: https://stackoverflow.com/a/51579784/1810391
+		out, e = strconv.Unquote(strings.ReplaceAll(strconv.Quote(*sP), `\\u`, `\u`))
+		if e != nil { // if unquote failed, return original string
 			return sP
 		}
 	}
@@ -370,17 +366,15 @@ func (t *StrAny) processUnquote(sP *string) *string {
 
 // Indent processing
 func (t *StrAny) processStrIndent(sP *string) *string {
-	var out *string
-	if sP == nil {
-		out = &strEmpty
-	} else {
+	var out string
+	if sP != nil {
 		if t.indentEnable {
-			out = str.JsonIndent(sP)
+			return str.JsonIndent(sP)
 		} else {
-			out = sP
+			out = *sP
 		}
 	}
-	return out
+	return &out
 }
 
 func (t *StrAny) processStrArray(saP *[]string) *string {
@@ -432,7 +426,7 @@ func (t *StrAny) processGenericArray(eaP *array.Array[any]) *string {
 	if eaP != nil {
 		last := len(*eaP) - 1
 		for index, item := range *eaP {
-			out += *t.String(item)
+			out += t.Any(item)
 			if index < last {
 				out += "\n"
 			}
@@ -446,7 +440,7 @@ func (t *StrAny) processGenericError(eaP *array.Array[error]) *string {
 	if eaP != nil {
 		last := len(*eaP) - 1
 		for index, item := range *eaP {
-			out += *t.String(item)
+			out += t.Any(item)
 			if index < last {
 				out += "\n"
 			}

@@ -326,7 +326,7 @@ func (t *EzLog) build(data any, isMsg bool) *EzLog {
 		t.StrAny.
 			UnquoteEnable(t.msgUnquote).
 			IndentEnable(t.msgIndent)
-		tmp := *t.StrAny.Any(data)
+		tmp := t.StrAny.Any(data)
 		if t.msgTrim {
 			tmp = strings.Trim(tmp, "\n")
 			tmp = strings.TrimSpace(tmp)

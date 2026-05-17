@@ -28,10 +28,7 @@ var strAny = New()
 func New() *StrAny { return new(StrAny).New() }
 
 // Convert any to *string.
-func Any(data any) *string { return strAny.Any(data) }
-
-// Convert any to *string. Alias of Any()
-func String(data any) *string { return strAny.Any(data) }
+func Any(data any) string { return strAny.Any(data) }
 
 func DebugEnable(enable bool) *StrAny { return strAny.DebugEnable(enable) }
 
