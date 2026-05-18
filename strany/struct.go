@@ -69,12 +69,12 @@ func (t *StrAny) Any(data any) (out string) {
 		if t.debug {
 			fmt.Println(prefix, "string")
 		}
-		out = *t.processStrIndent(&v)
+		out = *str.JsonIndent(&v)
 	case *string:
 		if t.debug {
 			fmt.Println(prefix, "*string")
 		}
-		out = *t.processStrIndent(v)
+		out = *str.JsonIndent(v)
 	case []string:
 		if t.debug {
 			fmt.Println(prefix, "[]string")
@@ -89,25 +89,25 @@ func (t *StrAny) Any(data any) (out string) {
 		if t.debug {
 			fmt.Println(prefix, "[]byte")
 		}
-		out = *t.processByteArray(&v)
+		out = *str.ByteJsonIndent(&v)
 	case *[]byte:
 		if t.debug {
 			fmt.Println(prefix, "*[]byte")
 		}
-		out = *t.processByteArray(v)
+		out = *str.ByteJsonIndent(v)
 	case bytes.Buffer:
 		if t.debug {
 			fmt.Println(prefix, "bytes.Buffer")
 		}
 		var b = v.Bytes()
-		out = *t.processByteArray(&b)
+		out = *str.ByteJsonIndent(&b)
 	case *bytes.Buffer:
 		if t.debug {
 			fmt.Println(prefix, "*bytes.Buffer")
 		}
 		if v != nil {
 			var b = v.Bytes()
-			out = *t.processByteArray(&b)
+			out = *str.ByteJsonIndent(&b)
 		}
 	case error:
 		if t.debug {
@@ -364,19 +364,6 @@ func (t *StrAny) processUnquote(sP *string) *string {
 	return &out
 }
 
-// Indent processing
-func (t *StrAny) processStrIndent(sP *string) *string {
-	var out string
-	if sP != nil {
-		if t.indentEnable {
-			return str.JsonIndent(sP)
-		} else {
-			out = *sP
-		}
-	}
-	return &out
-}
-
 func (t *StrAny) processStrArray(saP *[]string) *string {
 	out := ""
 	if saP != nil {
@@ -390,18 +377,6 @@ func (t *StrAny) processStrArray(saP *[]string) *string {
 			if index < last {
 				out += "\n"
 			}
-		}
-	}
-	return &out
-}
-
-func (t *StrAny) processByteArray(baP *[]byte) *string {
-	out := ""
-	if baP != nil && len(*baP) > 0 {
-		if t.indentEnable {
-			out = *str.ByteJsonIndent(baP)
-		} else {
-			out = string(*baP)
 		}
 	}
 	return &out
