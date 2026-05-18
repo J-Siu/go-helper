@@ -27,6 +27,7 @@ package str
 
 import (
 	"bytes"
+	"encoding/hex"
 	"encoding/json"
 	"strings"
 	"unsafe"
@@ -150,6 +151,8 @@ func ByteJsonIndent(baP *[]byte) *string {
 	}
 	return &out
 }
+
+func ByteHex(b []byte) string { return hex.EncodeToString(b) }
 
 // --- bool
 
