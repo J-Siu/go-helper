@@ -20,15 +20,17 @@ import "github.com/J-Siu/go-helper/v2/str"
 
 ```go
 // collection of string related helper functions
-func ArrayContains(arrIn *[]string, strIn *string, caseSensitive bool) bool
-func ArrayContainsSubString(arrIn *[]string, strIn string, caseSensitive bool) bool
-func ArrayPtrRemoveEmpty(arrIn *[]string) *[]string
-func ArraySPrintln(arrIn *[]string) *string
-func ContainsAnySubStrings(strIn *string, subStrings *[]string, caseSensitive bool) (result bool, resultVal string)
-func ContainsAnySubStringsBool(strIn *string, subStrings *[]string, caseSensitive bool) (result bool)
-func LnSplit(strIn *string) *[]string
-func JsonIndent(strIn *string) *string
+func ArrayContains(arrP *[]string, str string, caseSensitive bool) bool
+func ArrayContainsSubString(arrP *[]string, subStr string, caseSensitive bool) bool
+func ArrayPtrRemoveEmpty(arrP *[]string) (out []string)
+func ArraySPrintln(arrP *[]string) (out string)
+func ByteHex(b []byte) string { return hex.EncodeToString(b) }
 func ByteJsonIndent(baP *[]byte) *string
+func ContainsAnySubStrings(str string, subStrArrP *[]string, caseSensitive bool) (result bool, resultVal string)
+func ContainsAnySubStringsBool(str string, subStrArrP *[]string, caseSensitive bool) (result bool)
+func JsonIndent(strP *string) *string
+func JsonMarshal(strP *string) *string
+func LnSplit(strP *string) *[]string
 // --- bool
 func Ok(b bool) string
 func Success(b bool) string

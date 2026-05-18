@@ -29,9 +29,12 @@ type StrAny struct {
 }
 
 func (t *StrAny) New() *StrAny
-func (t *StrAny) Any(data any) *string
-func (t *StrAny) String(data any) *string
+func (t *StrAny) Any(data any) (out string)
 func (t *StrAny) DebugEnable(enable bool) *StrAny
+func (t *StrAny) GetIndent() string { return t.indent }
+func (t *StrAny) GetIndentEnable() bool { return t.indentEnable }
+func (t *StrAny) GetIndentPrefix() string { return t.indentPrefix }
+func (t *StrAny) GetUnquoteEnable() bool { return t.unquote }
 func (t *StrAny) Indent(indent string) *StrAny
 func (t *StrAny) IndentEnable(enable bool) *StrAny
 func (t *StrAny) IndentPrefix(prefix string) *StrAny
@@ -41,11 +44,10 @@ func (t *StrAny) UnquoteEnable(enable bool) *StrAny
 ### Package Functions
 
 ```go
-func New() *StrAny
-func Any(data any) *string
-func String(data any) *string
-func DebugEnable(enable bool) *StrAny
-func ToPtr[T any](v T) *T
+func New() *StrAny { return new(StrAny).New() }
+func Any(data any) string { return strAny.Any(data) }
+func DebugEnable(enable bool) *StrAny { return strAny.DebugEnable(enable) }
+func ToPtr[T any](v T) *T { return &v }
 ```
 
 ## Example
