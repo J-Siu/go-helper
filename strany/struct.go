@@ -67,6 +67,7 @@ func (t *StrAny) Any(data any) (out string) {
 	var bBuffer bytes.Buffer
 	if t.debug {
 		fmt.Printf("%s %T\n", prefix, data)
+		fmt.Printf("%s unquote: %t\n", prefix, t.unquote)
 	}
 	switch v := data.(type) {
 	case string:
@@ -189,19 +190,14 @@ func (t *StrAny) Any(data any) (out string) {
 			fmt.Println(prefix, "indentEnable:", t.indentEnable)
 		}
 		var b []byte
-		b, t.Err = json.Marshal(v)
-		if t.Err == nil {
+		if b, t.Err = json.Marshal(v); t.Err == nil {
 			if t.indentEnable {
-				var bBuffer bytes.Buffer
 				str.ByteJsonIndent(&b, &bBuffer)
 				out = bBuffer.String()
 			} else {
 				out = string(b)
 			}
 		}
-	}
-	if t.debug {
-		fmt.Println(prefix, "unquote:", t.unquote)
 	}
 	if t.unquote {
 		out = *t.processUnquote(&out)
