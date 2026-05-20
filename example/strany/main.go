@@ -25,6 +25,7 @@ THE SOFTWARE.
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/J-Siu/go-helper/v2/strany"
@@ -90,8 +91,11 @@ func (N *NUM) New() *NUM {
 }
 
 func main() {
+	debug := flag.Bool("d", false, "enable debug mode")
+	flag.Parse()
+	strany.DebugEnable(*debug)
+
 	n := new(NUM).New()
-	// strany.DebugEnable(true)
 	fmt.Println(strany.Any(n.F32))
 	fmt.Println(strany.Any(n.F64))
 	fmt.Println(strany.Any(n.Str))
