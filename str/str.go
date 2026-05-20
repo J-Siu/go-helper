@@ -117,30 +117,37 @@ func LnSplit(strP *string) *[]string {
 	return &strOut
 }
 
+// json.Marshal() wrapper
+// succeed: result in dst
+// failed: dst not modified
+// return: dst
+func JsonMarshal(src *string, dst *[]byte) *[]byte {
+	if src != nil {
+		*dst, _ = json.Marshal(src)
+	}
+	return dst
+}
+
+// json.Indent() wrapper
+// succeed: result in dst
+// failed: write src into dst
+// return: dst
 func JsonIndent(src *string, dst *bytes.Buffer) *bytes.Buffer {
 	return ByteJsonIndent((*[]byte)(unsafe.Pointer(src)), dst)
 }
 
-// Return *string of "" if json.Marshal failed
-func JsonMarshal(strP *string) *string {
-	out := ""
-	if strP != nil {
-		if p, e := json.Marshal(strP); e == nil {
-			out = string(p)
-		}
-	}
-	return &out
-}
-
-// If json indent succeed, result into dst
-// if json indent failed, write src into dst
+// json.Indent() wrapper
+// succeed: result in dst
+// failed: write src into dst
+// return: dst
 func ByteJsonIndent(src *[]byte, dst *bytes.Buffer) *bytes.Buffer {
-	if src == nil || json.Indent(dst, *src, "", "  ") != nil {
+	if src != nil && json.Indent(dst, *src, "", "  ") != nil {
 		dst.Write(*src)
 	}
 	return dst
 }
 
+// hex.EncodeToString() wrapper
 func ByteHex(b []byte) string { return hex.EncodeToString(b) }
 
 // --- bool
