@@ -64,232 +64,122 @@ func (t *StrAny) New() *StrAny {
 // If `IndentEnable` is true, struct will be converted with `json.MarshalIndent`, else `json.Marshal`
 func (t *StrAny) Any(data any) (out string) {
 	prefix := t.MyType + ".Any"
+	var bBuffer bytes.Buffer
+	if t.debug {
+		fmt.Printf("%s %T\n", prefix, data)
+	}
 	switch v := data.(type) {
 	case string:
-		if t.debug {
-			fmt.Println(prefix, "string")
-		}
-		out = *str.JsonIndent(&v)
+		str.JsonIndent(&v, &bBuffer)
+		out = bBuffer.String()
 	case *string:
-		if t.debug {
-			fmt.Println(prefix, "*string")
-		}
-		out = *str.JsonIndent(v)
+		str.JsonIndent(v, &bBuffer)
+		out = bBuffer.String()
 	case []string:
-		if t.debug {
-			fmt.Println(prefix, "[]string")
-		}
 		out = *t.processStrArray(&v)
 	case *[]string:
-		if t.debug {
-			fmt.Println(prefix, "*[]string")
-		}
 		out = *t.processStrArray(v)
 	case []byte:
-		if t.debug {
-			fmt.Println(prefix, "[]byte")
-		}
-		out = *str.ByteJsonIndent(&v)
+		str.ByteJsonIndent(&v, &bBuffer)
+		out = bBuffer.String()
 	case *[]byte:
-		if t.debug {
-			fmt.Println(prefix, "*[]byte")
-		}
-		out = *str.ByteJsonIndent(v)
+		str.ByteJsonIndent(v, &bBuffer)
+		out = bBuffer.String()
 	case bytes.Buffer:
-		if t.debug {
-			fmt.Println(prefix, "bytes.Buffer")
-		}
 		var b = v.Bytes()
-		out = *str.ByteJsonIndent(&b)
+		str.ByteJsonIndent(&b, &bBuffer)
+		out = bBuffer.String()
 	case *bytes.Buffer:
-		if t.debug {
-			fmt.Println(prefix, "*bytes.Buffer")
-		}
 		if v != nil {
 			var b = v.Bytes()
-			out = *str.ByteJsonIndent(&b)
+			str.ByteJsonIndent(&b, &bBuffer)
+			out = bBuffer.String()
 		}
 	case error:
-		if t.debug {
-			fmt.Println(prefix, "error")
-		}
 		out = v.Error()
 	case *error:
-		if t.debug {
-			fmt.Println(prefix, "*error")
-		}
 		out = (*v).Error()
 	case []error:
-		if t.debug {
-			fmt.Println(prefix, "[]error")
-		}
 		out = *t.processErrArray(&v)
 	case *[]error:
-		if t.debug {
-			fmt.Println(prefix, "*[]error")
-		}
 		out = *t.processErrArray(v)
 	case array.Array[error]:
-		if t.debug {
-			fmt.Println(prefix, "array.Array[error]")
-		}
 		out = *t.processGenericError(&v)
 	case *array.Array[error]:
-		if t.debug {
-			fmt.Println(prefix, "*array.Array[error]")
-		}
 		out = *t.processGenericError(v)
 	case array.Array[any]:
-		if t.debug {
-			fmt.Println(prefix, "array.Array[any]")
-		}
 		out = *t.processGenericArray(&v)
 	case *array.Array[any]:
-		if t.debug {
-			fmt.Println(prefix, "*array.Array[any]")
-		}
 		out = *t.processGenericArray(v)
 	case int:
-		if t.debug {
-			fmt.Println(prefix, "int")
-		}
 		out = fmt.Sprint(v)
 	case int8:
-		if t.debug {
-			fmt.Println(prefix, "int8")
-		}
 		out = fmt.Sprint(v)
 	case int16:
-		if t.debug {
-			fmt.Println(prefix, "int16")
-		}
 		out = fmt.Sprint(v)
 	case int32:
-		if t.debug {
-			fmt.Println(prefix, "int32")
-		}
 		out = fmt.Sprint(v)
 	case int64:
-		if t.debug {
-			fmt.Println(prefix, "int64")
-		}
 		out = fmt.Sprint(v)
 	case uint:
-		if t.debug {
-			fmt.Println(prefix, "uint")
-		}
 		out = fmt.Sprint(v)
 	case uint8:
-		if t.debug {
-			fmt.Println(prefix, "uint8")
-		}
 		out = fmt.Sprint(v)
 	case uint16:
-		if t.debug {
-			fmt.Println(prefix, "uint16")
-		}
 		out = fmt.Sprint(v)
 	case uint32:
-		if t.debug {
-			fmt.Println(prefix, "uint32")
-		}
 		out = fmt.Sprint(v)
 	case uint64:
-		if t.debug {
-			fmt.Println(prefix, "uint64")
-		}
 		out = fmt.Sprint(v)
 	case float32:
-		if t.debug {
-			fmt.Println(prefix, "float32")
-		}
 		out = fmt.Sprint(v)
 	case float64:
-		if t.debug {
-			fmt.Println(prefix, "float64")
-		}
 		out = fmt.Sprint(v)
 	case *int:
-		if t.debug {
-			fmt.Println(prefix, "*int")
-		}
 		if v != nil {
 			out = fmt.Sprint(*v)
 		}
 	case *int8:
-		if t.debug {
-			fmt.Println(prefix, "*int8")
-		}
 		if v != nil {
 			out = fmt.Sprint(*v)
 		}
 	case *int16:
-		if t.debug {
-			fmt.Println(prefix, "*int16")
-		}
 		if v != nil {
 			out = fmt.Sprint(*v)
 		}
 	case *int32:
-		if t.debug {
-			fmt.Println(prefix, "*int32")
-		}
 		if v != nil {
 			out = fmt.Sprint(*v)
 		}
 	case *int64:
-		if t.debug {
-			fmt.Println(prefix, "*int64")
-		}
 		if v != nil {
 			out = fmt.Sprint(*v)
 		}
 	case *uint:
-		if t.debug {
-			fmt.Println(prefix, "*uint")
-		}
 		if v != nil {
 			out = fmt.Sprint(*v)
 		}
 	case *uint8:
-		if t.debug {
-			fmt.Println(prefix, "*uint8")
-		}
 		if v != nil {
 			out = fmt.Sprint(*v)
 		}
 	case *uint16:
-		if t.debug {
-			fmt.Println(prefix, "*uint16")
-		}
 		if v != nil {
 			out = fmt.Sprint(*v)
 		}
 	case *uint32:
-		if t.debug {
-			fmt.Println(prefix, "*uint32")
-		}
 		if v != nil {
 			out = fmt.Sprint(*v)
 		}
 	case *uint64:
-		if t.debug {
-			fmt.Println(prefix, "*uint64")
-		}
 		if v != nil {
 			out = fmt.Sprint(*v)
 		}
 	case *float32:
-		if t.debug {
-			fmt.Println(prefix, "*float32")
-		}
 		if v != nil {
 			out = fmt.Sprint(*v)
 		}
 	case *float64:
-		if t.debug {
-			fmt.Println(prefix, "*float64")
-		}
 		if v != nil {
 			out = fmt.Sprint(*v)
 		}
@@ -299,13 +189,15 @@ func (t *StrAny) Any(data any) (out string) {
 			fmt.Println(prefix, "indentEnable:", t.indentEnable)
 		}
 		var b []byte
-		if t.indentEnable {
-			b, t.Err = json.MarshalIndent(v, t.indentPrefix, t.indent)
-		} else {
-			b, t.Err = json.Marshal(v)
-		}
+		b, t.Err = json.Marshal(v)
 		if t.Err == nil {
-			out = string(b)
+			if t.indentEnable {
+				var bBuffer bytes.Buffer
+				str.ByteJsonIndent(&b, &bBuffer)
+				out = bBuffer.String()
+			} else {
+				out = string(b)
+			}
 		}
 	}
 	if t.debug {
@@ -366,11 +258,13 @@ func (t *StrAny) processUnquote(sP *string) *string {
 
 func (t *StrAny) processStrArray(saP *[]string) *string {
 	out := ""
+	var bBuffer bytes.Buffer
 	if saP != nil {
 		last := len(*saP) - 1
 		for index, item := range *saP {
 			if t.indentEnable {
-				out += *str.JsonIndent(&item)
+				str.JsonIndent(&item, &bBuffer)
+				out += bBuffer.String()
 			} else {
 				out += item
 			}

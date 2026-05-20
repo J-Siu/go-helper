@@ -117,14 +117,8 @@ func LnSplit(strP *string) *[]string {
 	return &strOut
 }
 
-// Return *string of "" if failed
-func JsonIndent(strP *string) *string {
-	out := ""
-	if strP != nil {
-		var byteA = []byte(*strP)
-		return ByteJsonIndent(&byteA)
-	}
-	return &out
+func JsonIndent(src *string, dst *bytes.Buffer) *bytes.Buffer {
+	return ByteJsonIndent((*[]byte)(unsafe.Pointer(src)), dst)
 }
 
 // Return *string of "" if json.Marshal failed
@@ -138,18 +132,13 @@ func JsonMarshal(strP *string) *string {
 	return &out
 }
 
-// Return *string of "" if json.Indent failed
-func ByteJsonIndent(baP *[]byte) *string {
-	out := ""
-	if baP != nil {
-		var dst bytes.Buffer
-		if err := json.Indent(&dst, *baP, "", "  "); err == nil {
-			out = strings.Trim(dst.String(), "\n")
-		} else {
-			return (*string)(unsafe.Pointer(baP))
-		}
+// If json indent succeed, result into dst
+// if json indent failed, write src into dst
+func ByteJsonIndent(src *[]byte, dst *bytes.Buffer) *bytes.Buffer {
+	if src == nil || json.Indent(dst, *src, "", "  ") != nil {
+		dst.Write(*src)
 	}
-	return &out
+	return dst
 }
 
 func ByteHex(b []byte) string { return hex.EncodeToString(b) }

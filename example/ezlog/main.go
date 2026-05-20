@@ -25,6 +25,7 @@ THE SOFTWARE.
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/J-Siu/go-helper/v2/ezlog"
@@ -87,11 +88,12 @@ func (N *NUM) New() *NUM {
 
 func main() {
 	var (
-		// log         = ezlog.New().SetLogLevel(ezlog.DEBUG)
-		N           = new(NUM).New()
-		f32 float32 = 100.000032
-		f64 float64 = 100.000064
+		debug         = flag.Bool("d", false, "enable debug mode")
+		f32   float32 = 100.000032
+		f64   float64 = 100.000064
+		n             = new(NUM).New()
 	)
+	flag.Parse()
 
 	fmt.Println("--- ezlog - START")
 	ezlog.
@@ -106,14 +108,15 @@ func main() {
 		Name("&f32").MsgNewLine(&f32).
 		Name("&f64").MsgNewLine(&f64).
 		Name("uint64").MsgNewLine(uint64(199999999999)).
-		Name("N").L().MsgNewLine(N).
-		Name("&N").L().MsgNewLine(&N).
+		Name("N").L().MsgNewLine(n).
+		Name("&N").L().MsgNewLine(&n).
 		Out()
 	fmt.Println("--- ezlog - END")
-	fmt.Println("--- ezlog.Dump - START")
-	ezlog.Dump(false)
-	fmt.Println("--- ezlog.Dump - END")
-
+	if *debug {
+		fmt.Println("--- ezlog.Dump - START")
+		ezlog.Dump(false)
+		fmt.Println("--- ezlog.Dump - END")
+	}
 	fmt.Println("--- println ---")
 	fmt.Println(ezlog.String())
 }
