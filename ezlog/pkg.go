@@ -53,7 +53,7 @@ const (
 )
 
 func defaultDateTimeFunc() string { return time.Now().Format(defaultTimeFormat) }
-func defaultOutFunc(str *string)  { fmt.Println(*str) }
+func defaultOutFunc(str string)   { fmt.Println(str) }
 
 // ---
 
@@ -137,9 +137,8 @@ func Trace() *EzLog { return logger.Trace() }
 
 // --- Output
 
-func Out() *EzLog      { return logger.Out() }
-func String() string   { return logger.String() }
-func StringP() *string { return logger.StringP() }
+func Out() *EzLog    { return logger.Out() }
+func String() string { return logger.String() }
 
 // --- Build log message
 
