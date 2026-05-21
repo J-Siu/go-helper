@@ -88,17 +88,20 @@ func (N *NUM) New() *NUM {
 
 func main() {
 	var (
-		debug         = flag.Bool("d", false, "enable debug mode")
-		f32   float32 = 100.000032
-		f64   float64 = 100.000064
-		n             = new(NUM).New()
+		flagDump   = flag.Bool("d", false, "enable debug mode")
+		flagIndent = flag.Bool("i", false, "enable indent")
+		flagTime   = flag.Bool("t", false, "enable time")
+
+		f32 float32 = 100.000032
+		f64 float64 = 100.000064
+		n           = new(NUM).New()
 	)
 	flag.Parse()
 
 	fmt.Println("--- ezlog - START")
 	ezlog.
-		EnableIndent(false).
-		EnableTime(true).
+		EnableIndent(*flagIndent).
+		EnableTime(*flagTime).
 		SetLogLevel(ezlog.DEBUG).
 		Log().
 		MsgNewLine(true).
@@ -112,11 +115,13 @@ func main() {
 		Name("&N").L().MsgNewLine(&n).
 		Out()
 	fmt.Println("--- ezlog - END")
-	if *debug {
+
+	if *flagDump {
 		fmt.Println("--- ezlog.Dump - START")
 		ezlog.Dump(false)
 		fmt.Println("--- ezlog.Dump - END")
 	}
+
 	fmt.Println("--- println ---")
 	fmt.Println(ezlog.String())
 }

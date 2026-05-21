@@ -24,13 +24,12 @@ package ezlog
 
 import (
 	"strings"
-	"unicode/utf8"
 
 	"github.com/J-Siu/go-helper/v2/str"
 	"github.com/J-Siu/go-helper/v2/strany"
 )
 
-type FuncOut func(msg *string)
+type FuncOut func(msg string)
 type FuncDateTime func() string
 
 type EzLog struct {
@@ -283,39 +282,37 @@ func (t *EzLog) Trace() *EzLog {
 // --- Output
 
 func (t *EzLog) Out() *EzLog {
-	if t.msgLogLevel <= t.logLevel {
-		// Skip empty?
-		if !(t.msgSkipEmpty && t.msgEmpty) {
-			// DateTime
-			if t.time {
-				t.strBuf = append([]string{t.funcDateTime() + ":"}, t.strBuf...)
-			}
-			// Log level prefix
-			if t.msgLogLevelPrefix && (t.msgLogLevel != DISABLED) {
-				t.strBuf = append([]string{t.msgLogLevel.String() + ":"}, t.strBuf...)
-			}
-			t.funcOut(t.StringP())
-		}
+	if t.msgLogLevel <= t.logLevel &&
+		!(t.msgSkipEmpty && t.msgEmpty) { // Skip empty?
+		t.funcOut(t.String())
 	}
 	return t
 }
 
-func (t *EzLog) String() string { return *t.StringP() }
-
-func (t *EzLog) StringP() *string {
-	var strOut string
+func (t *EzLog) String() string {
+	var sBuilder strings.Builder
 	if t.msgLogLevel <= t.logLevel {
+		// DateTime
+		if t.time {
+			sBuilder.WriteString(t.funcDateTime() + ": ")
+		}
+		// Log level prefix
+		if t.msgLogLevelPrefix && (t.msgLogLevel != DISABLED) {
+			sBuilder.WriteString(t.msgLogLevel.String() + ": ")
+		}
 		if t.strBuf != nil {
-			for _, s := range t.strBuf {
-				_, size := utf8.DecodeLastRuneInString(strOut)
-				if size > 0 && strOut[len(strOut)-size] != '\n' {
-					strOut += " "
+			var newLine bool
+			for i, s := range t.strBuf {
+				if i > 0 && !newLine {
+					sBuilder.WriteString(" " + s)
+				} else {
+					sBuilder.WriteString(s)
 				}
-				strOut += s
+				newLine = s[len(s)-1] == '\n'
 			}
 		}
 	}
-	return &strOut
+	return sBuilder.String()
 }
 
 // --- Build log message
@@ -334,7 +331,9 @@ func (t *EzLog) build(data any, isMsg bool) *EzLog {
 		if isMsg {
 			t.msgEmpty = t.msgEmpty && len(tmp) == 0
 		}
-		t.strBuf = append(t.strBuf, tmp)
+		if len(tmp) > 0 { // skip empty
+			t.strBuf = append(t.strBuf, tmp)
+		}
 	}
 	return t
 }
