@@ -64,7 +64,10 @@ func (t *StrAny) New() *StrAny {
 // If `IndentEnable` is true, struct will be converted with `json.MarshalIndent`, else `json.Marshal`
 func (t *StrAny) Any(data any) (out string) {
 	prefix := t.MyType + ".Any"
-	var bBuffer bytes.Buffer
+	var (
+		bBuffer  bytes.Buffer
+		sBuilder strings.Builder
+	)
 	if t.debug {
 		fmt.Printf("%s %T\n", prefix, data)
 		fmt.Printf("%s unquote: %t\n", prefix, t.unquote)
@@ -77,9 +80,9 @@ func (t *StrAny) Any(data any) (out string) {
 		str.JsonIndent(v, &bBuffer)
 		out = bBuffer.String()
 	case []string:
-		out = *t.processStrArray(&v)
+		out = t.processStrArray(&v, &sBuilder).String()
 	case *[]string:
-		out = *t.processStrArray(v)
+		out = t.processStrArray(v, &sBuilder).String()
 	case []byte:
 		str.ByteJsonIndent(&v, &bBuffer)
 		out = bBuffer.String()
@@ -101,17 +104,17 @@ func (t *StrAny) Any(data any) (out string) {
 	case *error:
 		out = (*v).Error()
 	case []error:
-		out = *t.processErrArray(&v)
+		out = t.processErrArray(&v, &sBuilder).String()
 	case *[]error:
-		out = *t.processErrArray(v)
+		out = t.processErrArray(v, &sBuilder).String()
 	case array.Array[error]:
-		out = *t.processGenericError(&v)
+		out = t.processGenericError(&v, &sBuilder).String()
 	case *array.Array[error]:
-		out = *t.processGenericError(v)
+		out = t.processGenericError(v, &sBuilder).String()
 	case array.Array[any]:
-		out = *t.processGenericArray(&v)
+		out = t.processGenericArray(&v, &sBuilder).String()
 	case *array.Array[any]:
-		out = *t.processGenericArray(v)
+		out = t.processGenericArray(v, &sBuilder).String()
 	case int:
 		out = fmt.Sprint(v)
 	case int8:
@@ -200,7 +203,10 @@ func (t *StrAny) Any(data any) (out string) {
 		}
 	}
 	if t.unquote {
-		out = *t.processUnquote(&out)
+		// From Coconut: https://stackoverflow.com/a/51579784/1810391
+		if dst, e := strconv.Unquote(strings.ReplaceAll(strconv.Quote(out), `\\u`, `\u`)); e == nil {
+			out = dst
+		}
 	}
 	return out
 }
@@ -237,79 +243,62 @@ func (t *StrAny) UnquoteEnable(enable bool) *StrAny {
 }
 func (t *StrAny) GetUnquoteEnable() bool { return t.unquote }
 
-// Unescape utf8 string
-func (t *StrAny) processUnquote(sP *string) *string {
+func (t *StrAny) processStrArray(src *[]string, dst *strings.Builder) *strings.Builder {
 	var (
-		e   error
-		out = ""
+		bBuffer bytes.Buffer
 	)
-	if sP != nil { // From Coconut: https://stackoverflow.com/a/51579784/1810391
-		out, e = strconv.Unquote(strings.ReplaceAll(strconv.Quote(*sP), `\\u`, `\u`))
-		if e != nil { // if unquote failed, return original string
-			return sP
-		}
-	}
-	return &out
-}
-
-func (t *StrAny) processStrArray(saP *[]string) *string {
-	out := ""
-	var bBuffer bytes.Buffer
-	if saP != nil {
-		last := len(*saP) - 1
-		for index, item := range *saP {
+	if src != nil {
+		last := len(*src) - 1
+		for index, item := range *src {
 			if t.indentEnable {
-				str.JsonIndent(&item, &bBuffer)
-				out += bBuffer.String()
+				bBuffer.Reset()
+				dst.WriteString(str.JsonIndent(&item, &bBuffer).String())
 			} else {
-				out += item
+				dst.WriteString(item)
 			}
 			if index < last {
-				out += "\n"
+				dst.WriteString("\n")
 			}
 		}
 	}
-	return &out
+	return dst
 }
 
-func (t *StrAny) processErrArray(eaP *[]error) *string {
-	out := ""
-	if eaP != nil {
-		last := len(*eaP) - 1
-		for index, item := range *eaP {
-			out += item.Error()
+func (t *StrAny) processErrArray(src *[]error, dst *strings.Builder) *strings.Builder {
+	if src != nil {
+		last := len(*src) - 1
+		for index, item := range *src {
+			dst.WriteString(item.Error())
 			if index < last {
-				out += "\n"
+				dst.WriteString("\n")
 			}
 		}
 	}
-	return &out
+	return dst
 }
 
-func (t *StrAny) processGenericArray(eaP *array.Array[any]) *string {
-	out := ""
-	if eaP != nil {
-		last := len(*eaP) - 1
-		for index, item := range *eaP {
-			out += t.Any(item)
+func (t *StrAny) processGenericArray(src *array.Array[any], dst *strings.Builder) *strings.Builder {
+	if src != nil {
+		last := len(*src) - 1
+		for index, item := range *src {
+			dst.WriteString(t.Any(item))
 			if index < last {
-				out += "\n"
+				dst.WriteString("\n")
 			}
 		}
 	}
-	return &out
+	return dst
 }
 
-func (t *StrAny) processGenericError(eaP *array.Array[error]) *string {
-	out := ""
-	if eaP != nil {
-		last := len(*eaP) - 1
-		for index, item := range *eaP {
-			out += t.Any(item)
+func (t *StrAny) processGenericError(src *array.Array[error], dst *strings.Builder) *strings.Builder {
+	if src != nil {
+		last := len(*src) - 1
+		for index, item := range *src {
+			dst.WriteString(item.Error())
 			if index < last {
-				out += "\n"
+				dst.WriteString("\n")
 			}
 		}
 	}
-	return &out
+	return dst
 }
