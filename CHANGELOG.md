@@ -233,6 +233,6 @@
   - strcolor: export color string
 - v2.8.2
   - cleanup
-- v2.8.3
+- v2.8.4
   - ezlog use strings.Builder
   - strany use json v2
