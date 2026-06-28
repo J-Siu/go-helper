@@ -151,14 +151,16 @@ func SameDir(path1, path2 string) bool {
 }
 
 // Get list of directory and list of file
-func GetDirFile(dir string) (*[]string, *[]string) {
+func GetDirFile(dir string) (d *[]string, f *[]string) {
 	var (
 		dirs  []string
 		files []string
 	)
 	symwalk.Walk(dir, func(p string, info os.FileInfo, err error) error {
 		if info.IsDir() {
-			dirs = append(dirs, p)
+			if p != dir {
+				dirs = append(dirs, p)
+			}
 		} else {
 			files = append(files, p)
 		}
