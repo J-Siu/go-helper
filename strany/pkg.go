@@ -31,6 +31,3 @@ func New() *StrAny { return new(StrAny).New() }
 func Any(data any) string { return strAny.Any(data) }
 
 func DebugEnable(enable bool) *StrAny { return strAny.DebugEnable(enable) }
-
-// Return pointer of any type
-func ToPtr[T any](v T) *T { return &v }
