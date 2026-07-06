@@ -41,6 +41,7 @@ type EzLog struct {
 	namePostfix     bool
 	namePostfixChar rune
 	// struct level
+	delimiter string
 	indent    bool
 	skipEmpty bool
 	strBuf    []string
@@ -48,6 +49,7 @@ type EzLog struct {
 	trim      bool // persistent trim
 	unquote   bool
 	// msg level
+	msgDelimiter      string
 	msgIndent         bool
 	msgLogLevel       EzLogLevel
 	msgLogLevelPrefix bool
@@ -67,6 +69,7 @@ func (t *EzLog) New() *EzLog {
 		EnableTrim(true).
 		EnableUnquote(true).
 		SetDateTimeFunc(defaultDateTimeFunc).
+		SetDelimiter(" ").
 		SetLogLevel(ERR).
 		SetLogLevelPrefix(true).
 		SetNamePostfixChar(defaultNamePostfix).
@@ -75,9 +78,10 @@ func (t *EzLog) New() *EzLog {
 
 // Clear message
 func (t *EzLog) Clear() *EzLog {
+	t.msgDelimiter = t.delimiter
+	t.msgEmpty = true
 	t.msgIndent = t.indent
 	t.msgLogLevelPrefix = t.logLevelPrefix
-	t.msgEmpty = true
 	t.msgSkipEmpty = t.skipEmpty
 	t.msgTrim = t.trim
 	t.msgUnquote = t.unquote
@@ -178,6 +182,12 @@ func (t *EzLog) GetSkipEmpty() bool {
 // Set DateTime function
 func (t *EzLog) SetDateTimeFunc(f FuncDateTime) *EzLog {
 	t.funcDateTime = f
+	return t
+}
+
+func (t *EzLog) SetDelimiter(s string) *EzLog {
+	t.delimiter = s
+	t.msgDelimiter = s
 	return t
 }
 
@@ -294,17 +304,22 @@ func (t *EzLog) String() string {
 	if t.msgLogLevel <= t.logLevel {
 		// DateTime
 		if t.time {
-			sBuilder.WriteString(t.funcDateTime() + ": ")
+			sBuilder.WriteString(t.funcDateTime())
+			sBuilder.WriteString(":")
+			sBuilder.WriteString(t.msgDelimiter)
 		}
 		// Log level prefix
 		if t.msgLogLevelPrefix && (t.msgLogLevel != DISABLED) {
-			sBuilder.WriteString(t.msgLogLevel.String() + ": ")
+			sBuilder.WriteString(t.msgLogLevel.String())
+			sBuilder.WriteString(":")
+			sBuilder.WriteString(t.msgDelimiter)
 		}
 		if t.strBuf != nil {
 			var newLine bool
 			for i, s := range t.strBuf {
 				if i > 0 && !newLine {
-					sBuilder.WriteString(" " + s)
+					sBuilder.WriteString(t.msgDelimiter)
+					sBuilder.WriteString(s)
 				} else {
 					sBuilder.WriteString(s)
 				}
@@ -355,6 +370,12 @@ func (t *EzLog) Se() *EzLog {
 // enable/disable trim data. Default to false. Reset each time Out() is called
 func (t *EzLog) Tr(enable bool) *EzLog {
 	t.msgTrim = enable
+	return t
+}
+
+// enable/disable data indent. Default to true. Reset each time Out() is called
+func (t *EzLog) Delimiter(str string) *EzLog {
+	t.msgDelimiter = str
 	return t
 }
 

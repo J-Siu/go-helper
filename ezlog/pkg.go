@@ -85,6 +85,9 @@ func GetSkipEmpty() bool { return logger.GetSkipEmpty() }
 // Set DateTime function
 func SetDateTimeFunc(f FuncDateTime) *EzLog { return logger.SetDateTimeFunc(f) }
 
+// Set delimited
+func SetDelimiter(str string) *EzLog { return logger.SetDelimiter(str) }
+
 // Set log level
 func SetLogLevel(level EzLogLevel) *EzLog { return logger.SetLogLevel(level) }
 
