@@ -236,3 +236,5 @@
 - v2.8.4
   - ezlog use strings.Builder
   - strany use json v2
+- v2.8.5
+  - feat: ezlog add SetDelimiter()

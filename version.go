@@ -23,5 +23,5 @@ THE SOFTWARE.
 package helper
 
 const (
-	Version = "v2.8.4"
+	Version = "v2.8.5"
 )
